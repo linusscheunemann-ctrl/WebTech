@@ -1,383 +1,423 @@
-Projektbeschreibung – WebTech Abschlussprojekt
+# Projektbeschreibung
 
-Projektthema: Digitales Autohaus mit Fahrzeugvermietung
+## Projektthema: Autohaus
 
-Das Projekt ist eine webbasierte Anwendung in Form eines digitalen Autohauses, bei dem Nutzer Fahrzeuge verschiedener Marken ansehen, filtern und reservieren können.
+Das Projekt ist eine webbasierte Anwendung in Form eines **digitalen Autohauses**, bei dem Nutzer Fahrzeuge verschiedener Marken ansehen, filtern und reservieren können.
 
-Der Schwerpunkt liegt auf einer übersichtlichen Fahrzeugdarstellung, einer Such- und Filterfunktion nach Marken sowie einer benutzerbasierten Reservierungsfunktion.
+Der Schwerpunkt liegt auf:
 
-Die Anwendung wird als klassische Webanwendung unter Verwendung von HTML, CSS, JavaScript, PHP und MySQL im MVC-Pattern umgesetzt.
+- einer übersichtlichen Fahrzeugdarstellung
+- einer Such- und Filterfunktion nach Marken
+- einer benutzerbasierten Reservierungsfunktion
 
-⸻
+Die Anwendung wird als klassische Webanwendung unter Verwendung von:
 
-1. Ziel des Projekts
+- **HTML**
+- **CSS**
+- **JavaScript**
+- **PHP**
+- **MySQL**
+
+nach dem **MVC-Pattern (Model-View-Controller)** umgesetzt.
+
+---
+
+# 1. Ziel des Projekts
 
 Ziel der Anwendung ist die Entwicklung eines digitalen Fahrzeugportals, in dem Benutzer:
-	•	verfügbare Fahrzeuge ansehen
-	•	nach Marken suchen
-	•	Fahrzeuge filtern
-	•	Fahrzeugdetails einsehen
-	•	sich registrieren
-	•	sich einloggen
-	•	ein Fahrzeug reservieren / mieten
+
+- verfügbare Fahrzeuge ansehen
+- nach Marken suchen
+- Fahrzeuge filtern
+- Fahrzeugdetails einsehen
+- sich registrieren
+- sich einloggen
+- ein Fahrzeug reservieren / mieten
 
 können.
 
-Zusätzlich erhält ein Administrator erweiterte Rechte zur Verwaltung der gesamten Plattform.
+Zusätzlich erhält ein **Administrator** erweiterte Rechte zur Verwaltung der gesamten Plattform.
 
-⸻
+---
 
-2. Grundfunktionalität
+# 2. Grundfunktionalität
 
 Die Plattform besteht aus zwei Hauptbereichen:
 
-Benutzerbereich
+---
 
-Für Kunden / registrierte Nutzer
+## 👤 Benutzerbereich
 
-Funktionen
-	•	Registrierung
-	•	Login / Logout
-	•	Fahrzeugübersicht
-	•	Suche nach Marken
-	•	Filterfunktion
-	•	Detailseite eines Fahrzeugs
-	•	Fahrzeug reservieren
-	•	eigene Reservierung ansehen
-	•	Reservierung stornieren
+Für Kunden und registrierte Nutzer.
 
-⸻
+### Funktionen
 
-Adminbereich
+- Registrierung
+- Login / Logout
+- Fahrzeugübersicht
+- Suche nach Marken
+- Filterfunktion
+- Detailseite eines Fahrzeugs
+- Fahrzeug reservieren
+- eigene Reservierung ansehen
+- Reservierung stornieren
 
-Für Administratoren
+---
 
-Funktionen
-	•	Fahrzeuge hinzufügen
-	•	Fahrzeuge bearbeiten
-	•	Fahrzeuge löschen
-	•	neue Marken hinzufügen
-	•	Bilder hochladen
-	•	Reservierungen verwalten
-	•	Benutzer verwalten
+## 🛠️ Adminbereich
 
-Dies erfüllt die Anforderungen für dynamische Erweiterbarkeit und CRUD-Operationen.
+Für Administratoren.
 
-⸻
+### Funktionen
 
-3. Kategorien und Unterkategorien
+- Fahrzeuge hinzufügen
+- Fahrzeuge bearbeiten
+- Fahrzeuge löschen
+- neue Marken hinzufügen
+- Bilder hochladen
+- Reservierungen verwalten
+- Benutzer verwalten
+
+Diese Funktionen erfüllen die Anforderungen für:
+
+- **CRUD-Operationen**
+- **dynamische Erweiterbarkeit**
+- **Admin-Rollenverwaltung**
+
+---
+
+# 3. Kategorien und Unterkategorien
 
 Da die Aufgabenstellung mindestens zwei Kategorien und Unterkategorien verlangt, wird die Struktur wie folgt definiert:
 
-Kategorie 1: Fahrzeugtyp
-	•	PKW
-	•	SUV
-	•	Sportwagen
+---
 
-Kategorie 2: Marken
-	•	Marke A
-	•	Marke B
-	•	Marke C
+## 🚘 Kategorie 1: Fahrzeugtyp
 
-Da konkrete Marken noch nicht festgelegt sind, bleibt dies zunächst abstrakt.
+- PKW
+- SUV
+- Sportwagen
 
-Später können reale Marken ergänzt werden.
+---
 
-Zum Beispiel:
-	•	BMW
-	•	Audi
-	•	Mercedes
+## 🏷️ Kategorie 2: Marken
 
-Diese Struktur ist prüfungstechnisch sehr gut.
+- Marke A
+- Marke B
+- Marke C
 
-⸻
+Da konkrete Marken noch nicht final festgelegt sind, bleibt dies zunächst abstrakt.
 
-4. Fahrzeugdaten
+Später können reale Marken ergänzt werden, z. B.:
+
+- BMW
+- Audi
+- Mercedes
+
+Diese Struktur ist prüfungstechnisch sehr gut geeignet.
+
+---
+
+# 4. Fahrzeugdaten
 
 Jedes Fahrzeug besitzt folgende Eigenschaften:
-	•	Fahrzeug-ID
-	•	Marke
-	•	Modell
-	•	Baujahr
-	•	PS
-	•	Fahrzeugbild
-	•	Verfügbarkeitsstatus
-	•	Reservierungsstatus
 
-Optional erweiterbar:
-	•	Farbe
-	•	Kraftstofftyp
-	•	Getriebe
-	•	Sitzplätze
+- **Fahrzeug-ID**
+- **Marke**
+- **Modell**
+- **Baujahr**
+- **PS**
+- **Fahrzeugbild**
+- **Verfügbarkeitsstatus**
+- **Reservierungsstatus**
 
-⸻
+---
 
-5. Benutzerverwaltung
+## Optional erweiterbar
+
+- Farbe
+- Kraftstofftyp
+- Getriebe
+- Sitzplätze
+
+---
+
+# 5. Benutzerverwaltung
 
 Die Anwendung enthält ein vollständiges Benutzerverwaltungssystem.
 
-Registrierung
+---
+
+## 📝 Registrierung
 
 Benutzer können einen eigenen Account erstellen.
 
-Pflichtfelder:
-	•	Vorname
-	•	Nachname
-	•	E-Mail
-	•	Passwort
+### Pflichtfelder
 
-⸻
+- Vorname
+- Nachname
+- E-Mail
+- Passwort
 
-Login
+---
 
-Benutzer melden sich mit:
-	•	E-Mail
-	•	Passwort
+## 🔐 Login
 
-an.
+Benutzer melden sich mit folgenden Daten an:
 
-Die Session-Verwaltung erfolgt serverseitig über PHP-Sessions und Cookies.
+- E-Mail
+- Passwort
 
-⸻
+Die Session-Verwaltung erfolgt serverseitig über:
 
-6. Reservierungsfunktion
+- **PHP-Sessions**
+- **Cookies**
+
+---
+
+# 6. Reservierungsfunktion
 
 Benutzer können ein Fahrzeug direkt reservieren.
 
-Da ihr Option B gewählt habt, erfolgt die Reservierung ohne Datumsangabe.
+Die Reservierung erfolgt **ohne Datumsangabe**.
 
-Ablauf:
-	1.	Fahrzeug auswählen
-	2.	Fahrzeugdetailseite öffnen
-	3.	„Reservieren“-Button klicken
-	4.	Fahrzeug wird dem Benutzerkonto zugeordnet
-	5.	Status wechselt auf „reserviert“
+---
 
-Ein Benutzer kann immer nur eine aktive Reservierung gleichzeitig besitzen.
+## Ablauf
 
-Diese Logik sollte serverseitig geprüft werden.
+1. Fahrzeug auswählen
+2. Fahrzeugdetailseite öffnen
+3. **„Reservieren“**-Button klicken
+4. Fahrzeug wird dem Benutzerkonto zugeordnet
+5. Status wechselt auf **„reserviert“**
 
-⸻
+Ein Benutzer kann immer nur **eine aktive Reservierung gleichzeitig** besitzen.
 
-7. Workflow-Modell (für die Aufgabe sehr wichtig)
+Diese Logik wird serverseitig geprüft.
 
-Hier ist bereits ein strukturelles Seitenmodell:
+---
 
-⸻
+# 7. Workflow-Modell
 
-Seiten als Knoten
-	•	Startseite
-	•	Login
-	•	Registrierung
-	•	Fahrzeugübersicht
-	•	Fahrzeugdetailseite
-	•	Benutzerkonto
-	•	Reservierungsseite
-	•	Admin-Dashboard
-	•	Fahrzeugverwaltung
+Dieses Modell ist besonders wichtig für die Aufgabenstellung.
 
-⸻
+---
 
-Seitenwechsel als Kanten + Interaktionen
+## 📄 Seiten als Knoten
 
-Startseite → Login
+- Startseite
+- Login
+- Registrierung
+- Fahrzeugübersicht
+- Fahrzeugdetailseite
+- Benutzerkonto
+- Reservierungsseite
+- Admin-Dashboard
+- Fahrzeugverwaltung
 
-Interaktion: Login-Daten eingeben
+---
 
-Startseite → Registrierung
+## 🔄 Seitenwechsel als Kanten + Interaktionen
 
-Interaktion: neuen Account erstellen
+| Von | Nach | Interaktion |
+|---|---|---|
+| Startseite | Login | Login-Daten eingeben |
+| Startseite | Registrierung | neuen Account erstellen |
+| Startseite | Fahrzeugübersicht | Fahrzeuge anzeigen |
+| Fahrzeugübersicht | Detailseite | Fahrzeug auswählen |
+| Detailseite | Reservierungsseite | Fahrzeug reservieren |
+| Reservierungsseite | Benutzerkonto | Reservierung anzeigen |
+| Benutzerkonto | Logout | abmelden |
+| Admin-Dashboard | Fahrzeugverwaltung | Fahrzeug hinzufügen / bearbeiten / löschen |
 
-Startseite → Fahrzeugübersicht
+---
 
-Interaktion: Fahrzeuge anzeigen
+### Wichtig
 
-Fahrzeugübersicht → Detailseite
+Es gibt **keine Deadlocks**, da von jeder Seite ein Rückweg möglich ist.
 
-Interaktion: Fahrzeug auswählen
+Dies ist für die Aufgabenstellung entscheidend.
 
-Detailseite → Reservierungsseite
+---
 
-Interaktion: Fahrzeug reservieren
+# 8. Technologien und deren Einsatz
 
-Reservierungsseite → Benutzerkonto
+---
 
-Interaktion: Reservierung anzeigen
+## HTML
 
-Benutzerkonto → Logout
+Struktur aller Seiten:
 
-Interaktion: abmelden
+- Formulare
+- Tabellen
+- Kartenansichten
 
-Admin-Dashboard → Fahrzeugverwaltung
+---
 
-Interaktion: Fahrzeug hinzufügen / bearbeiten / löschen
+## CSS
 
-⸻
+Responsive Gestaltung.
 
-Wichtig:
-Es gibt keine Deadlocks, da von jeder Seite ein Rückweg möglich ist.
+### Vorgabe
 
-Das ist für die Aufgabe entscheidend.
+Optimiert für Desktop-Auflösungen von:
 
-⸻
+- **1280 × 720**
+- bis **1920 × 1080**
 
-8. Technologien und deren Einsatz
+---
 
-⸻
+## JavaScript
 
-HTML
+Für dynamische Benutzerinteraktionen:
 
-Struktur aller Seiten
+- Live-Suche
+- Filter
+- Formularvalidierung
+- Reservierungsstatus
 
-Zum Beispiel:
-	•	Formulare
-	•	Tabellen
-	•	Kartenansichten
+---
 
-⸻
+## AJAX (Pflicht)
 
-CSS
+Ein Pflichtbestandteil des Projekts.
 
-Responsive Gestaltung
+---
 
-Wichtig laut Vorgabe:
-	•	optimiert für Desktop
-	•	1280x720 bis 1920x1080
+## 🔍 Live-Fahrzeugsuche
 
-⸻
+Suche nach Marken **ohne Seitenreload**
 
-JavaScript
+### Beispielablauf
 
-Für dynamische Benutzerinteraktionen
+- Nutzer tippt „BMW“
+- AJAX sendet Anfrage an PHP
+- JSON-Daten werden zurückgegeben
+- Fahrzeuge werden dynamisch angezeigt
 
-Zum Beispiel:
-	•	Live-Suche
-	•	Filter
-	•	Formularvalidierung
-	•	Reservierungsstatus
+Dies erfüllt die Prüfungsanforderung optimal.
 
-⸻
+---
 
-AJAX (Pflicht)
+## PHP
 
-Sehr wichtig für die Prüfung.
+Backend nach MVC.
 
-Empfohlenes Beispiel:
-
-Live-Fahrzeugsuche
-
-Ohne Seitenreload nach Marken suchen
-
-z. B.
-	•	Nutzer tippt „BMW“
-	•	AJAX sendet Anfrage an PHP
-	•	JSON-Daten werden zurückgegeben
-	•	Fahrzeuge werden dynamisch angezeigt
-
-Das ist perfekt für die Vorgabe.
-
-⸻
-
-PHP
-
-Backend + MVC
-
-Model
-
+### Model
 Datenbankzugriffe
 
-View
-
+### View
 HTML-Ausgabe
 
-Controller
-
+### Controller
 Logik und Request-Steuerung
 
-⸻
+---
 
-MySQL
+## MySQL
 
 Speicherung von:
-	•	Benutzern
-	•	Fahrzeugen
-	•	Marken
-	•	Reservierungen
-	•	Bildern
 
-⸻
+- Benutzern
+- Fahrzeugen
+- Marken
+- Reservierungen
+- Bildern
 
-9. Datenbankstruktur (grobe Planung)
+---
 
-Tabelle users
-	•	id
-	•	firstname
-	•	lastname
-	•	email
-	•	password
-	•	role
+# 9. Datenbankstruktur (grobe Planung)
 
-⸻
+---
 
-Tabelle vehicles
-	•	id
-	•	brand_id
-	•	model
-	•	year
-	•	horsepower
-	•	image
-	•	status
+## Tabelle `users`
 
-⸻
+| Feld | Beschreibung |
+|---|---|
+| id | Benutzer-ID |
+| firstname | Vorname |
+| lastname | Nachname |
+| email | E-Mail |
+| password | Passwort |
+| role | Benutzerrolle |
 
-Tabelle brands
-	•	id
-	•	brand_name
+---
 
-⸻
+## Tabelle `vehicles`
 
-Tabelle reservations
-	•	id
-	•	user_id
-	•	vehicle_id
-	•	reservation_status
+| Feld | Beschreibung |
+|---|---|
+| id | Fahrzeug-ID |
+| brand_id | Fremdschlüssel Marke |
+| model | Modell |
+| year | Baujahr |
+| horsepower | PS |
+| image | Bild |
+| status | Verfügbarkeit |
 
-Hier ist bereits ein JOIN enthalten:
+---
 
+## Tabelle `brands`
+
+| Feld | Beschreibung |
+|---|---|
+| id | Marken-ID |
+| brand_name | Markenname |
+
+---
+
+## Tabelle `reservations`
+
+| Feld | Beschreibung |
+|---|---|
+| id | Reservierungs-ID |
+| user_id | Benutzer-ID |
+| vehicle_id | Fahrzeug-ID |
+| reservation_status | Status |
+
+---
+
+## 🔗 JOIN-Beziehung
+
+```text
 users ↔ reservations ↔ vehicles
+```
 
 Damit ist die JOIN-Vorgabe erfüllt.
 
-⸻
+---
 
-10. Teamaufteilung (3 Personen)
+# 10. Teamaufteilung (3 Personen)
 
 Sehr wichtig für die Prüfungsordnung.
 
-⸻
+---
 
-Person 1 – Frontend
-	•	HTML
-	•	CSS
-	•	Seitenstruktur
-	•	Responsives Layout
-	•	Fahrzeugkarten
+## 👨‍💻 Person 1 – Frontend
 
-⸻
+- HTML
+- CSS
+- Seitenstruktur
+- responsives Layout
+- Fahrzeugkarten
 
-Person 2 – Backend / MVC
-	•	PHP Controller
-	•	Login
-	•	Registrierung
-	•	Session / Cookies
-	•	Reservierungslogik
+---
 
-⸻
+## ⚙️ Person 2 – Backend / MVC
 
-Person 3 – Datenbank / Admin / AJAX
-	•	MySQL
-	•	CRUD
-	•	Adminbereich
-	•	Fahrzeugverwaltung
-	•	AJAX-Suche
-	•	Bild-Upload
+- PHP Controller
+- Login
+- Registrierung
+- Sessions / Cookies
+- Reservierungslogik
+
+---
+
+## 🗄️ Person 3 – Datenbank / Admin / AJAX
+
+- MySQL
+- CRUD
+- Adminbereich
+- Fahrzeugverwaltung
+- AJAX-Suche
+- Bild-Upload
