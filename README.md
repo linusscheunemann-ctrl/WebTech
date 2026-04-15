@@ -77,6 +77,7 @@ Da die Aufgabenstellung mindestens zwei Kategorien und Unterkategorien verlangt,
 ## 🚘 Kategorie 1: Fahrzeugtyp
 
 - PKW
+- Motorrad
 - SUV
 - Sportwagen
 
