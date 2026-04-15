@@ -1,0 +1,43 @@
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust:100%
+}
+body {
+    margin:0
+}
+h1 {
+    font-size: 2em;
+    margin:.67em 0
+}
+#nav {
+	background-color: #fff;
+	-webkit-box-shadow: 0 20px 20px 0px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 20px 20px 0px rgba(0, 0, 0, 0.1);
+	-ms-box-shadow: 0 20px 20px 0px rgba(0, 0, 0, 0.1);
+	-o-box-shadow: 0 20px 20px 0px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 10px 20px 0px rgba(0, 0, 0, 0.1);
+	display: block;
+	height: 200px;
+	left: 0;
+	margin: 0 auto;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 100%;
+	z-index: 4990;
+}
+
+#nav-inner {
+	height: 100%;
+	left: 0;
+	margin: 0 auto;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100%;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display:block
+}
