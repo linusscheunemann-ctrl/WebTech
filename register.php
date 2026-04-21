@@ -4,7 +4,6 @@ ini_set('display_errors', 1);
 print_r($_POST);
 
 
-
 $conn = new mysqli("localhost", "root", "", "users");
 
 if ($conn->connect_error) {

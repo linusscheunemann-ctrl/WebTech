@@ -1,46 +1,44 @@
 <!DOCTYPE html>
-<<<<<<< Updated upstream
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-<link href="CSS/style.css" rel="stylesheet">
-=======
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="CSS/formulare.css">
+    <link rel="stylesheet" href="CSS/mystyle.css">
     <title>Registrierung</title>
->>>>>>> Stashed changes
 </head>
 <body>
-    <div class="container">
-        <h1>Registration</h1>
-        <form>
-<form action="register.php" method="POST">
-        <input type="text" name="username" placeholder="Benutzername" required>
-        <br><br>
+ <!-- Navigation Anfang -->
+    <hr>
+   <a href="index.html"> <img src="images/mayer-classic-cars.png" alt="Autohaus" class="logo"></a>
+    <hr>
+   <nav>
+        <div class="nav-center">
+            <a href="bestand.html">CLASSIC CARS & BIKES</a>
+            <a href="Events"> EVENTS</a>
+            <a href="about.html">ABOUT</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html"><img src="images/login.jpg" alt="Login" class="login-icon"></a>
+        </div>
+    </nav>
+    <hr>
+    <!-- Navigation Ende -->
 
-        <input type="password" name="password" placeholder="Passwort" required>
-        <br><br>
 
-<<<<<<< Updated upstream
-        <button type="submit">Registrieren</button>
-        <button type="button" onclick="window.location.href='login.html'">Login</button>
-=======
+
+    <h1>Benutzerregistrierung</h1>
+
+    <form action="register.php" method="POST"">
+        <label>Benutzername:</label>
+        <input type="text" name="username" required><br><br>
+
         <label>Passwort:</label>
-        <input type="password" name="password"><br><br>
+        <input type="password" name="password" required><br><br>
 
         <label>Passwort bestätigen:</label>
-        <input type="password" name="confirm_password"><br><br>
+        <input type="password" name="confirm_password" required><br><br>
 
-            <button type="button" onclick="location.href='login.html'">Anmelden</button>
-            <button type="button" onclick="location.href='index.html'">Zur Startseite</button>
-            <button type="submit">Registrieren</button>
->>>>>>> Stashed changes
+        <button type="submit">Registrieren</button>
+        <button type="button" onclick="location.href='login.html'">Anmelden</button>
+        
     </form>
-
-        </form>
-    </div>
 </body>
 </html>

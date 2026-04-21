@@ -1,22 +1,72 @@
 h1 {
     font-family: 'Courier New', Courier, monospace;
+    justify-content: center;
+    display: flex;
+    gap: 20px;;
 }
 
 body {
-    background-color: rgb(218, 216, 216);
     font-size: 12px;
     text-align: justify;
 }
 
 nav {
+    position: relative;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    align-items: center;
     margin-bottom: 20px;
+}
+button {
+  background: linear-gradient(135deg, #4f8cff, #6ed0ff);
+  color: white;
+  border: none;
+  border-radius: 12px; /* runde Ecken */
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+/* Hover-Effekt */
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Klick-Effekt */
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+.nav-center {
+    display: flex;
+    gap: 20px;
+}
+
+
+.nav-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.login-icon {
+    width: 30px;
+    height: 30px;
 }
 
 
 a {
     text-decoration: none;;
     font-size: 18px;
+}
+
+.logo {
+    display: block;
+    margin: 20px auto;
+    width: 200px;
 }
