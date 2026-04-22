@@ -1,0 +1,89 @@
+body {
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f4f4f4;
+
+    margin: 20px;
+
+}
+
+/* Überschriften */
+
+h1 {
+
+    color: darkred;
+
+}
+
+/* Navigation */
+
+nav {
+
+    background-color: #333;
+
+    padding: 10px;
+
+}
+
+nav li {
+
+    display: block;
+
+    margin: 10px 0;
+
+}
+
+nav a {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 5px 10px;
+
+    display: block;
+
+}
+
+nav a:hover {
+
+    background-color: #555;
+
+}
+
+nav a:visited {
+
+    color: purple;
+
+}
+
+/* Buttons */
+
+button {
+
+    background-color: darkred;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 12px;
+
+    cursor: pointer;
+
+}
+
+button:hover {
+
+    background-color: red;
+
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
