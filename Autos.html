@@ -1,14 +1,13 @@
 <!DOCTYPE html>
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="CSS/mystyle.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <title>Autos</title>
 </head>
 <body>
-    <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
-   <nav>
+    <a href="index.html"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
+    <nav>
         <div class="nav-center">
             <a href="bestand.html" class="nav-button">CARS & BIKES</a>
             <a href="about.html" class="nav-button">ABOUT</a>
@@ -17,26 +16,56 @@
             <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
         </div>
     </nav>
-    <!-- Navigation Ende -->
 
-    <div>
-        <h1>Ferrari Modelle</h1>
-         <h2>Auto 1: Ferrari F40</h2>
-         <p>Leistung: 620 PS</p>
-         <h2>Auto 2: Ferrari 488 Pista</h2>
-         <p>Leistung: 720 PS</p>
+    <h1>Autos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Bild</th>
+                <th>Marke</th>
+                <th>Modell</th>
+                <th>Leistung</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><img src="images/classic-cars-ingolstadt-11.jpg" alt="Ferrari F40"></td>
+                <td>Ferrari</td>
+                <td>F40</td>
+                <td>620 PS</td>
+            </tr>
+        
+          
+            <tr>
+                <td><img src="images/bg9.jpg" alt="Ferrari Enzo"></td>
+                <td>Ferrari</td>
+                <td>Enzo</td>
+                <td>660 PS</td>
+            </tr>
+       
+        </tbody>
+    </table>
 
-         <h1>Lamborghini Modelle</h1>
-         <h2>Auto 1: Lamborghini Aventador</h2>
-         <p>Leistung: 770 PS</p>
-         <h2>Auto 2: Lamborghini Huracán</h2>
-         <p>Leistung: 640 PS</p>
-
-         <h1>McLaren Modelle</h1>
-         <h2>Auto 1: McLaren P1</h2>
-         <p>Leistung: 900 PS</p>
-         <h2>Auto 2: McLaren 720S</h2>
-         <p>Leistung: 790 PS</p>    
+<footer id="footer-wrapper">
+    <div id="footersocial">
+      <ul>
+        <li><a href="#"><img src="images/footer-facebook.png" alt="Facebook"></a></li>
+        <li><a href="#"><img src="images/footer-email.png" alt="Instagram"></a></li>
+      </ul>
     </div>
+
+   <div id="claim-footer">
+     <h3><span>Kontakt</span></h3>
+        <p>Auto Union Straße 1 </p>
+        <p> 85053 Ingolstadt  </p>
+        <p>Email: info@deinautohaus.de</p>
+        <p>Telefon: 01234-567890</p>
+        <p>Öffnungszeiten: Mo-Fr 9-18 Uhr, Sa 10-14 Uhr</p>
+    </div>
+
+    <div id="copyright">
+      <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
+    </div>
+</footer>
 </body>
 </html>
