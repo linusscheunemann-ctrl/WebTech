@@ -1,10 +1,27 @@
+
 <!DOCTYPE html>
-<html lang="de">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="CSS/mystyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <title>Login</title>
 </head>
 <body>
+     <!-- Navigation Anfang -->
+   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <nav>
+        <div class="nav-center">
+            <a href="bestand.html" class="nav-button">CARS & BIKES</a>
+            <a href="about.html" class="nav-button">ABOUT</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        </div>
+    </nav>
+    <!-- Navigation Ende -->
+
+
+
     <h1>Benutzeranmeldung</h1>
 
     <form>
@@ -13,11 +30,8 @@
 
         <label>Passwort:</label>
         <input type="password" name="password"><br><br>
-
-        <a href="registration.html">Registrieren</a>
-        <a href="user.html">Anmelden</a>
-        <a href="index.html">Zur Startseite</a>
-        
+        <button type="button" onclick="location.href='user.html'">Anmelden</button>
+        <button type="button" onclick="location.href='registration.html'">Registrieren</button>
     </form>
 </body>
 </html>
