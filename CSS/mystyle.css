@@ -1,3 +1,7 @@
+th {
+background-color: lightgrey;
+}
+
 h1 {
     font-family: 'Inter', sans-serif;
     justify-content: center;
@@ -8,7 +12,8 @@ h1 {
 }
 p {
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  text-align: right;
+  font-size: 12px;
   line-height: 1.5;
   margin: 10px 0;
 }
@@ -31,11 +36,10 @@ button {
   background: linear-gradient(135deg, #2B3133, #3f4f55);
   color: white;
   border: none;
-  border-radius: 12px; /* runde Ecken */
+  border-radius: 12px;
   padding: 12px 24px;
   font-size: 12px;
   font-weight: bold;
-  cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.25s ease;
   margin-right: 10px;
@@ -79,7 +83,13 @@ label {
 a {
     text-decoration: none;;
     font-size: 18px;
+    color: black;
 }
+
+a:hover {
+    color: rgb(173, 173, 173);
+    transition: 0.75s ease;
+} 
 
 .nav-button {
     color: white;
