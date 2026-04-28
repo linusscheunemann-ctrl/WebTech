@@ -1,26 +1,41 @@
 <!DOCTYPE html>
-<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="CSS/mystyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <title>Registrierung</title>
 </head>
 <body>
-    <h1>Registrierung</h1>
+    <!-- Navigation Anfang -->
+   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <nav>
+        <div class="nav-center">
+            <a href="bestand.html" class="nav-button">CARS & BIKES</a>
+            <a href="about.html" class="nav-button">ABOUT</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        </div>
+    </nav>
+    <!-- Navigation Ende -->
 
-    <form method="post">
+
+
+
+    <h1>Benutzerregistrierung</h1>
+
+    <form action="register.php" method="POST"">
         <label>Benutzername:</label>
-        <input type="text" name="username"><br><br>
-
+        <input type="text" name="username" required><br><br>
+<br>
         <label>Passwort:</label>
-        <input type="password" name="password"><br><br>
+        <input type="password" name="password" required><br><br>
 
         <label>Passwort bestätigen:</label>
-        <input type="password" name="confirm_password"><br><br>
+        <input type="password" name="confirm_password" required><br><br>
 
-        <a href="login.html">Anmelden</a>
-        <a href="index.html">Zur Startseite</a>
-        
+        <button type="submit">Registrieren</button>
+        <button type="button" onclick="location.href='login.html'">Anmelden</button>
     </form>
 </body>
 </html>

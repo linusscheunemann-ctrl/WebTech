@@ -4,8 +4,7 @@ ini_set('display_errors', 1);
 print_r($_POST);
 
 
-
-$conn = new mysqli("localhost", "root", "", "WebTechnologien");
+$conn = new mysqli("localhost", "root", "", "users");
 
 if ($conn->connect_error) {
     die("Verbindung fehlgeschlagen: " . $conn->connect_error);
@@ -21,7 +20,7 @@ $stmt->bind_param("ss", $username, $password);
 if ($stmt->execute()) {
     echo "Registrierung erfolgreich!";
 } else {
-    echo "Fehler: Benutzername existiert bereits.";
+    echo "Fehler: Benutzername existiert vielleicht schon.";
 }
 
 $stmt->close();

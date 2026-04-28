@@ -2,9 +2,28 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="CSS/mystyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <title>Benutzerbereich</title>
 </head>
 <body>
+    <!-- Navigation Anfang -->
+   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <nav>
+        <div class="nav-center">
+            <a href="bestand.html" class="nav-button">CARS & BIKES</a>
+            <a href="about.html" class="nav-button">ABOUT</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        </div>
+    </nav>
+    <!-- Navigation Ende -->
+
+
+
+
+
     <h1>Mein Profil</h1>
 
     <form>
@@ -14,8 +33,8 @@
         <label>Passwort:</label>
         <input type="password" value="123456"><br><br>
 
-        <a href="logout.html">Abmelden</a>
-        <a href="index.html">Zur Startseite</a>
+        <button type="submit">Aktualisieren</button>
+        <button type="button" onclick="window.location.href='logout.html'"> Abmelden</button>
     </form>
 </body>
 </html>
