@@ -4,8 +4,11 @@
     <link rel="stylesheet" href="CSS/mystyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <script src="toggle-theme.js"></script>
-    <title>Logout</title>
+
+    
+    <title>Shop</title>
 </head>
+<body>
     <!-- Navigation Anfang -->
    <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
@@ -18,10 +21,12 @@
                 <a href="motorraeder.html">Motorräder</a>
             </div>
         </div>
-
+        <a href="shop.html" class="nav-button">SHOP</a>
+        </div>  
+            
+        </div>
         <a href="about.html" class="nav-button">ABOUT</a>
-    </div>
-
+        </div>
     <div class="nav-right">
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
         <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
@@ -29,11 +34,56 @@
 </nav>
     <!-- Navigation Ende -->
 
-<body>
-    <h1>Sie wurden erfolgreich abgemeldet.</h1>
-    <p>möchten Sie sich erneut anmelden?</p>
-    <button onclick="window.location.href='login.html'">Anmelden</button>
-</body>
+
+<div class="wrapper">
+<div class="shop">
+    <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 1">
+        <h3 class="product-name">Produkt 1</h3>
+        <div class="price">19,99 €</div>
+        <button>Kaufen</button>
+
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 2">
+        <h3 class="product-name">Produkt 2</h3>
+        <div class="price">29,99 €</div>
+        <button>Kaufen</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 3">
+        <h3 class="product-name">Produkt 3</h3>
+        <div class="price">15,49 €</div>
+        <button>Kaufen</button>
+    </div>
+
+        <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 1">
+        <h3 class="product-name">Produkt 1</h3>
+        <div class="price">19,99 €</div>
+        <button>Kaufen</button>
+
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 2">
+        <h3 class="product-name">Produkt 2</h3>
+        <div class="price">29,99 €</div>
+        <button>Kaufen</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/200" alt="Produkt 3">
+        <h3 class="product-name">Produkt 3</h3>
+        <div class="price">15,49 €</div>
+        <button>Kaufen</button>
+    </div>
+
+
+</div>
+</div>
 <footer id="footer-wrapper">
     <div id="footersocial">
       <ul>
@@ -42,7 +92,7 @@
       </ul>
     </div>
 
-   <div id="claim-footer">
+    <div id="claim-footer">
      <span id="head-footer">Kontakt</span>
         <p>Auto Union Straße 1 </p>
         <p> 85053 Ingolstadt  </p>
@@ -55,4 +105,7 @@
       <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
     </div>
 </footer>
+
+
+</body>
 </html>
