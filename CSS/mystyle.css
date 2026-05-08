@@ -244,8 +244,8 @@ nav {
 }
 
 .cart-img {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 }
 
 .theme-toggle {
@@ -434,6 +434,7 @@ footer a,
 
 .product-name {
   color: #000000;
+  text-align: center;
 }
 
 .wrapper {
