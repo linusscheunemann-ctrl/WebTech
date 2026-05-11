@@ -35,28 +35,41 @@
     
     <div class="cart-container"> 
         <h1>Warenkorb</h1>
-        <p id="empty-msg" style="display: block;">
-            "Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren."
+        <p class="middle" id="empty-msg" style="display: block;">
+            "Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren." <br><br>
             <a href="index.html">Zurück zur Startseite</a>
         </p>
         <!--- Tabelle für den Warenkorb (Nils)--->
         <table id="cart-table" style="display: none;">
             <thead>
                 <tr>
+                    <th>Position</th>
                     <th>Produkt</th>
                     <th>Preis</th>
-                    <th>Menge</th>
-                    <th>Gesamt</th>
-                    <th>Entfernen</th>
+                    <th>Anzahl</th>
+                    <th>Netto</th>
+                    
+                    
+                    
                 </tr>
             </thead>
             <tbody id="cart-body"> </tbody>
                 <!-- Dynamisch generierte Zeilen für Produkte im Warenkorb -->
                  <tfoot>
-                    <tr class="total-row"></tr>
-                    <td colspan="4"> Gesamt:</td>
+                    
+                 <tr>
+                    <td colspan="4">Nettobetrag</td>
+                    <td id="netto-price" colspan="2"></td>
+                </tr>
+                 <tr>
+                    <td colspan="4">zzgl. MwSt. (19%)</td>
+                    <td id="mwst-price" colspan="2"></td>         <!-- MwSt.-Zeile -->
+                </tr>
+                <tr class="total-row"></tr>
+                    <td colspan="4"> Gesamt (inkl.MwSt.):</td>
                     <td id="total-price" colspan="2">0,00 €</td>
                  </tr>
+                
                  </tfoot>
         </table>
         <div class="cart-actions">
@@ -90,6 +103,9 @@
         // Formatiert eine Zahl als deutschen Preis-String, z. B. 19.99 → "19,99 €"
         function formatPrice(num) {
             return num.toFixed(2).replace('.', ',') + ' €';
+        }
+        function calcMwst(netto){
+            return netto * 0.19;
         }
 
         // -------------------------------------------------------
@@ -147,7 +163,12 @@
             });
 
             // Gesamtbetrag in der Fußzeile der Tabelle anzeigen
+            const nettoBetrag = gesamtBetrag / 1.19;
+            const mwstBetrag = gesamtBetrag - nettoBetrag;
             document.getElementById('total-price').textContent = formatPrice(gesamtBetrag);
+            document.getElementById('netto-price').textContent  = formatPrice(nettoBetrag);
+            document.getElementById('mwst-price').textContent   = formatPrice(mwstBetrag);
+
         }
 
         // -------------------------------------------------------
@@ -167,6 +188,9 @@
             saveCart(cart);   // Geänderten Warenkorb speichern
             renderCart();     // Tabelle neu rendern
         }
+        // Preis mit Steuer berechnen 
+        
+        
 
         // Entfernt einen Artikel anhand seines Index komplett aus dem Warenkorb
         function removeItem(index) {

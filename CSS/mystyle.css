@@ -105,6 +105,13 @@ p,h1, h2, h3 {
   max-width: 80vw;
   margin: 20px auto;
 }
+---Anpassung der Dartstellung der Warenkorb Nachricht---
+.middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
 button {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
