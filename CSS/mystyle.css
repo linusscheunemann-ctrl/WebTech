@@ -171,6 +171,7 @@ form {
 nav {
   background-color: var(--primary-color);
   position: relative;
+  z-index: 10;
   display: var(--display);
   justify-content: var(--justify-content);
   align-items: center;
@@ -203,6 +204,7 @@ nav {
   border-radius: 0 0 10px 10px;
   opacity: 0;
   visibility: hidden;
+  z-index: 20;
   transition: all 0.25s ease;
   pointer-events: none;
 }
