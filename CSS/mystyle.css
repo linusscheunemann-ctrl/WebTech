@@ -26,6 +26,12 @@ body.loaded * {
 }
 
 
+html,
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 html[data-theme="dark"] {
   --primary-color: #000000;
   --secondary-color: #3d3d3d;
@@ -175,7 +181,7 @@ nav {
   display: var(--display);
   justify-content: var(--justify-content);
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 0 !important;
   height: 55px;
 }
 .dropdown {
@@ -289,7 +295,7 @@ nav {
 
 .logo {
   display: block;
-  margin: 20px auto;
+  margin: 0 auto !important;
   width: 200px;
 }
 

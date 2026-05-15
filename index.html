@@ -13,8 +13,9 @@
         overflow: hidden;
         position: relative;
         z-index: 1;
-        margin-top: 100px;
-        border: 2px solid #ccc;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        border: 2px solid var(--primary-color);
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       }
@@ -24,7 +25,7 @@
         transition: transform 0.7s ease;
       }
       .slideshow .slide {
-        min-width: 100%;
+        width: 100%;
         height: 100%;
         flex-shrink: 0;
         position: relative;
@@ -87,12 +88,143 @@
       .slideshow .slide-dots button.active {
         background: white;
       }
+      .vehicle-section {
+        width: 100%;
+        background-color: var(--primary-color);
+        padding: 40px 0 60px;
+      }
+      .vehicle-section .vehicle-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .vehicle-section h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+      .vehicle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+      .vehicle-card {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        color: white;
+      }
+      .vehicle-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+      .vehicle-card-content {
+        padding: 16px;
+      }
+      .vehicle-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+      .vehicle-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .visit-section {
+        width: 100%;
+        background-color: white;
+        padding: 40px 0 60px;
+      }
+      .visit-section .vehicle-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .visit-section h2 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+      .visit-card {
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        color: var(--primary-color);
+      }
+      .visit-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+      .visit-card-content {
+        padding: 16px;
+      }
+      .visit-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+      .visit-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .logo-heart {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 24px;
+        margin: 0;
+        padding: 6px 12px;
+        box-sizing: border-box;
+        justify-content: center;
+      }
+      .logo-heart .heartbeat-line {
+        flex: 1 1 0;
+        height: 18px;
+        margin: 0 12px;
+        background-image: repeating-linear-gradient(
+          to right,
+          transparent 0px,
+          transparent 16px,
+          var(--primary-color) 16px,
+          var(--primary-color) 20px,
+          transparent 20px,
+          transparent 36px
+        );
+        background-size: auto 100%;
+      }
+      .logo-heart .logo-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        z-index: 5;
+        background: transparent;
+      }
+      .logo-heart .logo {
+        width: auto;
+        height: 56px;
+        display: block;
+      }
     </style>
     <title>Autohaus Startseite</title>
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+    <div class="logo-heart">
+      <span class="heartbeat-line"></span>
+      <a href="index.html" class="logo-link"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
+      <span class="heartbeat-line"></span>
+    </div>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
@@ -136,6 +268,78 @@
       </div>
     </section>
 
+    <section class="vehicle-section" aria-label="Fahrzeugauswahl">
+      <div class="vehicle-inner">
+        <h2>Unsere Highlights</h2>
+        <div class="vehicle-grid">
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-7.jpg" alt="Sportwagen">
+            <div class="vehicle-card-content">
+              <h3>Eleganter Sportwagen</h3>
+              <p>Performance trifft Stil – ideal für Enthusiasten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/motorrad-museum-ingolstadt-1.jpg" alt="Motorrad">
+            <div class="vehicle-card-content">
+              <h3>Classic Bike</h3>
+              <p>Tourer mit nostalgischem Design und moderner Technik.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-11.jpg" alt="Oldtimer">
+            <div class="vehicle-card-content">
+              <h3>Oldtimer Klassiker</h3>
+              <p>Authentisches Fahrgefühl aus vergangenen Zeiten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/ferrari 488 pista.jpg" alt="Ferrari">
+            <div class="vehicle-card-content">
+              <h3>Premium Sportwagen</h3>
+              <p>Rennstrecken-Feeling und luxuriöses Interieur.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit-section" aria-label="Visit Us">
+      <div class="vehicle-inner">
+        <h2>Visit US</h2>
+        <div class="vehicle-grid">
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-14.jpg" alt="Besuch uns">
+            <div class="visit-card-content">
+              <h3>Besuche unsere Ausstellung</h3>
+              <p>Erlebe exklusive Fahrzeuge live vor Ort in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/events-ingolstadt-10.jpg" alt="Kontakt">
+            <div class="visit-card-content">
+              <h3>Events</h3>
+              <p>Entdecken Sie unsere bevorstehenden Veranstaltungen und Sonderangebote.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-17.jpg" alt="Route">
+            <div class="visit-card-content">
+              <h3>Einfach erreichbar</h3>
+              <p>Unsere Adresse befindet sich mitten in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/classic-cars-ingolstadt-6.jpg" alt="Öffnungszeiten">
+            <div class="visit-card-content">
+              <h3>Öffnungszeiten</h3>
+              <p>Mo–Fr 9–18 Uhr, Sa 10–14 Uhr.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <script>
   let currentSlide = 0;
   const slides = document.querySelectorAll('.slideshow .slide');
@@ -161,20 +365,7 @@
   setInterval(nextSlide, 10000);
 </script>
 
-<h1>Willkommen bei deinem Autohaus</h1>
-<hr>
-<br><br><br><br><br><br><br><br>
 
-<p class="justify">
-    Entdecken Sie unsere exklusive Auswahl an hochwertigen Fahrzeugen, die Ihren Fahrtraum wahr werden lassen.
-    Bei Dein Autohaus bieten wir Ihnen eine vielfältige Palette an Autos und Motorrädern, die nicht nur durch ihre Leistung,
-    sondern auch durch ihr Design und ihre Qualität überzeugen.
-    Unser engagiertes Team steht Ihnen mit fachkundiger Beratung zur Seite, um das perfekte Fahrzeug für Ihre Bedürfnisse zu finden.
-    Besuchen Sie uns und erleben Sie die Faszination des Fahrens mit unseren erstklassigen Modellen.
-    Traumauto wartet auf Sie bei Dein Autohaus!
-</p>
-<br><br><br><br><br><br><br><br>
-    <hr>
 <footer id="footer-wrapper">
   
     
