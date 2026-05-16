@@ -3,26 +3,340 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="CSS/mystyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
+    <script src="toggle-theme.js"></script>
+    <style>
+      .slideshow {
+        width: 100%;
+        height: 50vh;
+        max-height: 500px;
+        min-height: 320px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        border: 2px solid var(--primary-color);
+       
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      .slideshow .slides {
+        display: flex;
+        height: 100%;
+        transition: transform 0.7s ease;
+      }
+      .slideshow .slide {
+        width: 100%;
+        height: 100%;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .slideshow .slide img {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        object-fit: cover;
+        display: block;
+      }
+      .slideshow .slide::before {
+        content: attr(data-title);
+        position: absolute;
+        left: 30px;
+        bottom: 30px;
+        color: white;
+        font-size: 2rem;
+        text-shadow: 0 0 14px rgba(0,0,0,0.8);
+      }
+      .slideshow .slide-nav {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+      .slideshow .slide-nav button {
+        pointer-events: all;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.6);
+        color: white;
+        padding: 10px 14px;
+        margin: 0 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .slideshow .slide-dots {
+        position: absolute;
+        left: 50%;
+        bottom: 14px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+      }
+      .slideshow .slide-dots button {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.6);
+        cursor: pointer;
+      }
+      .slideshow .slide-dots button.active {
+        background: white;
+      }
+      .vehicle-section {
+        width: 100%;
+        background-color: var(--primary-color);
+        padding: 40px 0 60px;
+      }
+     
+      .vehicle-section h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+      .vehicle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+     
+    
+      .visit-card h3 .vehicle-card h3{
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+      .visit-section {
+        width: 100%;
+        background-color: white;
+        padding: 40px 0 60px;
+      }
+      .visit-section .vehicle-inner .vehicle-section .vehicle-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+        
+      .visit-section h2 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+      .visit-card {
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        color: var(--primary-color);
+      }
+       .vehicle-card {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        color: white;
+
+      }
+      .visit-card img .vehicle-card img{
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+        
+      .visit-card-content .vehicle-card-content {
+        padding: 16px;
+        
+      }
+      
+      .visit-card p .vehicle-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        text-align: center !important;
+      }
+      .logo-heart {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: 4px 12px;
+        box-sizing: border-box;
+        justify-content: center;
+      }
+      .logo-heart .heartbeat-line {
+        flex: 1 1 0;
+        height: 18px;
+        background-image: repeating-linear-gradient(
+          to right,
+          transparent 0px,
+          transparent 16px,
+          var(--primary-color) 16px,
+          var(--primary-color) 20px,
+          transparent 20px,
+          transparent 36px
+        );
+      }
+     
+    </style>
     <title>Autohaus Startseite</title>
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
-   <nav>
-        <div class="nav-center">
-            <a href="bestand.html" class="nav-button">CARS & BIKES</a>
-            <a href="about.html" class="nav-button">ABOUT</a>
+    <div class="logo-heart">
+      <span class="heartbeat-line"></span>
+      <a href="index.html" class="logo-link"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
+      <span class="heartbeat-line"></span>
+    </div>
+<nav>
+    <div class="nav-center">
+        <div class="dropdown">
+            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
+
+            <div class="dropdown-content">
+                <a href="autos.html">Autos</a>
+                <a href="motorraeder.html">Motorräder</a>
+            </div>
         </div>
-        <div class="nav-right">
-            <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="shop.html" class="nav-button">SHOP</a>
+        </div>  
+            
         </div>
-    </nav>
+        <a href="about.html" class="nav-button">ABOUT</a>
+        </div>
+    <div class="nav-right">
+        <a href="cart.html" class="cart-icon"> <img src="images/cart.png" class="cart-img"></a>
+        <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
+        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+    </div>
+</nav>
     <!-- Navigation Ende -->
 
+    <section class="slideshow" aria-label="Slideshow">
+      <div class="slides">
+        <div class="slide"><img src="images/bg1.jpg" alt="Slide 1"></div>
+        <div class="slide"><img src="images/bg10.jpg" alt="Slide 2"></div>
+        <div class="slide"><img src="images/bg2.jpg" alt="Slide 3"></div>
+        <div class="slide"><img src="images/bg5.jpg" alt="Slide 4"></div>
+      </div>
+      <div class="slide-nav">
+        <button type="button" onclick="prevSlide()" aria-label="Vorherige Folie">‹</button>
+        <button type="button" onclick="nextSlide()" aria-label="Nächste Folie">›</button>
+      </div>
+      <div class="slide-dots">
+        <button type="button" onclick="goToSlide(0)" class="active" aria-label="Slide 1"></button>
+        <button type="button" onclick="goToSlide(1)" aria-label="Slide 2"></button>
+        <button type="button" onclick="goToSlide(2)" aria-label="Slide 3"></button>
+        <button type="button" onclick="goToSlide(3)" aria-label="Slide 4"></button>
+      </div>
+    </section>
 
-<img src="images/oldtimer-museum-ingolstadt-9.jpg" alt="Autohaus">
+    <section class="vehicle-section" aria-label="Fahrzeugauswahl">
+      <div class="vehicle-inner">
+        <h2>Unsere Highlights</h2>
+        <div class="vehicle-grid">
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-7.jpg" alt="Sportwagen">
+            <div class="vehicle-card-content">
+              <h3>Eleganter Sportwagen</h3>
+              <p>Performance trifft Stil – ideal für Enthusiasten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/motorrad-museum-ingolstadt-1.jpg" alt="Motorrad">
+            <div class="vehicle-card-content">
+              <h3>Classic Bike</h3>
+              <p>Tourer mit nostalgischem Design und moderner Technik.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-11.jpg" alt="Oldtimer">
+            <div class="vehicle-card-content">
+              <h3>Oldtimer Klassiker</h3>
+              <p>Authentisches Fahrgefühl aus vergangenen Zeiten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/ferrari 488 pista.jpg" alt="Ferrari">
+            <div class="vehicle-card-content">
+              <h3>Premium Sportwagen</h3>
+              <p>Rennstrecken-Feeling und luxuriöses Interieur.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <hr>
+    <section class="visit-section" aria-label="Visit Us">
+      <div class="vehicle-inner">
+        <h2>Visit US</h2>
+        <div class="vehicle-grid">
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-14.jpg" alt="Besuch uns">
+            <div class="visit-card-content">
+              <h3>Besuche unsere Ausstellung</h3>
+              <p>Erlebe exklusive Fahrzeuge live vor Ort in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/events-ingolstadt-10.jpg" alt="Kontakt">
+            <div class="visit-card-content">
+              <h3>Events</h3>
+              <p>Entdecken Sie unsere bevorstehenden Veranstaltungen und Sonderangebote.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-17.jpg" alt="Route">
+            <div class="visit-card-content">
+              <h3>Einfach erreichbar</h3>
+              <p>Unsere Adresse befindet sich mitten in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/classic-cars-ingolstadt-6.jpg" alt="Öffnungszeiten">
+            <div class="visit-card-content">
+              <h3>Öffnungszeiten</h3>
+              <p>Mo–Fr 9–18 Uhr, Sa 10–14 Uhr.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slideshow .slide');
+  const slidesWrapper = document.querySelector('.slideshow .slides');
+  const dots = document.querySelectorAll('.slideshow .slide-dots button');
+
+  function updateSlide() {
+    slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+  }
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    updateSlide();
+  }
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    updateSlide();
+  }
+  function goToSlide(index) {
+    currentSlide = index;
+    updateSlide();
+  }
+  setInterval(nextSlide, 10000);
+</script>
+
+
 <footer id="footer-wrapper">
   
     
@@ -33,14 +347,19 @@
       <ul>
         <li><a href="#"><img src="images/footer-facebook.png" alt="Facebook"></a></li>
         <li><a href="#"><img src="images/footer-email.png" alt="Instagram"></a></li>
+        <li><a href="#"><img src="images/footer-telefon.png" alt="Email"></a></li>
+        <li><a href="#"><img src="images/footer-anfahrt.png" alt="Telefon"></a></li>
       </ul>
     </div>
 
     <div id="claim-footer">
-     <h3><span>Kontakt</span></h3>
-        <p>Auto Union Straße 1 ,  oder Öffnungszeiten.</p>
+     <span id="head-footer">Kontakt</span>
+        <p>Auto Union Straße 1 </p>
+        <p> 85053 Ingolstadt  </p>
+        <p>Email: info@deinautohaus.de</p>
+        <p>Telefon: 01234-567890</p>
+        <p>Öffnungszeiten: Mo-Fr 9-18 Uhr, Sa 10-14 Uhr</p>
     </div>
-
     <div id="copyright">
       <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
     </div>
