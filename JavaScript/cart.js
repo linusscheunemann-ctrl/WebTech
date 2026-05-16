@@ -2,6 +2,7 @@
         // -------------------------------------------------------
         // Hilfsfunktionen
         // -------------------------------------------------------
+
         // Liest den Warenkorb aus dem localStorage aus (Array von Objekten)
         function getCart() {
             return JSON.parse(localStorage.getItem('cart')) || [];

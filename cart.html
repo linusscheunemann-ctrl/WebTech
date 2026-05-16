@@ -1,47 +1,38 @@
 <!DOCTYPE html>
+<head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <link rel="stylesheet" href="CSS/mystyle.css">
-    <script src="JavaScript/toggle-theme.js"></script>
-    <script src="JavaScript/cart.js"></script>
-<head>
-   
-    <title>Über uns</title>
+    <script src="JavaScript/toggle-theme.js" defer></script>
+    <script src="JavaScript/cart.js" defer></script>
+    <title>Warenkorb</title>
 </head>
+<body>
     <!-- Navigation Anfang -->
    <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
             <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
-            <a href="shop.html" class="nav-button">SHOP</a>
-
             <div class="dropdown-content">
                 <a href="autos.html">Autos</a>
                 <a href="motorraeder.html">Motorräder</a>
-                <a href="shop.html" class="nav-button">SHOP</a>
             </div>
         </div>
-
+        <a href="shop.html" class="nav-button">SHOP</a>
         <a href="about.html" class="nav-button">ABOUT</a>
     </div>
-
     <div class="nav-right">
+        <a href="cart.html" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
         <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
-
-<body>
-    
     <div class="cart-container"> 
         <h1>Warenkorb</h1>
-        <p class="middle" id="empty-msg" style="display: block;">
-            "Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren." <br><br>
-            <a href="index.html">Zurück zur Startseite</a>
-        </p>
-        <!--- Tabelle für den Warenkorb (Nils)--->
-        <table id="cart-table" style="display: none;">
+        <p id="empty-msg">
+            Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren. </p>
+        <table id="cart-table">
             <thead>
                 <tr>
                     <th>Position</th>
@@ -49,35 +40,34 @@
                     <th>Preis</th>
                     <th>Anzahl</th>
                     <th>Netto</th>
-                    
-                    
+                    <th></th>
                     
                 </tr>
             </thead>
             <tbody id="cart-body"> </tbody>
                 <!-- Dynamisch generierte Zeilen für Produkte im Warenkorb -->
-                 <tfoot>
-                    
-                 <tr>
-                    <td colspan="4">Nettobetrag</td>
-                    <td id="netto-price" colspan="2"></td>
-                </tr>
-                 <tr>
-                    <td colspan="4">zzgl. MwSt. (19%)</td>
-                    <td id="mwst-price" colspan="2"></td>         <!-- MwSt.-Zeile -->
-                </tr>
-                <tr class="total-row"></tr>
-                    <td colspan="4"> Gesamt (inkl.MwSt.):</td>
-                    <td id="total-price" colspan="2">0,00 €</td>
-                 </tr>
-                
-                 </tfoot>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Nettobetrag</td>
+                        <td id="netto-price" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">zzgl. MwSt. (19%)</td>
+                        <td id="mwst-price" colspan="2"></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="4">Gesamt (inkl.MwSt.):</td>
+                        <td id="total-price" colspan="2">0,00 €</td>
+                    </tr>
+                </tfoot>
         </table>
         <div class="cart-actions">
-            <a href="shop.html" class="btn-back">Weiter einkaufen</a>
+            <button type="button" class="btn-back" onclick="location.href='shop.html'">Weiter einkaufen</button>
             <button class="btn-clear" onclick="clearCart()">Warenkorb leeren</button>
             <button class="btn-checkout" onclick="checkout()">Zur Kasse</button>
 
         </div>
     </div>
+
+
 </body>

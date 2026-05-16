@@ -1,5 +1,4 @@
-
-    function getCart() {
+function getCart() {
         return JSON.parse(localStorage.getItem('cart')) || []; //Warenkorb wird ausgelesen
     }
     function saveCart(cart) {
@@ -9,6 +8,8 @@
         const cart = getCart();
         const totalItems = cart.reduce((sum, item) => sum + item.menge, 0);
         const badge = document.getElementById('cart-count');
+
+        if (!badge) return; // Safeguard: some pages may not include the badge
 
         if (totalItems > 0) {
             badge.textContent = totalItems;
