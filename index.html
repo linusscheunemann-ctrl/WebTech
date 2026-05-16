@@ -16,7 +16,7 @@
         margin-top: 0 !important;
         padding-top: 0 !important;
         border: 2px solid var(--primary-color);
-        border-radius: 10px;
+       
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       }
       .slideshow .slides {
@@ -78,8 +78,8 @@
         gap: 10px;
       }
       .slideshow .slide-dots button {
-        width: 12px;
-        height: 12px;
+        width: 5px;
+        height: 5px;
         border-radius: 50%;
         border: none;
         background: rgba(255,255,255,0.6);
@@ -93,11 +93,7 @@
         background-color: var(--primary-color);
         padding: 40px 0 60px;
       }
-      .vehicle-section .vehicle-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
+     
       .vehicle-section h2 {
         color: white;
         text-align: center;
@@ -109,42 +105,23 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 20px;
       }
-      .vehicle-card {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        color: white;
-      }
-      .vehicle-card img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        display: block;
-      }
-      .vehicle-card-content {
-        padding: 16px;
-      }
-      .vehicle-card h3 {
+     
+    
+      .visit-card h3 .vehicle-card h3{
         margin: 0 0 10px;
         font-size: 1.1rem;
-      }
-      .vehicle-card p {
-        margin: 0;
-        font-size: 0.95rem;
-        line-height: 1.4;
       }
       .visit-section {
         width: 100%;
         background-color: white;
         padding: 40px 0 60px;
       }
-      .visit-section .vehicle-inner {
+      .visit-section .vehicle-inner .vehicle-section .vehicle-inner {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
       }
+        
       .visit-section h2 {
         color: var(--primary-color);
         text-align: center;
@@ -159,38 +136,45 @@
         box-shadow: 0 8px 30px rgba(0,0,0,0.08);
         color: var(--primary-color);
       }
-      .visit-card img {
+       .vehicle-card {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        color: white;
+
+      }
+      .visit-card img .vehicle-card img{
         width: 100%;
         height: 160px;
         object-fit: cover;
         display: block;
       }
-      .visit-card-content {
+        
+      .visit-card-content .vehicle-card-content {
         padding: 16px;
+        
       }
-      .visit-card h3 {
-        margin: 0 0 10px;
-        font-size: 1.1rem;
-      }
-      .visit-card p {
+      
+      .visit-card p .vehicle-card p {
         margin: 0;
         font-size: 0.95rem;
         line-height: 1.4;
+        text-align: center !important;
       }
       .logo-heart {
         display: flex;
         align-items: center;
         width: 100%;
-        gap: 24px;
         margin: 0;
-        padding: 6px 12px;
+        padding: 4px 12px;
         box-sizing: border-box;
         justify-content: center;
       }
       .logo-heart .heartbeat-line {
         flex: 1 1 0;
         height: 18px;
-        margin: 0 12px;
         background-image: repeating-linear-gradient(
           to right,
           transparent 0px,
@@ -200,21 +184,8 @@
           transparent 20px,
           transparent 36px
         );
-        background-size: auto 100%;
       }
-      .logo-heart .logo-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 8px;
-        z-index: 5;
-        background: transparent;
-      }
-      .logo-heart .logo {
-        width: auto;
-        height: 56px;
-        display: block;
-      }
+     
     </style>
     <title>Autohaus Startseite</title>
 </head>
@@ -376,6 +347,8 @@
       <ul>
         <li><a href="#"><img src="images/footer-facebook.png" alt="Facebook"></a></li>
         <li><a href="#"><img src="images/footer-email.png" alt="Instagram"></a></li>
+        <li><a href="#"><img src="images/footer-telefon.png" alt="Email"></a></li>
+        <li><a href="#"><img src="images/footer-anfahrt.png" alt="Telefon"></a></li>
       </ul>
     </div>
 
