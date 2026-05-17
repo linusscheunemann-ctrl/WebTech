@@ -633,9 +633,161 @@ footer a,
   border-radius: 12px;
 }
 
+.cart-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cart-product img {
+  width: 120px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.cart-product-name {
+  display: block;
+  font-weight: 700;
+}
+
 .cart-actions {
   display: flex;
   justify-content: center;
+  align-items: stretch;
   gap: 12px;
   margin-top: 10px;
+}
+
+/* Responsive Shop + Cart */
+@media (max-width: 1024px) {
+  .shop {
+    max-width: 100%;
+    margin: 24px 16px;
+    gap: 18px;
+  }
+
+  .cart-container {
+    max-width: 100%;
+    margin: 24px 16px;
+    padding: 16px;
+    overflow-x: auto;
+  }
+
+  #cart-table {
+    width: 100%;
+    min-width: 680px;
+  }
+
+  .cart-actions {
+    flex-wrap: wrap;
+  }
+
+  .cart-actions button {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  nav {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 12px 16px;
+    height: auto;
+  }
+
+  .nav-center,
+  .nav-right {
+    position: static;
+    transform: none;
+    width: 100%;
+  }
+
+  .nav-center {
+    order: 2;
+    margin: 10px 0 0;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-right {
+    order: 1;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .shop {
+    grid-template-columns: 1fr;
+    margin: 20px 12px;
+  }
+
+  .product {
+    padding: 14px;
+  }
+
+  .product img {
+    height: auto;
+  }
+
+  .cart-product {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .cart-product img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cart-product-name {
+    text-align: left;
+  }
+
+  .cart-actions {
+    gap: 10px;
+  }
+
+  #cart-table {
+    width: 100%;
+    min-width: 600px;
+    margin-bottom: 20px;
+  }
+
+  #cart-table th,
+  #cart-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #cart-table thead {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .theme-toggle {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cart-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart-actions button {
+    width: 100%;
+  }
+
+  .nav-right {
+    justify-content: space-between;
+  }
+
+  .theme-toggle {
+    font-size: 18px;
+  }
 }

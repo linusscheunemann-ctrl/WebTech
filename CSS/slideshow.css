@@ -140,6 +140,16 @@
         overflow: hidden;
         box-shadow: 0 8px 30px rgba(0,0,0,0.08);
         color: #000;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .visit-card-link {
+        display: block;
+        text-decoration: none;
+      }
+      .visit-card-link:hover .visit-card,
+      .visit-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(0,0,0,0.12);
       }
       .visit-section,
       .visit-section h2,

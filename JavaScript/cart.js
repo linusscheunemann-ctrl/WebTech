@@ -13,6 +13,29 @@
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
+        function getProductImage(name) {
+            const images = {
+                'Museumsgutschein': 'images/products/Museumsgtuschein.png',
+                'Museumsführung': 'images/products/Führung durch das Museum.png',
+                'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
+                'Produkt 3': '',
+                'Produkt 1': '',
+                'Produkt 2': '',
+                'Produkt 6': ''
+            };
+            if (images[name]) {
+                return images[name];
+            }
+            const normalized = name.toLowerCase();
+            if (normalized.includes('museumsgutschein')) {
+                return images['Museumsgutschein'];
+            }
+            if (normalized.includes('führung') || normalized.includes('führung durch das museum') || normalized.includes('museum')) {
+                return images['Museumsführung'];
+            }
+            return '';
+        }
+
         // Wandelt einen Preis-String wie "19,99 €" in eine Zahl (19.99) um
         function parsePrice(priceStr) {
             return parseFloat(priceStr.replace(' €', '').replace(',', '.'));
@@ -52,17 +75,28 @@
             emptyMsg.style.display = 'none';
 
             let gesamtBetrag = 0;  // Akkumulator für den Gesamtpreis
+            let updatedCart = false;
 
             // Für jeden Artikel eine Tabellenzeile erstellen
             cart.forEach(function(item, index) {
                 const einzelpreis = parsePrice(item.price);          // Einzelpreis als Zahl
                 const zeilenSumme = einzelpreis * item.menge;         // Zeilensumme berechnen
                 gesamtBetrag += zeilenSumme;                          // Zum Gesamtbetrag addieren
+                const imagePath = item.image || getProductImage(item.name) || '';
+                if (!item.image && imagePath) {
+                    item.image = imagePath;
+                    updatedCart = true;
+                }
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${item.name}</td>
+                    <td>
+                        <div class="cart-product">
+                            ${imagePath ? `<img src="${imagePath}" alt="${item.name}">` : ''}
+                            <span class="cart-product-name">${item.name}</span>
+                        </div>
+                    </td>
                     <td>${item.price}</td>
                     <td>
                         <!-- Menge verringern -->
@@ -79,6 +113,9 @@
                 `;
                 tbody.appendChild(row);  // Zeile der Tabelle hinzufügen
             });
+            if (updatedCart) {
+                saveCart(cart);
+            }
 
             // Gesamtbetrag in der Fußzeile der Tabelle anzeigen
             const nettoBetrag = gesamtBetrag / 1.19;
