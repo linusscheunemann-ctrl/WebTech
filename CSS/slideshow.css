@@ -182,26 +182,4 @@
       .visit-card-content .vehicle-card-content {
         padding: 16px;
       }
-      .logo-heart {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        margin: 0;
-        padding: 4px 12px;
-        box-sizing: border-box;
-        justify-content: center;
-      }
-      .logo-heart .heartbeat-line {
-        flex: 1 1 0;
-        height: 18px;
-        background-image: repeating-linear-gradient(
-          to right,
-          transparent 0px,
-          transparent 16px,
-          var(--primary-color) 16px,
-          var(--primary-color) 20px,
-          transparent 20px,
-          transparent 36px
-        );
-      }
-     
+      
