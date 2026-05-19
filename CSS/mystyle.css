@@ -8,16 +8,7 @@
   --text-align: right;
   --display: flex;
 }
-.dark-mode {
-  --primary-color: #000000;   
-  --secondary-color: #3d3d3d;
-  --third-color: #787878;
-  --text-color: white;
-  --font-family: 'Inter', sans-serif;
-  --justify-content: center;
-  --text-align: right;
-  --display: flex;
-}
+
 * {
   transition: all 0.5s ease;
 }
