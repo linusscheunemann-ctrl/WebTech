@@ -99,10 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Wenn beide Felder leer sind
         if (pw.length === 0 && (!confirm || cpw.length === 0)) {
-
             // Löscht die Meldungen
             msgPw.innerHTML = "";
-
             // Beendet die Funktion
             return;
         }
