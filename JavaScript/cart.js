@@ -138,7 +138,7 @@
             saveCart(cart);   // Geänderten Warenkorb speichern
             renderCart();     // Tabelle neu rendern
         }
-        // Preis mit Steuer berechnen 
+        
         
         
 
