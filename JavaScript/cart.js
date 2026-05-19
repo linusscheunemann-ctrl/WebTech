@@ -1,4 +1,3 @@
-
         // -------------------------------------------------------
         // Hilfsfunktionen
         // -------------------------------------------------------
@@ -18,10 +17,6 @@
                 'Museumsgutschein': 'images/products/Museumsgtuschein.png',
                 'Museumsführung': 'images/products/Führung durch das Museum.png',
                 'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
-                'Produkt 3': '',
-                'Produkt 1': '',
-                'Produkt 2': '',
-                'Produkt 6': ''
             };
             if (images[name]) {
                 return images[name];
