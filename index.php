@@ -2,64 +2,142 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="CSS/mystyle.css">
+    <link rel="stylesheet" href="CSS/slideshow.css">
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
+    <script src="JavaScript/toggle-theme.js"></script>
+    <script src="JavaScript/slideshow.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
-    <script src="toggle-theme.js"></script>
 
-    
+
     <title>Autohaus Startseite</title>
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+    
+      <a href="index.php" class="logo-link"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
+      
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
-
+            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
             <div class="dropdown-content">
-                <a href="autos.html">Autos</a>
-                <a href="motorraeder.html">Motorräder</a>
+                <a href="autos.php">Autos</a>
+                <a href="motorraeder.php">Motorräder</a>
             </div>
         </div>
-        <a href="shop.html" class="nav-button">SHOP</a>
-        </div>  
-            
-        </div>
-        <a href="about.html" class="nav-button">ABOUT</a>
-        </div>
+        <a href="shop.php" class="nav-button">SHOP</a>
+        <a href="about.php" class="nav-button">ABOUT</a>
+    </div>
     <div class="nav-right">
-        <a href="cart.html" class="cart-icon"> <img src="images/cart.png" class="cart-img"></a>
+        <a href="cart.php" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
     <!-- Navigation Ende -->
 
+    <section class="slideshow" aria-label="Slideshow">
+      <div class="slides">
+        <div class="slide"><img src="images/bg1.jpg" alt="Slide 1"></div>
+        <div class="slide"><img src="images/bg10.jpg" alt="Slide 2"></div>
+        <div class="slide"><img src="images/bg2.jpg" alt="Slide 3"></div>
+        <div class="slide"><img src="images/bg5.jpg" alt="Slide 4"></div>
 
-<h1>Willkommen bei deinem Autohaus</h1>
-<hr>
-<br><br><br><br><br><br><br><br>
+      </div>
+      <div class="slide-nav">
+        <button type="button" onclick="prevSlide()" aria-label="Vorherige Folie">‹</button>
+        <button type="button" onclick="nextSlide()" aria-label="Nächste Folie">›</button>
+      </div>
+      <div class="slide-dots">
+        <button type="button" onclick="goToSlide(0)" class="active" aria-label="Slide 1"></button>
+        <button type="button" onclick="goToSlide(1)" aria-label="Slide 2"></button>
+        <button type="button" onclick="goToSlide(2)" aria-label="Slide 3"></button>
+        <button type="button" onclick="goToSlide(3)" aria-label="Slide 4"></button>
+      </div>
+    </section>
 
-<p class="justify">
-    Entdecken Sie unsere exklusive Auswahl an hochwertigen Fahrzeugen, die Ihren Fahrtraum wahr werden lassen.
-    Bei Dein Autohaus bieten wir Ihnen eine vielfältige Palette an Autos und Motorrädern, die nicht nur durch ihre Leistung,
-    sondern auch durch ihr Design und ihre Qualität überzeugen.
-    Unser engagiertes Team steht Ihnen mit fachkundiger Beratung zur Seite, um das perfekte Fahrzeug für Ihre Bedürfnisse zu finden.
-    Besuchen Sie uns und erleben Sie die Faszination des Fahrens mit unseren erstklassigen Modellen.
-    Traumauto wartet auf Sie bei Dein Autohaus!
-</p>
-<br><br><br><br><br><br><br><br>
-    <hr>
+    <section class="vehicle-section" aria-label="Fahrzeugauswahl">
+      <div class="vehicle-inner">
+        <h2>Unsere Highlights</h2>
+        <div class="vehicle-grid">
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-7.jpg" alt="Sportwagen">
+            <div class="vehicle-card-content">
+              <h3>Eleganter Sportwagen</h3>
+              <p>Performance trifft Stil – ideal für Enthusiasten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/motorrad-museum-ingolstadt-1.jpg" alt="Motorrad">
+            <div class="vehicle-card-content">
+              <h3>Classic Bike</h3>
+              <p>Tourer mit nostalgischem Design und moderner Technik.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/classic-cars-ingolstadt-11.jpg" alt="Oldtimer">
+            <div class="vehicle-card-content">
+              <h3>Oldtimer Klassiker</h3>
+              <p>Authentisches Fahrgefühl aus vergangenen Zeiten.</p>
+            </div>
+          </div>
+          <div class="vehicle-card">
+            <img src="images/ferrari 488 pista.jpg" alt="Ferrari">
+            <div class="vehicle-card-content">
+              <h3>Premium Sportwagen</h3>
+              <p>Rennstrecken-Feeling und luxuriöses Interieur.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit-section" aria-label="Visit Us">
+      <div class="vehicle-inner">
+        <h2 class="visit-heading">Visit US</h2>
+        <div class="vehicle-grid">
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-14.jpg" alt="Besuch uns">
+            <div class="visit-card-content">
+              <h3>Besuche unsere Ausstellung</h3>
+              <p>Erlebe exklusive Fahrzeuge live vor Ort in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/events-ingolstadt-10.jpg" alt="Kontakt">
+            <div class="visit-card-content">
+              <h3>Events</h3>
+              <p>Entdecken Sie unsere bevorstehenden Veranstaltungen und Sonderangebote.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/oldtimer-museum-ingolstadt-17.jpg" alt="Route">
+            <div class="visit-card-content">
+              <h3>Einfach erreichbar</h3>
+              <p>Unsere Adresse befindet sich mitten in Ingolstadt.</p>
+            </div>
+          </div>
+          <div class="visit-card">
+            <img src="images/classic-cars-ingolstadt-6.jpg" alt="Öffnungszeiten">
+            <div class="visit-card-content">
+              <h3>Öffnungszeiten</h3>
+              <p>Mo–Fr 9–18 Uhr <br>Sa 10–14 Uhr</p>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <footer id="footer-wrapper">
   
-    
-
-      
 
     <div id="footersocial">
       <ul>
         <li><a href="#"><img src="images/footer-facebook.png" alt="Facebook"></a></li>
         <li><a href="#"><img src="images/footer-email.png" alt="Instagram"></a></li>
+        <li><a href="#"><img src="images/footer-telefon.png" alt="Email"></a></li>
+        <li><a href="#"><img src="images/footer-anfahrt.png" alt="Telefon"></a></li>
       </ul>
     </div>
 

@@ -8,26 +8,26 @@
     <title>Über uns</title>
 </head>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <a href="index.php"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
-            <a href="shop.html" class="nav-button">SHOP</a>
+            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
+            <a href="shop.php" class="nav-button">SHOP</a>
 
             <div class="dropdown-content">
-                <a href="autos.html">Autos</a>
-                <a href="motorraeder.html">Motorräder</a>
-                <a href="shop.html" class="nav-button">SHOP</a>
+                <a href="autos.php">Autos</a>
+                <a href="motorraeder.php">Motorräder</a>
+                <a href="shop.php" class="nav-button">SHOP</a>
             </div>
         </div>
 
-        <a href="about.html" class="nav-button">ABOUT</a>
+        <a href="about.php" class="nav-button">ABOUT</a>
     </div>
 
     <div class="nav-right">
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
 
@@ -37,7 +37,7 @@
         <h1>Warenkorb</h1>
         <p class="middle" id="empty-msg" style="display: block;">
             "Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren." <br><br>
-            <a href="index.html">Zurück zur Startseite</a>
+            <a href="index.php">Zurück zur Startseite</a>
         </p>
         <!--- Tabelle für den Warenkorb (Nils)--->
         <table id="cart-table" style="display: none;">
@@ -73,7 +73,7 @@
                  </tfoot>
         </table>
         <div class="cart-actions">
-            <a href="shop.html" class="btn-back">Weiter einkaufen</a>
+            <a href="shop.php" class="btn-back">Weiter einkaufen</a>
             <button class="btn-clear" onclick="clearCart()">Warenkorb leeren</button>
             <button class="btn-checkout" onclick="checkout()">Zur Kasse</button>
 

@@ -10,24 +10,24 @@
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <a href="index.php"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
+            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
 
             <div class="dropdown-content">
-                <a href="autos.html">Autos</a>
-                <a href="motorraeder.html">Motorräder</a>
+                <a href="autos.php">Autos</a>
+                <a href="motorraeder.php">Motorräder</a>
             </div>
         </div>
 
-        <a href="about.html" class="nav-button">ABOUT</a>
+        <a href="about.php" class="nav-button">ABOUT</a>
     </div>
 
     <div class="nav-right">
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
     <!-- Navigation Ende -->
@@ -46,8 +46,8 @@
         <input type="password" name="password" id="password">
         <p></p>
     
-        <button type="button" onclick="location.href='user.html'">Anmelden</button>
-        <button type="button" onclick="location.href='registration.html'">Registrieren</button>
+        <button type="button" onclick="location.href='user.php'">Anmelden</button>
+        <button type="button" onclick="location.href='registration.php'">Registrieren</button>
     </form>
     <footer id="footer-wrapper">
     <div id="footersocial">
