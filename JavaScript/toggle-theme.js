@@ -1,16 +1,31 @@
 const toDark = ["🌕","🌖","🌗","🌘","🌑"];
 const toLight = ["🌑","🌒","🌓","🌔","🌕"];
 
-
+// Prüft, ob im localStorage bereits das dunkle Theme gespeichert wurde
+// Ergebnis ist true oder false
 let isDark = localStorage.getItem("theme") === "dark";
+
+// Variable verhindert, dass mehrere Animationen gleichzeitig laufen
 let isAnimating = false;
+
+// Speichert das <html>-Element der Seite
 const html = document.documentElement;
+
+// Variable für den Theme-Button
+// Anfangs noch null, bis der Button gefunden wird
 let themeButton = null;
+
+
+// ===== BUTTON SUCHEN =====
 // Funktion sucht den Button mit der ID "theme-toggle"
 function findThemeButton() {
+
+    // Speichert das gefundene Element in der Variable themeButton
     themeButton = document.getElementById("theme-toggle");
 }
 
+
+// ===== BUTTON AKTUALISIEREN =====
 // Funktion aktualisiert das Emoji im Button
 function updateThemeButton() {
 
@@ -19,12 +34,21 @@ function updateThemeButton() {
     themeButton.textContent = isDark ? "🌑" : "🌕";
 }
 
+
+// ===== THEME ANWENDEN =====
+
+// Funktion setzt das aktuelle Theme auf der Webseite
 function applyTheme() {
+
+    // Wenn Darkmode aktiv ist
     if (isDark) {
+
+        // Setzt das Attribut data-theme="dark" im HTML-Element
         html.setAttribute("data-theme", "dark");
 
     } else {
 
+        // Entfernt das data-theme-Attribut → Lightmode
         html.removeAttribute("data-theme");
     }
 
@@ -32,6 +56,7 @@ function applyTheme() {
     updateThemeButton();
 }
 
+// ===== THEME INITIALISIEREN =====
 // Funktion wird beim Laden der Seite ausgeführt
 function initTheme() {
 
@@ -60,6 +85,8 @@ if (document.readyState === "loading") {
     initTheme();
 }
 
+
+// ===== THEME WECHSELN =====
 // Funktion wird beim Klick auf den Theme-Button aufgerufen
 function myFunction() {
 
@@ -83,7 +110,9 @@ function myFunction() {
         return;
     }
 
-    
+    // Wählt die passende Emoji-Animation aus
+    // Wenn aktuell Darkmode aktiv ist → Animation zu Hellmode
+    // Sonst → Animation zu Darkmode
     let sequence = isDark ? toLight : toDark;
 
     // Startindex für die Animation

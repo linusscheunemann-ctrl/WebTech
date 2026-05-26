@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
@@ -8,6 +7,7 @@
     <meta charset="UTF-8">
     <title>Über uns</title>
 </head>
+<body>
     <!-- Navigation Anfang -->
    <a href="index.php"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
@@ -30,7 +30,7 @@
 </nav>
     <!-- Navigation Ende -->
 
-<body>
+
     <h1>Anschrift</h1>
     <p>Adresse: Musterstraße 1, 12345 Berlin</p>
     <p>Telefon: 0123 456789</p>
