@@ -1,0 +1,172 @@
+        // -------------------------------------------------------
+        // Hilfsfunktionen
+        // -------------------------------------------------------
+
+        // Liest den Warenkorb aus dem localStorage aus (Array von Objekten)
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+
+        // Speichert das aktuelle Warenkorb-Array im localStorage
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function getProductImage(name) {
+            const images = {
+                'Museumsgutschein': 'images/products/Museumsgtuschein.png',
+                'Museumsführung': 'images/products/Führung durch das Museum.png',
+                'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
+            };
+            if (images[name]) {
+                return images[name];
+            }
+            const normalized = name.toLowerCase();
+            if (normalized.includes('museumsgutschein')) {
+                return images['Museumsgutschein'];
+            }
+            if (normalized.includes('führung') || normalized.includes('führung durch das museum') || normalized.includes('museum')) {
+                return images['Museumsführung'];
+            }
+            return '';
+        }
+
+        // Wandelt einen Preis-String wie "19,99 €" in eine Zahl (19.99) um
+        function parsePrice(priceStr) {
+            return parseFloat(priceStr.replace(' €', '').replace(',', '.'));
+        }
+
+        // Formatiert eine Zahl als deutschen Preis-String, z. B. 19.99 → "19,99 €"
+        function formatPrice(num) {
+            return num.toFixed(2).replace('.', ',') + ' €';
+        }
+        function calcMwst(netto){
+            return netto * 0.19;
+        }
+
+        // -------------------------------------------------------
+        // Warenkorb-Anzeige aufbauen
+        // -------------------------------------------------------
+
+        // Rendert die Warenkorb-Tabelle anhand der localStorage-Daten neu
+        function renderCart() {
+            const cart = getCart();
+            const tbody = document.getElementById('cart-body');
+            const emptyMsg = document.getElementById('empty-msg');
+            const cartTable = document.getElementById('cart-table');
+
+            tbody.innerHTML = '';  // Tabellenkörper vor dem Neuaufbau leeren
+
+            if (cart.length === 0) {
+                // Leerer Warenkorb: Tabelle ausblenden, Hinweis einblenden
+                cartTable.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                document.getElementById('total-price').textContent = '0,00 €';
+                return;
+            }
+
+            // Warenkorb hat Inhalt: Tabelle einblenden, Hinweis ausblenden
+            cartTable.style.display = 'table';
+            emptyMsg.style.display = 'none';
+
+            let gesamtBetrag = 0;  // Akkumulator für den Gesamtpreis
+            let updatedCart = false;
+
+            // Für jeden Artikel eine Tabellenzeile erstellen
+            cart.forEach(function(item, index) {
+                const einzelpreis = parsePrice(item.price);          // Einzelpreis als Zahl
+                const zeilenSumme = einzelpreis * item.menge;         // Zeilensumme berechnen
+                gesamtBetrag += zeilenSumme;                          // Zum Gesamtbetrag addieren
+                const imagePath = item.image || getProductImage(item.name) || '';
+                if (!item.image && imagePath) {
+                    item.image = imagePath;
+                    updatedCart = true;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="cart-product">
+                            ${imagePath ? `<img src="${imagePath}" alt="${item.name}">` : ''}
+                            <span class="cart-product-name">${item.name}</span>
+                        </div>
+                    </td>
+                    <td>${item.price}</td>
+                    <td>
+                        <!-- Menge verringern -->
+                        <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                        <span class="qty-value">${item.menge}</span>
+                        <!-- Menge erhöhen -->
+                        <button class="qty-btn" onclick="changeQty(${index}, +1)">+</button>
+                    </td>
+                    <td>${formatPrice(zeilenSumme)}</td>
+                    <td>
+                        <!-- Artikel komplett aus dem Warenkorb entfernen -->
+                        <button class="remove-btn" onclick="removeItem(${index})">Entfernen</button>
+                    </td>
+                `;
+                tbody.appendChild(row);  // Zeile der Tabelle hinzufügen
+            });
+            if (updatedCart) {
+                saveCart(cart);
+            }
+
+            // Gesamtbetrag in der Fußzeile der Tabelle anzeigen
+            const nettoBetrag = gesamtBetrag / 1.19;
+            const mwstBetrag = gesamtBetrag - nettoBetrag;
+            document.getElementById('total-price').textContent = formatPrice(gesamtBetrag);
+            document.getElementById('netto-price').textContent  = formatPrice(nettoBetrag);
+            document.getElementById('mwst-price').textContent   = formatPrice(mwstBetrag);
+
+        }
+
+        // -------------------------------------------------------
+        // Warenkorb-Aktionen
+        // -------------------------------------------------------
+
+        // Ändert die Menge eines Artikels um den angegebenen Wert (+1 oder -1).
+        // Wenn die Menge auf 0 fällt, wird der Artikel entfernt.
+        function changeQty(index, delta) {
+            const cart = getCart();
+            cart[index].menge += delta;
+
+            if (cart[index].menge <= 0) {
+                cart.splice(index, 1);  // Artikel aus Array entfernen wenn Menge 0
+            }
+
+            saveCart(cart);   // Geänderten Warenkorb speichern
+            renderCart();     // Tabelle neu rendern
+        }
+        
+        
+        
+
+        // Entfernt einen Artikel anhand seines Index komplett aus dem Warenkorb
+        function removeItem(index) {
+            const cart = getCart();
+            cart.splice(index, 1);  // Artikel an Position index entfernen
+            saveCart(cart);
+            renderCart();
+        }
+
+        // Leert den gesamten Warenkorb nach einer Sicherheitsabfrage
+        function clearCart() {
+            if (confirm('Möchtest du den gesamten Warenkorb leeren?')) {
+                localStorage.removeItem('cart');  // Warenkorb-Eintrag aus localStorage löschen
+                renderCart();
+            }
+        }
+
+        // Platzhalter für den Checkout-Prozess
+        function checkout() {
+            alert('Vielen Dank für deine Bestellung! 🎉');
+            localStorage.removeItem('cart');  
+            renderCart();
+        }
+
+        // -------------------------------------------------------
+        //  Warenkorb beim Laden rendern
+        // -------------------------------------------------------
+        renderCart();
+    
