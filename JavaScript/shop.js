@@ -1,61 +1,65 @@
-function getCart() {
-        return JSON.parse(localStorage.getItem('cart')) || []; //Warenkorb wird ausgelesen
-    }
-    function saveCart(cart) {
-        localStorage.setItem('cart', JSON.stringify(cart)); //Warenkorb wird gespeichert
-    }
-    
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-    function getProductImage(name) {
-        const images = {
-            'Museumsgutschein': 'images/products/Museumsgtuschein.png',
-            'Museumsführung': 'images/products/Führung durch das Museum.png',
-            'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
-        };
-        if (images[name]) {
-            return images[name];
-        }
-        const normalized = name.toLowerCase();
-        if (normalized.includes('museumsgutschein')) {
-            return images['Museumsgutschein'];
-        }
-        if (normalized.includes('führung') || normalized.includes('führung durch das museum') || normalized.includes('museum')) {
-            return images['Museumsführung'];
-        }
-        return '';
-    }
-    function addToCart(name, price, image) {
-        const cart = getCart();
-        const existingItem = cart.find(item => item.name === name);
-        const imagePath = image || getProductImage(name) || '';
+document.addEventListener("DOMContentLoaded", () => {
+    loadProducts();
+});
 
-        if (existingItem) {
-            existingItem.menge += 1;
-            if (!existingItem.image && imagePath) {
-                existingItem.image = imagePath;
-            }
-        } else {
-            cart.push({name, price, image: imagePath, menge: 1});
-        }
-        saveCart(cart);
-        
-        showToast(`${name} wurde zum Warenkorb hinzugefügt!`);
-    }
-    //Event Listener für alle Kauf-Buttons
-    document.querySelectorAll('.buy-btn').forEach(function(button){
-        button.addEventListener('click', function(){
-            const name = this.getAttribute('data-name');
-            const price = this.getAttribute('data-price');
-            const image = this.getAttribute('data-image') || '';
+async function loadProducts() {
+    const response = await fetch("product.json");
+    const data = await response.json();
+
+    const container = document.querySelector(".shop");
+    container.innerHTML = "";
+
+    data.products.forEach(product => {
+
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product");
+
+        productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+
+            <h3 class="product-name">${product.name}</h3>
+
+            <div class="price">${formatPrice(product.price)}</div>
+
+            <div class="product-buttons">
+
+                <button class="buy-btn"
+                    data-name="${product.name}"
+                    data-price="${product.price}"
+                    data-image="${product.image}">
+                    Kaufen
+                </button>
+
+                <button class="detail-btn"
+                    onclick="goToProduct(${product.id})">
+                    Details
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(productDiv);
+    });
+
+    attachBuyEvents();
+}
+
+function goToProduct(id) {
+    window.location.href = "product.php?pid=" + id;
+}
+
+function formatPrice(num) {
+    return Number(num).toFixed(2).replace(".", ",") + " €";
+}
+
+function attachBuyEvents() {
+    document.querySelectorAll(".buy-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const name = this.dataset.name;
+            const price = this.dataset.price;
+            const image = this.dataset.image;
+
             addToCart(name, price, image);
         });
     });
-
-    
+}

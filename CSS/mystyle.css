@@ -646,8 +646,28 @@ footer a,
   gap: 12px;
   margin-top: 10px;
 }
+.product-image-wrapper img.product-detail-image {
+    display: block;
+    margin: 20px auto !important;
+    max-width: 350px;
+    height: auto;
+    border-radius: 20px;
+}
 
+.buy-btn {
+    display: block !important;
+    margin: 20px auto !important;
+    text-align: center !important;
+}
 /* Responsive Shop + Cart */
+.product-buttons {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+}
+
 @media (max-width: 1024px) {
   .shop {
     max-width: 100%;
@@ -777,3 +797,4 @@ footer a,
     font-size: 18px;
   }
 }
+

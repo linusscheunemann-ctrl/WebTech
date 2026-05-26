@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="CSS/mystyle.css">
     <script src="JavaScript/toggle-theme.js"></script>
     <script src="JavaScript/cart.js" defer></script>
+    <script src="JavaScript/shop.js" defer></script>
     <title>Warenkorb</title>
 </head>
 <body>

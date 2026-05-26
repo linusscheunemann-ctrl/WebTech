@@ -1,0 +1,49 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Museumsgutschein",
+      "description": "Gutschein für den Eintritt ins Museum inklusive aller Ausstellungen.",
+      "image": "images/products/Museumsgtuschein.png",
+      "price": 100.00,
+      "category": "Gutschein",
+      "subcategory": "Museum"
+    },
+    {
+      "id": 2,
+      "name": "Museumsgutschein",
+      "description": "Gutschein für den Eintritt ins Museum.",
+      "image": "images/products/Museumsgtuschein.png",
+      "price": 50.00,
+      "category": "Gutschein",
+      "subcategory": "Museum"
+    },
+    {
+      "id": 3,
+      "name": "Museumsgutschein",
+      "description": "Reduzierter Gutschein für das Museum.",
+      "image": "images/products/Museumsgtuschein.png",
+      "price": 20.00,
+      "category": "Gutschein",
+      "subcategory": "Museum"
+    },
+    {
+      "id": 4,
+      "name": "Museumsgutschein",
+      "description": "Kleiner Museumsgutschein.",
+      "image": "images/products/Museumsgtuschein.png",
+      "price": 10.00,
+      "category": "Gutschein",
+      "subcategory": "Museum"
+    },
+    {
+      "id": 5,
+      "name": "Museumsführung",
+      "description": "Geführte Tour durch das Museum mit Guide.",
+      "image": "images/products/Führung durch das Museum.png",
+      "price": 29.99,
+      "category": "Ticket",
+      "subcategory": "Führung"
+    }
+  ]
+}
