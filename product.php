@@ -1,11 +1,11 @@
 <?php
 // SNIPPET: Parameter-Check
 if (!isset($_GET["pid"])) {
-    die("Parameter is missing!");
+    echo("Parameter is missing!");
 }
 
 if (empty($_GET["pid"])) {
-    die("No value for the parameter!");
+    echo("No value for the parameter!");
 }
 
 $pid = (int) $_GET["pid"];
