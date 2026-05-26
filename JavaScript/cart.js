@@ -18,17 +18,18 @@ window.saveCart = function (cart) {
 // SHOP INTEGRATION
 // -------------------------------------------------------
 
-window.addToCart = function (name, price, image = "") {
+window.addToCart = function (id,name, price, image = "") {
     const cart = getCart();
 
     const parsedPrice = parseFloat(price);
 
-    const existingItem = cart.find(item => item.name === name);
+    const existingItem = cart.find(item => item.id === id);
 
     if (existingItem) {
         existingItem.menge += 1;
     } else {
         cart.push({
+            id: id,
             name: name,
             price: parsedPrice,
             image: image,

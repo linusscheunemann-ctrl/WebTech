@@ -24,6 +24,7 @@ async function loadProducts() {
             <div class="product-buttons">
 
                 <button class="buy-btn"
+                data-id="${product.id}"
                     data-name="${product.name}"
                     data-price="${product.price}"
                     data-image="${product.image}">
@@ -54,11 +55,13 @@ function formatPrice(num) {
 function attachBuyEvents() {
     document.querySelectorAll(".buy-btn").forEach(button => {
         button.addEventListener("click", function () {
+            const id = Number(this.dataset.id);
             const name = this.dataset.name;
             const price = this.dataset.price;
             const image = this.dataset.image;
+            
 
-            addToCart(name, price, image);
+            addToCart(id,name, price, image);
         });
     });
 }
