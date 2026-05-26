@@ -1,7 +1,6 @@
 // Wartet, bis das gesamte HTML-Dokument vollständig geladen wurde
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===== BENUTZERNAME =====
     // Holt das Eingabefeld mit der ID "username"
     const username = document.getElementById("username");
     // Holt das Element, in dem die Validierungsnachrichten angezeigt werden
@@ -63,14 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-    // ===== PASSWORT =====
     // Holt das Passwortfeld
     const password = document.getElementById("password");
-
     // Holt das Feld zur Passwort-Bestätigung
     const confirm = document.getElementById("confirm_password");
-
     // Holt das Element für Passwortmeldungen
     const msgPw = document.getElementById("msg-pw");
 
