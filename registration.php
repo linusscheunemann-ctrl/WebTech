@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
@@ -6,43 +5,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <script src="JavaScript/toggle-theme.js"></script>
     <script src="JavaScript/validate.js"></script>
-    <title>Login</title>
+    <title>Registrierung</title>
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <a href="index.php"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
+            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
             <div class="dropdown-content">
-                <a href="autos.html">Autos</a>
-                <a href="motorraeder.html">Motorräder</a>
+                <a href="autos.php">Autos</a>
+                <a href="motorraeder.php">Motorräder</a>
             </div>
         </div>
-        <a href="shop.html" class="nav-button">SHOP</a>
-        <a href="about.html" class="nav-button">ABOUT</a>
+        <a href="shop.php" class="nav-button">SHOP</a>
+        <a href="about.php" class="nav-button">ABOUT</a>
     </div>
     <div class="nav-right">
-        <a href="cart.html" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
+        <a href="cart.php" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
     <!-- Navigation Ende -->
-    <h1>Benutzeranmeldung</h1>
-    <form>
-        <label>Benutzername:</label>
-        <input type="text" name="username" id="username">
-        <p id="msg-user"></p>
-        <label>Passwort:</label>
-        <input type="password" name="password" id="password">
-        <p></p>
-    
-        <button type="button" onclick="location.href='user.html'">Anmelden</button>
-        <button type="button" onclick="location.href='registration.html'">Registrieren</button>
+    <h1>Benutzerregistrierung</h1>
+    <form action="register.php" method="POST">
+
+    <label>Benutzername:</label>
+    <input type="text" id="username" required>
+    <p id="msg-user"></p>
+    <label>Passwort:</label>
+    <input type="password" id="password" required>
+
+    <label>Passwort bestätigen:</label>
+    <input type="password" id="confirm_password" required>
+    <p id="msg-pw"></p>
+        <button type="submit">Registrieren</button>
+        <button type="button" onclick="location.href='login.php'">Anmelden</button>
     </form>
-    <footer id="footer-wrapper">
+</body>
+<footer id="footer-wrapper">
     <div id="footersocial">
       <ul>
         <li><a href="#"><img src="images/footer-facebook.png" alt="Facebook"></a></li>
@@ -63,5 +66,4 @@
       <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
     </div>
 </footer>
-</body>
 </html>

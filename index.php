@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="CSS/mystyle.css">
     <link rel="stylesheet" href="CSS/slideshow.css">
      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
-    <script src="JavaScript/toggle-theme.js" defer></script>
+    <script src="JavaScript/toggle-theme.js"></script>
     <script src="JavaScript/slideshow.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
 
@@ -13,27 +13,25 @@
 </head>
 <body>
     <!-- Navigation Anfang -->
-    <div class="logo-heart">
-      <span class="heartbeat-line"></span>
-      <a href="index.html" class="logo-link"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
-      <span class="heartbeat-line"></span>
-    </div>
+    
+      <a href="index.php" class="logo-link"><img src="images/logo.png" alt="Autohaus" class="logo"></a>
+      
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
+            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
             <div class="dropdown-content">
-                <a href="autos.html">Autos</a>
-                <a href="motorraeder.html">Motorräder</a>
+                <a href="autos.php">Autos</a>
+                <a href="motorraeder.php">Motorräder</a>
             </div>
         </div>
-        <a href="shop.html" class="nav-button">SHOP</a>
-        <a href="about.html" class="nav-button">ABOUT</a>
+        <a href="shop.php" class="nav-button">SHOP</a>
+        <a href="about.php" class="nav-button">ABOUT</a>
     </div>
     <div class="nav-right">
-        <a href="cart.html" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
+        <a href="cart.php" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
     <!-- Navigation Ende -->
