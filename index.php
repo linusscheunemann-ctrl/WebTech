@@ -42,7 +42,6 @@
         <div class="slide"><img src="images/bg10.jpg" alt="Slide 2"></div>
         <div class="slide"><img src="images/bg2.jpg" alt="Slide 3"></div>
         <div class="slide"><img src="images/bg5.jpg" alt="Slide 4"></div>
-
       </div>
       <div class="slide-nav">
         <button type="button" onclick="prevSlide()" aria-label="Vorherige Folie">‹</button>

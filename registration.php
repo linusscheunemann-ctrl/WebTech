@@ -3,54 +3,47 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="CSS/mystyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
-    <script src="toggle-theme.js"></script>
-    <script src="validate.js"></script>
+    <script src="JavaScript/toggle-theme.js"></script>
+    <script src="JavaScript/validate.js"></script>
     <title>Registrierung</title>
 </head>
 <body>
     <!-- Navigation Anfang -->
-   <a href="index.php"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
+   <a href="index.html"> <img src="images/logo.png" alt="Autohaus" class="logo"></a>
 <nav>
     <div class="nav-center">
         <div class="dropdown">
-            <a href="bestand.php" class="nav-button" id="dropbtn">CARS & BIKES</a>
-
+            <a href="bestand.html" class="nav-button" id="dropbtn">CARS & BIKES</a>
             <div class="dropdown-content">
-                <a href="autos.php">Autos</a>
-                <a href="motorraeder.php">Motorräder</a>
+                <a href="autos.html">Autos</a>
+                <a href="motorraeder.html">Motorräder</a>
             </div>
         </div>
-
-        <a href="about.php" class="nav-button">ABOUT</a>
+        <a href="shop.html" class="nav-button">SHOP</a>
+        <a href="about.html" class="nav-button">ABOUT</a>
     </div>
-
     <div class="nav-right">
+        <a href="cart.html" class="cart-icon"> <img src="images/cart.webp" class="cart-img"></a>
         <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-        <a href="login.php"><img src="images/login.png" alt="Login" class="login-icon"></a>
+        <a href="login.html"><img src="images/login.png" alt="Login" class="login-icon"></a>
     </div>
 </nav>
     <!-- Navigation Ende -->
     <h1>Benutzerregistrierung</h1>
-
-    <form action="register.php" method="POST"">
+    <form action="register.php" method="POST">
 
     <label>Benutzername:</label>
-    <input type="text" id="username" required><br><br>
+    <input type="text" id="username" required>
     <p id="msg-user"></p>
     <label>Passwort:</label>
-    <input type="password" id="password" required><br><br>
+    <input type="password" id="password" required>
 
     <label>Passwort bestätigen:</label>
-    <input type="password" id="confirm_password" required><br><br>
+    <input type="password" id="confirm_password" required>
     <p id="msg-pw"></p>
-
-
         <button type="submit">Registrieren</button>
-        <button type="button" onclick="location.href='login.php'">Anmelden</button>
+        <button type="button" onclick="location.href='login.html'">Anmelden</button>
     </form>
-
-    <script src="script.js"></script>
-
 </body>
 <footer id="footer-wrapper">
     <div id="footersocial">
