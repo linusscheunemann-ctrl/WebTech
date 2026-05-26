@@ -29,7 +29,6 @@ async function loadProducts() {
                     data-image="${product.image}">
                     Kaufen
                 </button>
-
                 <button class="detail-btn"
                     onclick="goToProduct(${product.id})">
                     Details
