@@ -667,6 +667,16 @@ footer a,
     gap: 4px;
 
 }
+input.valid {
+    background-color: rgba(25, 135, 84, 0.15) !important;
+}
+input.invalid {
+    background-color: rgba(220, 53, 69, 0.15) !important;
+}
+input.valid,
+input.invalid {
+    transition: background-color 0.25s ease;
+}
 
 @media (max-width: 1024px) {
   .shop {
