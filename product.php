@@ -1,7 +1,5 @@
 <?php
-// ------------------------------
 // SNIPPET: Parameter-Check
-// ------------------------------
 if (!isset($_GET["pid"])) {
     die("Parameter is missing!");
 }
@@ -18,9 +16,7 @@ if (isset($_GET["id2"]) && !empty($_GET["id2"])) {
     $pid2 = (int) $_GET["id2"];
 }
 
-// ------------------------------
 // JSON laden
-// ------------------------------
 $json = file_get_contents("product.json");
 
 if (!$json) {
@@ -33,9 +29,7 @@ if (!$data || !isset($data["products"])) {
     die("Invalid JSON structure!");
 }
 
-// ------------------------------
 // Produkt-Finder
-// ------------------------------
 function findProduct($data, $id) {
     foreach ($data["products"] as $item) {
         if ((int)$item["id"] === $id) {
@@ -45,18 +39,15 @@ function findProduct($data, $id) {
     return null;
 }
 
-// ------------------------------
 // Produkt 1
-// ------------------------------
 $product1 = findProduct($data, $pid);
 
 if (!$product1) {
     die("Product not found for ID: " . $pid);
 }
 
-// ------------------------------
-// Produkt 2 optional
-// ------------------------------
+
+// Produkt 2 
 $product2 = null;
 if ($pid2 !== null) {
     $product2 = findProduct($data, $pid2);
