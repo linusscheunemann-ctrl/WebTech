@@ -128,7 +128,6 @@ if ($pid2 !== null) {
         <h1><?php echo htmlspecialchars($product2["name"]); ?></h1>
         <img src="<?php echo htmlspecialchars($product2["image"]); ?>" class="product-detail-image" alt="Produkt">
         <p><?php echo htmlspecialchars($product2["description"]); ?></p>
-
         <h3>
             Preis: <?php echo number_format($product2["price"], 2, ',', '.'); ?> €
         </h3>
