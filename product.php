@@ -1,11 +1,11 @@
 <?php
 // SNIPPET: Parameter-Check
-if (!isset($_GET["pid"])) {
-    echo("Parameter is missing!");
+if(isset($_GET["pid"])) {
+    if(empty($_GET["pid"])) {
+        echo "No value fo the parameter!";
 }
-
-if (empty($_GET["pid"])) {
-    echo("No value for the parameter!");
+    } else {
+    echo "Parameter is missing!";
 }
 
 $pid = (int) $_GET["pid"];
@@ -41,7 +41,6 @@ function findProduct($data, $id) {
 
 // Produkt 1
 $product1 = findProduct($data, $pid);
-
 if (!$product1) {
     die("Product not found for ID: " . $pid);
 }

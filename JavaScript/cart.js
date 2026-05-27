@@ -1,11 +1,6 @@
 "use strict";
 
 console.log("CART.JS GELADEN");
-
-// -------------------------------------------------------
-// GLOBAL EXPORT (WICHTIGSTER FIX)
-// -------------------------------------------------------
-
 window.getCart = function () {
     return JSON.parse(localStorage.getItem('cart')) || [];
 };
@@ -14,21 +9,18 @@ window.saveCart = function (cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
-// -------------------------------------------------------
+
 // SHOP INTEGRATION
-// -------------------------------------------------------
-
-window.addToCart = function (name, price, image = "") {
+window.addToCart = function (id,name, price, image = "") {
     const cart = getCart();
-
     const parsedPrice = parseFloat(price);
-
-    const existingItem = cart.find(item => item.name === name);
+    const existingItem = cart.find(item => item.id === id);
 
     if (existingItem) {
         existingItem.menge += 1;
     } else {
         cart.push({
+            id: id,
             name: name,
             price: parsedPrice,
             image: image,
@@ -40,26 +32,7 @@ window.addToCart = function (name, price, image = "") {
     showToast(`${name} wurde zum Warenkorb hinzugefügt!`);
 };
 
-// -------------------------------------------------------
-// TOAST
-// -------------------------------------------------------
-
-window.showToast = function (message) {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-
-    toast.textContent = message;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-};
-
-// -------------------------------------------------------
 // IMAGE FALLBACK
-// -------------------------------------------------------
-
 window.getProductImage = function (name) {
     const images = {
         'Museumsgutschein': 'images/products/Museumsgtuschein.png',
@@ -82,10 +55,7 @@ window.getProductImage = function (name) {
     return '';
 };
 
-// -------------------------------------------------------
 // PRICE HELPERS
-// -------------------------------------------------------
-
 window.parsePrice = function (price) {
     return parseFloat(price);
 };
@@ -94,10 +64,7 @@ window.formatPrice = function (num) {
     return Number(num).toFixed(2).replace('.', ',') + ' €';
 };
 
-// -------------------------------------------------------
 // CART RENDER
-// -------------------------------------------------------
-
 window.renderCart = function () {
     const cart = getCart();
 
@@ -174,10 +141,7 @@ window.renderCart = function () {
     document.getElementById('mwst-price').textContent = formatPrice(mwst);
 };
 
-// -------------------------------------------------------
 // ACTIONS
-// -------------------------------------------------------
-
 window.changeQty = function (index, delta) {
     const cart = getCart();
 
@@ -211,8 +175,5 @@ window.checkout = function () {
     renderCart();
 };
 
-// -------------------------------------------------------
 // INIT
-// -------------------------------------------------------
-
 document.addEventListener("DOMContentLoaded", renderCart);
