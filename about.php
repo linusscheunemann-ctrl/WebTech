@@ -29,12 +29,18 @@
     </div>
 </nav>
     <!-- Navigation Ende -->
+<?php
+$h1 = "Anschrift";
+$adresse = "Adresse: Musterstraße 1, 12345 Berlin";
+$telefon = "Telefon: 0123 456789";
+$email = "E-Mail: info@autohaus.de";
+?>
 
+<h1><?php echo $h1; ?></h1>
+<p><?php echo $adresse; ?></p>
+<p><?php echo $telefon; ?></p>
+<p><?php echo $email; ?></p>
 
-    <h1>Anschrift</h1>
-    <p>Adresse: Musterstraße 1, 12345 Berlin</p>
-    <p>Telefon: 0123 456789</p>
-    <p>E-Mail: info@autohaus.de</p>
 </body>
 <footer id="footer-wrapper">
     <div id="footersocial">

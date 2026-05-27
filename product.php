@@ -25,7 +25,7 @@ if (!$json) {
 
 $data = json_decode($json, true);
 
-if (!$data || !isset($data["products"])) {
+if (!$data || !isset($data["products"])) {x^
     die("Invalid JSON structure!");
 }
 
@@ -103,11 +103,8 @@ if ($pid2 !== null) {
     <!-- PRODUKT 1 -->
     <div class="product-detail">
         <h1><?php echo htmlspecialchars($product1["name"]); ?></h1>
-
         <img src="<?php echo htmlspecialchars($product1["image"]); ?>" class="product-detail-image" alt="Produkt">
-
         <p><?php echo htmlspecialchars($product1["description"]); ?></p>
-
         <h3>
             Preis: <?php echo number_format($product1["price"], 2, ',', '.'); ?> €
         </h3>
@@ -129,9 +126,7 @@ if ($pid2 !== null) {
     <?php if ($product2): ?>
     <div class="product-detail">
         <h1><?php echo htmlspecialchars($product2["name"]); ?></h1>
-
         <img src="<?php echo htmlspecialchars($product2["image"]); ?>" class="product-detail-image" alt="Produkt">
-
         <p><?php echo htmlspecialchars($product2["description"]); ?></p>
 
         <h3>
