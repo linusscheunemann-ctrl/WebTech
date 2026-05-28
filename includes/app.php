@@ -287,6 +287,186 @@ function appFormatDiscountSummary(?string $label, float $percent, float $amount)
     return $prefix . '-' . appFormatMoney($amount) . ' (' . appFormatPercent($percent) . '%)';
 }
 
+function appGetMailConfig(): array
+{
+    $config = [
+        'host' => '',
+        'port' => 587,
+        'username' => '',
+        'password' => '',
+        'encryption' => 'tls',
+        'from_email' => 'no-reply@localhost',
+        'from_name' => 'WebTech Kontakt',
+    ];
+
+    $localConfigFile = __DIR__ . '/../config/mail.php';
+    if (is_file($localConfigFile)) {
+        $localConfig = require $localConfigFile;
+        if (is_array($localConfig)) {
+            $config = array_merge($config, array_intersect_key($localConfig, $config));
+        }
+    }
+
+    $envFallbacks = [
+        'host' => getenv('SMTP_HOST') ?: '',
+        'port' => (int) (getenv('SMTP_PORT') ?: 587),
+        'username' => getenv('SMTP_USERNAME') ?: '',
+        'password' => getenv('SMTP_PASSWORD') ?: '',
+        'encryption' => strtolower((string) (getenv('SMTP_ENCRYPTION') ?: 'tls')),
+        'from_email' => getenv('SMTP_FROM_EMAIL') ?: 'no-reply@localhost',
+        'from_name' => getenv('SMTP_FROM_NAME') ?: 'WebTech Kontakt',
+    ];
+
+    foreach ($envFallbacks as $key => $value) {
+        if (($config[$key] ?? '') === '' || $config[$key] === 587 || $config[$key] === 'tls' || $config[$key] === 'no-reply@localhost' || $config[$key] === 'WebTech Kontakt') {
+            $config[$key] = $value;
+        }
+    }
+
+    return $config;
+}
+
+function appSmtpReadResponse($connection): array
+{
+    $lines = [];
+
+    while (!feof($connection)) {
+        $line = fgets($connection, 515);
+
+        if ($line === false) {
+            break;
+        }
+
+        $lines[] = trim($line);
+
+        if (preg_match('/^\d{3} /', $line)) {
+            break;
+        }
+    }
+
+    $code = 0;
+    if ($lines !== [] && preg_match('/^(\d{3})/', $lines[count($lines) - 1], $matches)) {
+        $code = (int) $matches[1];
+    }
+
+    return [
+        'code' => $code,
+        'lines' => $lines,
+    ];
+}
+
+function appSmtpWriteCommand($connection, string $command, ?int $expectedCode = null): array
+{
+    fwrite($connection, $command . "\r\n");
+    $response = appSmtpReadResponse($connection);
+
+    if ($expectedCode !== null && $response['code'] !== $expectedCode) {
+        throw new RuntimeException('SMTP-Fehler bei "' . $command . '": ' . implode(' | ', $response['lines']));
+    }
+
+    return $response;
+}
+
+function appSendMailSmtp(array $config, string $toEmail, string $toName, string $subject, string $body, string $replyToEmail = '', string $replyToName = ''): array
+{
+    if (($config['host'] ?? '') === '' || ($config['username'] ?? '') === '' || ($config['password'] ?? '') === '') {
+        return [
+            'success' => false,
+            'error' => 'SMTP ist nicht konfiguriert. Bitte SMTP_HOST, SMTP_USERNAME und SMTP_PASSWORD setzen.',
+        ];
+    }
+
+    $host = (string) $config['host'];
+    $port = (int) ($config['port'] ?? 587);
+    $encryption = (string) ($config['encryption'] ?? 'tls');
+    $transport = $encryption === 'ssl' ? 'ssl://' : 'tcp://';
+    $remote = $transport . $host . ':' . $port;
+    $timeout = 15;
+
+    $connection = @stream_socket_client($remote, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT);
+
+    if (!$connection) {
+        return [
+            'success' => false,
+            'error' => 'SMTP-Verbindung fehlgeschlagen: ' . $errstr,
+        ];
+    }
+
+    stream_set_timeout($connection, $timeout);
+
+    try {
+        $greeting = appSmtpReadResponse($connection);
+        if (!in_array($greeting['code'], [220], true)) {
+            throw new RuntimeException('SMTP-Server hat nicht korrekt geantwortet.');
+        }
+
+        $hostname = $_SERVER['SERVER_NAME'] ?? 'localhost';
+        appSmtpWriteCommand($connection, 'EHLO ' . $hostname, 250);
+
+        if ($encryption === 'tls') {
+            appSmtpWriteCommand($connection, 'STARTTLS', 220);
+            if (!stream_socket_enable_crypto($connection, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new RuntimeException('TLS konnte nicht aktiviert werden.');
+            }
+            appSmtpWriteCommand($connection, 'EHLO ' . $hostname, 250);
+        }
+
+        appSmtpWriteCommand($connection, 'AUTH LOGIN', 334);
+        appSmtpWriteCommand($connection, base64_encode((string) $config['username']), 334);
+        appSmtpWriteCommand($connection, base64_encode((string) $config['password']), 235);
+
+        $fromEmail = (string) ($config['from_email'] ?? $config['username']);
+        $fromName = (string) ($config['from_name'] ?? 'WebTech Kontakt');
+        $encodedSubject = function_exists('mb_encode_mimeheader')
+            ? mb_encode_mimeheader($subject, 'UTF-8')
+            : $subject;
+
+        appSmtpWriteCommand($connection, 'MAIL FROM:<' . $fromEmail . '>', 250);
+        appSmtpWriteCommand($connection, 'RCPT TO:<' . $toEmail . '>', 250);
+        appSmtpWriteCommand($connection, 'DATA', 354);
+
+        $headers = [
+            'From: ' . $fromName . ' <' . $fromEmail . '>',
+            'To: ' . $toName . ' <' . $toEmail . '>',
+            'Subject: ' . $encodedSubject,
+            'Date: ' . date(DATE_RFC2822),
+            'MIME-Version: 1.0',
+            'Content-Type: text/plain; charset=UTF-8',
+        ];
+
+        if ($replyToEmail !== '') {
+            $replyName = $replyToName !== '' ? $replyToName : $replyToEmail;
+            $headers[] = 'Reply-To: ' . $replyName . ' <' . $replyToEmail . '>';
+        }
+
+        $message = implode("\r\n", $headers) . "\r\n\r\n" . $body;
+        $message = preg_replace("/\r\n|\r|\n/", "\r\n", $message);
+        $message = preg_replace('/^\./m', '..', $message);
+
+        fwrite($connection, $message . "\r\n.\r\n");
+        $dataResponse = appSmtpReadResponse($connection);
+        if (!in_array($dataResponse['code'], [250], true)) {
+            throw new RuntimeException('SMTP konnte die Nachricht nicht akzeptieren.');
+        }
+
+        appSmtpWriteCommand($connection, 'QUIT', 221);
+
+        fclose($connection);
+
+        return [
+            'success' => true,
+            'error' => null,
+        ];
+    } catch (Throwable $throwable) {
+        @fclose($connection);
+
+        return [
+            'success' => false,
+            'error' => $throwable->getMessage(),
+        ];
+    }
+}
+
 function appGetSetting(PDO $pdo, string $key, string $default = ''): string
 {
     $statement = $pdo->prepare(
