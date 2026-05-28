@@ -362,11 +362,22 @@ window.clearCart = function () {
 };
 
 window.checkout = function () {
-    alert('Bestellung erfolgreich! 🎉');
-    localStorage.removeItem('cart');
-    renderCart();
-    renderCartDrawer();
-    closeCartDrawer();
+    const cart = getCart();
+    const form = document.getElementById('checkout-form');
+    const payloadField = document.getElementById('cart-payload');
+
+    if (!form || !payloadField) {
+        window.location.href = 'login.php?return_to=cart.php';
+        return;
+    }
+
+    if (cart.length === 0) {
+        alert('Dein Warenkorb ist leer.');
+        return;
+    }
+
+    payloadField.value = JSON.stringify(cart);
+    form.submit();
 };
 
 // INIT
@@ -374,6 +385,17 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCart();
     renderCartDrawer();
     updateCartBadge();
+
+    const url = new URL(window.location.href);
+    const bookingStatus = url.searchParams.get('booking');
+
+    if (bookingStatus === 'success') {
+        localStorage.removeItem('cart');
+        renderCart();
+        renderCartDrawer();
+        updateCartBadge();
+        closeCartDrawer();
+    }
 
     const drawer = document.getElementById('cart-drawer');
     const cartIcons = document.querySelectorAll('.cart-icon');

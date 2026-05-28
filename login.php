@@ -4,9 +4,19 @@ require_once __DIR__ . '/db.php';
 
 $errorMessage = '';
 $usernameValue = '';
+$returnTo = $_GET['return_to'] ?? $_POST['return_to'] ?? 'user.php';
+
+function resolveReturnTo(string $path): string
+{
+    $allowedTargets = ['cart.php', 'user.php'];
+
+    return in_array($path, $allowedTargets, true) ? $path : 'user.php';
+}
+
+$returnTo = resolveReturnTo($returnTo);
 
 if (isset($_SESSION['username']) && $_SESSION['username'] !== '') {
-    header('Location: user.php');
+    header('Location: ' . $returnTo);
     exit;
 }
 
@@ -35,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['username'] = $user['username'];
 
-            header('Location: user.php');
+            header('Location: ' . $returnTo);
             exit;
         }
     }
@@ -87,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form action="login.php" method="post">
+        <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8'); ?>">
         <label for="username">Benutzername:</label>
         <input
             type="text"
