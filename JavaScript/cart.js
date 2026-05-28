@@ -380,6 +380,31 @@ window.checkout = function () {
     form.submit();
 };
 
+window.saveCartAsList = function () {
+    const cart = getCart();
+    const form = document.getElementById('save-list-form');
+    const payloadField = document.getElementById('list-cart-payload');
+    const nameField = document.getElementById('list-name');
+
+    if (!form || !payloadField || !nameField) {
+        return;
+    }
+
+    if (cart.length === 0) {
+        alert('Dein Warenkorb ist leer.');
+        return;
+    }
+
+    if (nameField.value.trim() === '') {
+        alert('Bitte einen Namen für die Sammelliste eingeben.');
+        nameField.focus();
+        return;
+    }
+
+    payloadField.value = JSON.stringify(cart);
+    form.submit();
+};
+
 // INIT
 document.addEventListener("DOMContentLoaded", () => {
     renderCart();

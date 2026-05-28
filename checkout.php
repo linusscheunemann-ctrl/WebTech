@@ -1,6 +1,11 @@
 <?php
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/app.php';
+
+if (isset($pdo)) {
+    appEnsureSchema($pdo);
+}
 
 if (empty($_SESSION['username']) || empty($_SESSION['user_id'])) {
     header('Location: login.php?return_to=cart.php');
@@ -12,29 +17,17 @@ if (!isset($pdo)) {
     exit;
 }
 
-$pdo->exec(
-    'CREATE TABLE IF NOT EXISTS bookings (
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        user_id INT UNSIGNED NOT NULL,
-        total_amount DECIMAL(10,2) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX (user_id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
-);
+$currentUser = appLoadCurrentUser($pdo);
 
-$pdo->exec(
-    'CREATE TABLE IF NOT EXISTS booking_items (
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        booking_id INT UNSIGNED NOT NULL,
-        product_id INT UNSIGNED NULL,
-        product_name VARCHAR(255) NOT NULL,
-        unit_price DECIMAL(10,2) NOT NULL,
-        quantity INT UNSIGNED NOT NULL,
-        image VARCHAR(255) DEFAULT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX (booking_id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
-);
+if (!$currentUser) {
+    header('Location: login.php?return_to=cart.php');
+    exit;
+}
+
+if ((int) ($currentUser['is_blocked'] ?? 0) === 1) {
+    header('Location: cart.php?booking=blocked');
+    exit;
+}
 
 $cartPayload = $_POST['cart_payload'] ?? '';
 $cartItems = json_decode($cartPayload, true);
@@ -45,7 +38,7 @@ if (!is_array($cartItems) || count($cartItems) === 0) {
 }
 
 $normalizedItems = [];
-$totalAmount = 0.0;
+$subtotalAmount = 0.0;
 
 foreach ($cartItems as $item) {
     $productId = isset($item['id']) ? (int) $item['id'] : null;
@@ -59,7 +52,7 @@ foreach ($cartItems as $item) {
     }
 
     $lineTotal = $unitPrice * $quantity;
-    $totalAmount += $lineTotal;
+    $subtotalAmount += $lineTotal;
 
     $normalizedItems[] = [
         'product_id' => $productId,
@@ -79,15 +72,50 @@ try {
     $pdo->beginTransaction();
 
     $bookingInsert = $pdo->prepare(
-        'INSERT INTO bookings (user_id, total_amount)
-         VALUES (:user_id, :total_amount)'
+        'INSERT INTO bookings (user_id, subtotal_amount, total_amount, discount_percent, discount_amount, discount_label, status)
+         VALUES (:user_id, :subtotal_amount, :total_amount, :discount_percent, :discount_amount, :discount_label, :status)'
     );
     $bookingInsert->execute([
         'user_id' => (int) $_SESSION['user_id'],
-        'total_amount' => $totalAmount,
+        'subtotal_amount' => $subtotalAmount,
+        'total_amount' => $subtotalAmount,
+        'discount_percent' => 0,
+        'discount_amount' => 0,
+        'discount_label' => null,
+        'status' => 'new',
     ]);
 
     $bookingId = (int) $pdo->lastInsertId();
+    $discountConfig = appGetDiscountConfig($pdo);
+    $discount = appCalculateBookingDiscount($bookingId, $subtotalAmount, $discountConfig);
+
+    if (($discount['amount'] ?? 0) > 0) {
+        $updateBooking = $pdo->prepare(
+            'UPDATE bookings
+             SET total_amount = :total_amount,
+                 discount_percent = :discount_percent,
+                 discount_amount = :discount_amount,
+                 discount_label = :discount_label
+             WHERE id = :booking_id'
+        );
+        $updateBooking->execute([
+            'total_amount' => $discount['final_total'],
+            'discount_percent' => $discount['percent'],
+            'discount_amount' => $discount['amount'],
+            'discount_label' => $discount['label'],
+            'booking_id' => $bookingId,
+        ]);
+    } else {
+        $updateBooking = $pdo->prepare(
+            'UPDATE bookings
+             SET total_amount = :total_amount
+             WHERE id = :booking_id'
+        );
+        $updateBooking->execute([
+            'total_amount' => $subtotalAmount,
+            'booking_id' => $bookingId,
+        ]);
+    }
 
     $itemInsert = $pdo->prepare(
         'INSERT INTO booking_items (

@@ -1,6 +1,11 @@
 <?php
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/app.php';
+
+if (isset($pdo)) {
+    appEnsureSchema($pdo);
+}
 
 $errorMessage = '';
 $usernameValue = '';
@@ -8,7 +13,7 @@ $returnTo = $_GET['return_to'] ?? $_POST['return_to'] ?? 'user.php';
 
 function resolveReturnTo(string $path): string
 {
-    $allowedTargets = ['cart.php', 'user.php'];
+    $allowedTargets = ['cart.php', 'user.php', 'admin.php'];
 
     return in_array($path, $allowedTargets, true) ? $path : 'user.php';
 }
@@ -16,6 +21,10 @@ function resolveReturnTo(string $path): string
 $returnTo = resolveReturnTo($returnTo);
 
 if (isset($_SESSION['username']) && $_SESSION['username'] !== '') {
+    if (($_SESSION['role'] ?? 'user') === 'admin' && $returnTo === 'user.php') {
+        $returnTo = 'admin.php';
+    }
+
     header('Location: ' . $returnTo);
     exit;
 }
@@ -30,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = 'Bitte Benutzername und Passwort eingeben.';
     } else {
         $statement = $pdo->prepare(
-            'SELECT id, username, password_hash
+            'SELECT id, username, password_hash, role, is_blocked
              FROM users
              WHERE username = :username
              LIMIT 1'
@@ -44,8 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'] ?? 'user';
+            $_SESSION['is_blocked'] = (int) ($user['is_blocked'] ?? 0);
 
-            header('Location: ' . $returnTo);
+            $target = $returnTo;
+
+            if (($user['role'] ?? 'user') === 'admin' && $returnTo === 'user.php') {
+                $target = 'admin.php';
+            }
+
+            header('Location: ' . $target);
             exit;
         }
     }
