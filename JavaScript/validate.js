@@ -1,10 +1,54 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const username = document.getElementById("username");
+    const msgUser = document.getElementById("msg-user");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirm_password");
+    const msgPw = document.getElementById("msg-pw");
+    const submitButton = document.getElementById("register-submit") || document.getElementById("profile-submit");
+
+    function attachPasswordToggle(input) {
+        if (!input || input.dataset.toggleAttached === "true") return;
+
+        const toggleButton = document.createElement("button");
+        toggleButton.type = "button";
+        toggleButton.className = "password-toggle";
+        toggleButton.textContent = "Anzeigen";
+        toggleButton.setAttribute("aria-label", "Passwort anzeigen");
+        toggleButton.setAttribute("aria-pressed", "false");
+
+        toggleButton.addEventListener("click", () => {
+            const isHidden = input.type === "password";
+
+            input.type = isHidden ? "text" : "password";
+            toggleButton.textContent = isHidden ? "Verbergen" : "Anzeigen";
+            toggleButton.setAttribute("aria-label", isHidden ? "Passwort verbergen" : "Passwort anzeigen");
+            toggleButton.setAttribute("aria-pressed", String(isHidden));
+        });
+
+        input.insertAdjacentElement("afterend", toggleButton);
+        input.dataset.toggleAttached = "true";
+    }
 
     // =========================
     // USERNAME VALIDIERUNG
     // =========================
-    const username = document.getElementById("username");
-    const msgUser = document.getElementById("msg-user");
+
+    function updateSubmitState() {
+        if (!submitButton || !username || !password || !confirm) return;
+
+        const usernameValue = username.value;
+        const passwordValue = password.value;
+        const confirmValue = confirm.value;
+
+        const usernameValid = usernameValue.length >= 5
+            && /[A-Z]/.test(usernameValue)
+            && /[a-z]/.test(usernameValue);
+
+        const passwordValid = passwordValue.length >= 10;
+        const confirmValid = passwordValue === confirmValue;
+
+        submitButton.disabled = !(usernameValid && passwordValid && confirmValid);
+    }
 
     if (username && msgUser) {
         username.addEventListener("input", function () {
@@ -48,15 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     </li>
                 </ul>
             `;
+
+            updateSubmitState();
         });
     }
 
     // =========================
     // PASSWORD VALIDIERUNG
     // =========================
-    const password = document.getElementById("password");
-    const confirm = document.getElementById("confirm_password");
-    const msgPw = document.getElementById("msg-pw");
 
     function validatePassword() {
         if (!password || !msgPw) return;
@@ -108,6 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         message += `</ul>`;
         msgPw.innerHTML = message;
+
+        updateSubmitState();
     }
 
     if (password && msgPw) {
@@ -117,5 +162,9 @@ document.addEventListener("DOMContentLoaded", function () {
             confirm.addEventListener("input", validatePassword);
         }
     }
+
+    attachPasswordToggle(password);
+    attachPasswordToggle(confirm);
+    updateSubmitState();
 
 });

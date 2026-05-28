@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="CSS/slideshow.css">
      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <script src="JavaScript/toggle-theme.js"></script>
+    <script src="JavaScript/cart.js" defer></script>
     <script src="JavaScript/slideshow.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
 
