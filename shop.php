@@ -61,6 +61,37 @@
 <!-- TOAST -->
 <div id="toast"></div>
 
+<!-- CART DRAWER -->
+<div id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-drawer-backdrop" data-cart-close></div>
+    <aside class="cart-drawer-panel" aria-label="Aktueller Warenkorb">
+        <div class="cart-drawer-header">
+            <div>
+                <p class="cart-drawer-eyebrow">Schnellansicht</p>
+                <h2>Dein Warenkorb</h2>
+            </div>
+            <button type="button" class="cart-drawer-close" data-cart-close aria-label="Warenkorb schließen">×</button>
+        </div>
+
+        <div class="cart-drawer-meta">
+            <span id="cart-drawer-count">0 Artikel</span>
+            <a class="cart-drawer-link" href="cart.php">Zur Warenkorbseite</a>
+        </div>
+
+        <div id="cart-drawer-items" class="cart-drawer-items"></div>
+
+        <div class="cart-drawer-footer">
+            <div>
+                <span>Gesamtsumme</span>
+                <strong id="cart-drawer-total">0,00 €</strong>
+            </div>
+            <div class="cart-drawer-actions">
+                <button type="button" class="btn-back" onclick="closeCartDrawer()">Weiter shoppen</button>
+                <button type="button" class="btn-checkout" onclick="location.href='cart.php'">Checkout</button>
+            </div>
+        </div>
+    </aside>
+</div>
 
 <!-- FOOTER -->
 <footer id="footer-wrapper">

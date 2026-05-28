@@ -3,6 +3,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <link rel="stylesheet" href="CSS/mystyle.css">
     <script src="JavaScript/toggle-theme.js"></script>
+    <script src="JavaScript/cart.js" defer></script>
 <head>
     <meta charset="UTF-8">
     <title>Über uns</title>
@@ -29,12 +30,18 @@
     </div>
 </nav>
     <!-- Navigation Ende -->
+<?php
+$h1 = "Anschrift";
+$adresse = "Adresse: Musterstraße 1, 12345 Berlin";
+$telefon = "Telefon: 0123 456789";
+$email = "E-Mail: info@autohaus.de";
+?>
 
+<h1><?php echo $h1; ?></h1>
+<p><?php echo $adresse; ?></p>
+<p><?php echo $telefon; ?></p>
+<p><?php echo $email; ?></p>
 
-    <h1>Anschrift</h1>
-    <p>Adresse: Musterstraße 1, 12345 Berlin</p>
-    <p>Telefon: 0123 456789</p>
-    <p>E-Mail: info@autohaus.de</p>
 </body>
 <footer id="footer-wrapper">
     <div id="footersocial">
