@@ -1,6 +1,26 @@
 <?php
 session_start();
-$isLoggedIn = !empty($_SESSION['username']);
+$isLoggedIn = !empty($_SESSION['username']) && !empty($_SESSION['user_id']);
+$currentUser = null;
+
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/app.php';
+
+if (isset($pdo)) {
+    appEnsureSchema($pdo);
+}
+
+$currentUser = $isLoggedIn && isset($pdo) ? appLoadCurrentUser($pdo) : null;
+$isBlocked = (int) ($currentUser['is_blocked'] ?? ($_SESSION['is_blocked'] ?? 0)) === 1;
+$discountConfig = isset($pdo) ? appGetDiscountConfig($pdo) : ['enabled' => false, 'ten_percent' => 10, 'twenty_percent' => 20];
+$nextBookingDiscount = null;
+
+if ($isLoggedIn && isset($pdo)) {
+    $countStatement = $pdo->query('SELECT COUNT(*) FROM bookings');
+    $nextBookingNumber = ((int) ($countStatement ? $countStatement->fetchColumn() : 0)) + 1;
+    $nextBookingDiscount = appCalculateBookingDiscount($nextBookingNumber, 1.0, $discountConfig);
+}
+
 $loginReturnTo = 'login.php?return_to=cart.php';
 $bookingStatus = $_GET['booking'] ?? '';
 ?>
@@ -54,10 +74,22 @@ $bookingStatus = $_GET['booking'] ?? '';
             <p class="form-message error-message">Die Buchung konnte nicht gespeichert werden. Bitte versuche es erneut.</p>
         <?php elseif ($bookingStatus === 'database_error'): ?>
             <p class="form-message error-message">Die Datenbank ist aktuell nicht verfügbar.</p>
+        <?php elseif ($bookingStatus === 'blocked'): ?>
+            <p class="form-message error-message">Ihr Konto ist vom Administrator gesperrt. Buchungen sind derzeit deaktiviert.</p>
         <?php endif; ?>
 
         <?php if ($isLoggedIn): ?>
             <p class="form-message success-message">Eingeloggt als <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>. Du kannst die Buchung jetzt abschließen.</p>
+            <p class="form-message success-message">
+                <?php if (($discountConfig['enabled'] ?? false) && ($nextBookingDiscount['amount'] ?? 0) > 0): ?>
+                    Die nächste passende Bestellung erhält automatisch Rabatt. Aktuell wären es <?php echo htmlspecialchars((string) ($nextBookingDiscount['label'] ?? ''), ENT_QUOTES, 'UTF-8'); ?> mit <?php echo htmlspecialchars(appFormatPercent((float) ($nextBookingDiscount['percent'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?> %.
+                <?php else: ?>
+                    Rabatte können im Adminbereich aktiviert und angepasst werden.
+                <?php endif; ?>
+            </p>
+            <?php if ($isBlocked): ?>
+                <p class="form-message error-message">Ihr Konto ist vom Administrator gesperrt. Die Kasse wurde deaktiviert.</p>
+            <?php endif; ?>
         <?php else: ?>
             <p class="form-message error-message">Für die Buchung musst du eingeloggt sein. Bitte melde dich an oder registriere dich.</p>
         <?php endif; ?>
@@ -96,7 +128,14 @@ $bookingStatus = $_GET['booking'] ?? '';
                 <input type="hidden" name="cart_payload" id="cart-payload">
                 <button type="button" class="btn-back" onclick="location.href='shop.php'">Weiter einkaufen</button>
                 <button type="button" class="btn-clear" onclick="clearCart()">Warenkorb leeren</button>
-                <button type="button" class="btn-checkout" onclick="checkout()">Zur Kasse</button>
+                <button type="button" class="btn-checkout" onclick="checkout()" <?php echo $isBlocked ? 'disabled' : ''; ?>>Zur Kasse</button>
+            </form>
+
+            <form id="save-list-form" action="user.php" method="post" class="cart-actions cart-list-form">
+                <input type="hidden" name="action" value="save_cart_list">
+                <input type="hidden" name="cart_payload" id="list-cart-payload">
+                <input type="text" id="list-name" name="list_name" placeholder="Name der Sammelliste" value="Meine Sammelliste">
+                <button type="button" class="btn-back" onclick="saveCartAsList()">Als Sammelliste speichern</button>
             </form>
         <?php else: ?>
             <div class="cart-actions">

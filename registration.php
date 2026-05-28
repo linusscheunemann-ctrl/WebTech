@@ -1,5 +1,10 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/app.php';
+
+if (isset($pdo)) {
+    appEnsureSchema($pdo);
+}
 
 function isValidUsername(string $username): bool
 {
@@ -38,13 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMessage = 'Dieser Benutzername ist bereits vergeben.';
         } else {
             $insert = $pdo->prepare(
-                'INSERT INTO users (username, password_hash)
-                 VALUES (:username, :password_hash)'
+                'INSERT INTO users (username, password_hash, role, is_blocked)
+                 VALUES (:username, :password_hash, :role, 0)'
             );
 
             $insert->execute([
                 'username' => $usernameValue,
                 'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+                'role' => 'user',
             ]);
 
             $successMessage = 'Konto erfolgreich erstellt. Du kannst dich jetzt anmelden.';

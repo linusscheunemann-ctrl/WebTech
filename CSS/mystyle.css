@@ -161,6 +161,13 @@ button:active {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 form button {
   margin: 0px 0;
 }
@@ -200,6 +207,27 @@ form {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.form-message {
+  max-width: 900px;
+  margin: 12px auto;
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: block;
+  text-align: left;
+}
+
+.form-message.success-message {
+  background: rgba(25, 135, 84, 0.1);
+  color: #146c43;
+  border: 1px solid rgba(25, 135, 84, 0.22);
+}
+
+.form-message.error-message {
+  background: rgba(220, 53, 69, 0.1);
+  color: #b02a37;
+  border: 1px solid rgba(220, 53, 69, 0.22);
 }
 
 
@@ -396,6 +424,309 @@ table {
   margin: 0 auto 30px;
   border-collapse: collapse;
   width: auto;
+}
+
+.booking-table,
+.admin-table {
+  width: min(1100px, 94vw);
+  margin: 24px auto 40px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+}
+
+.booking-table th,
+.admin-table th {
+  background: #e7ecef;
+  color: #000;
+  font-size: 13px;
+}
+
+.booking-table td,
+.admin-table td {
+  vertical-align: top;
+  color: #000;
+}
+
+.booking-table tr:last-child td,
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.account-bookings {
+  max-width: 1100px;
+  width: 94vw;
+  margin: 30px auto 0;
+}
+
+.account-bookings h2,
+.admin-panel h2 {
+  display: block;
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.section-head p {
+  display: block;
+  margin: 0;
+  text-align: left;
+}
+
+.account-bookings-empty {
+  display: block;
+  text-align: left;
+  margin: 12px 0 0;
+}
+
+.booking-action-form,
+.admin-inline-form {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  max-width: none;
+  width: auto;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.booking-cancel-button,
+.admin-action-button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.booking-action-form input[type="text"],
+.admin-inline-form input[type="text"] {
+  width: 180px;
+  min-width: 140px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #cfd4da;
+  box-shadow: none;
+}
+
+.admin-inline-form label {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.admin-inline-form input[type="checkbox"] {
+  width: auto;
+  min-width: 0;
+  box-shadow: none;
+}
+
+.booking-action-form input[type="text"]:hover,
+.admin-inline-form input[type="text"]:hover {
+  transform: none;
+}
+
+.admin-dashboard h1 {
+  display: block;
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.booking-status,
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-new {
+  background: rgba(13, 110, 253, 0.12);
+  color: #0d6efd;
+}
+
+.status-processing {
+  background: rgba(255, 193, 7, 0.18);
+  color: #8a6d00;
+}
+
+.status-completed {
+  background: rgba(25, 135, 84, 0.12);
+  color: #146c43;
+}
+
+.status-rejected,
+.status-cancelled {
+  background: rgba(220, 53, 69, 0.12);
+  color: #b02a37;
+}
+
+.status-unknown {
+  background: rgba(108, 117, 125, 0.14);
+  color: #495057;
+}
+
+.admin-dashboard {
+  max-width: 1180px;
+  width: 94vw;
+  margin: 28px auto 60px;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0 22px;
+}
+
+.admin-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(63, 79, 85, 0.12);
+  color: #000;
+}
+
+.admin-tab.is-active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.admin-panel {
+  margin: 0 0 36px;
+}
+
+.admin-users-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-notifications,
+.account-lists {
+  max-width: 1100px;
+  width: 94vw;
+  margin: 28px auto 0;
+}
+
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.notification-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(63, 79, 85, 0.1);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+.notification-item.is-unread {
+  border-color: rgba(13, 110, 253, 0.25);
+  box-shadow: 0 8px 24px rgba(13, 110, 253, 0.06);
+}
+
+.notification-item.is-read {
+  opacity: 0.92;
+}
+
+.notification-type {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(63, 79, 85, 0.1);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.notification-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.notification-body strong,
+.notification-body span {
+  display: block;
+  text-align: left;
+}
+
+.notification-body span {
+  font-size: 12px;
+  color: #666;
+}
+
+.notification-actions,
+.shopping-lists-form {
+  margin: 14px 0 0;
+  max-width: none;
+  width: 100%;
+}
+
+.shopping-list-table input[type="checkbox"] {
+  width: auto;
+  min-width: 0;
+  box-shadow: none;
+}
+
+.cart-list-form {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cart-list-form input[type="text"] {
+  min-width: 240px;
+  background: #fff;
+  color: #000;
 }
 
 th {
