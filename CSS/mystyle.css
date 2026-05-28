@@ -242,7 +242,6 @@ form input::placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  top: 3px;
 }
 
 .cart-badge {
