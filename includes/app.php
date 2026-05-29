@@ -276,6 +276,63 @@ function appFormatPercent(float $percent): string
     return rtrim(rtrim(number_format($percent, 2, ',', '.'), '0'), ',');
 }
 
+function appCouponCatalogPath(): string
+{
+    return __DIR__ . '/../config/coupons.json';
+}
+
+function appLoadCouponCatalog(): array
+{
+    static $cachedCatalog = null;
+
+    if (is_array($cachedCatalog)) {
+        return $cachedCatalog;
+    }
+
+    $catalogPath = appCouponCatalogPath();
+
+    if (!is_file($catalogPath)) {
+        $cachedCatalog = [];
+        return $cachedCatalog;
+    }
+
+    $catalogContents = file_get_contents($catalogPath);
+
+    if ($catalogContents === false || trim($catalogContents) === '') {
+        $cachedCatalog = [];
+        return $cachedCatalog;
+    }
+
+    $decodedCatalog = json_decode($catalogContents, true);
+
+    if (!is_array($decodedCatalog)) {
+        $cachedCatalog = [];
+        return $cachedCatalog;
+    }
+
+    $normalizedCatalog = [];
+
+    foreach ($decodedCatalog as $couponCode => $couponData) {
+        if (!is_array($couponData)) {
+            continue;
+        }
+
+        $normalizedCode = strtoupper(trim((string) $couponCode));
+        if ($normalizedCode === '') {
+            continue;
+        }
+
+        $normalizedCatalog[$normalizedCode] = [
+            'label' => (string) ($couponData['label'] ?? $normalizedCode),
+            'percent' => max(0.0, min(100.0, (float) ($couponData['percent'] ?? 0))),
+        ];
+    }
+
+    $cachedCatalog = $normalizedCatalog;
+
+    return $cachedCatalog;
+}
+
 function appFormatDiscountSummary(?string $label, float $percent, float $amount): string
 {
     if ($amount <= 0 || $percent <= 0) {
@@ -812,5 +869,46 @@ function appCalculateBookingDiscount(int $bookingNumber, float $subtotal, array 
         'amount' => $amount,
         'label' => $label,
         'final_total' => $finalTotal,
+    ];
+}
+
+function appGetCouponCatalog(): array
+{
+    return appLoadCouponCatalog();
+}
+
+function appNormalizeCouponCode(string $couponCode): string
+{
+    return strtoupper(trim($couponCode));
+}
+
+function appCalculateCouponDiscount(string $couponCode, float $subtotal): array
+{
+    $normalizedCode = appNormalizeCouponCode($couponCode);
+    $catalog = appGetCouponCatalog();
+
+    if ($normalizedCode === '' || !isset($catalog[$normalizedCode])) {
+        return [
+            'code' => '',
+            'label' => null,
+            'percent' => 0.0,
+            'amount' => 0.0,
+            'final_total' => $subtotal,
+            'valid' => false,
+        ];
+    }
+
+    $coupon = $catalog[$normalizedCode];
+    $percent = max(0.0, min(100.0, (float) ($coupon['percent'] ?? 0)));
+    $amount = round($subtotal * ($percent / 100), 2);
+    $finalTotal = max(0, round($subtotal - $amount, 2));
+
+    return [
+        'code' => $normalizedCode,
+        'label' => (string) ($coupon['label'] ?? $normalizedCode),
+        'percent' => $percent,
+        'amount' => $amount,
+        'final_total' => $finalTotal,
+        'valid' => true,
     ];
 }

@@ -1,12 +1,125 @@
 "use strict";
 
 console.log("CART.JS GELADEN");
+window.getCouponCatalog = function () {
+    return window.COUPON_CATALOG || {};
+};
+
 window.getCart = function () {
     return JSON.parse(localStorage.getItem('cart')) || [];
 };
 
 window.saveCart = function (cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
+};
+
+window.normalizeCouponCode = function (code) {
+    return String(code || '').trim().toUpperCase();
+};
+
+window.getCouponCode = function () {
+    return window.normalizeCouponCode(localStorage.getItem('cart_coupon_code') || '');
+};
+
+window.saveCouponCode = function (code) {
+    const normalizedCode = window.normalizeCouponCode(code);
+
+    if (normalizedCode === '') {
+        localStorage.removeItem('cart_coupon_code');
+        return '';
+    }
+
+    localStorage.setItem('cart_coupon_code', normalizedCode);
+    return normalizedCode;
+};
+
+window.clearCouponCode = function () {
+    localStorage.removeItem('cart_coupon_code');
+    renderCart();
+    renderCartDrawer();
+
+    const couponInput = document.getElementById('discount-code');
+    const couponMessage = document.getElementById('coupon-message');
+
+    if (couponInput) {
+        couponInput.value = '';
+    }
+
+    if (couponMessage) {
+        couponMessage.textContent = 'Rabattcode wurde entfernt.';
+        couponMessage.className = 'cart-coupon-message is-valid';
+    }
+};
+
+window.getCouponDiscount = function (subtotal, code) {
+    const normalizedCode = window.normalizeCouponCode(code);
+    const coupon = window.getCouponCatalog()[normalizedCode];
+
+    if (!coupon) {
+        return {
+            code: '',
+            label: null,
+            percent: 0,
+            amount: 0,
+            final_total: subtotal,
+            valid: false,
+        };
+    }
+
+    const percent = Math.max(0, Math.min(100, Number(coupon.percent) || 0));
+    const amount = Math.round(subtotal * (percent / 100) * 100) / 100;
+
+    return {
+        code: normalizedCode,
+        label: coupon.label || normalizedCode,
+        percent,
+        amount,
+        final_total: Math.max(0, Math.round((subtotal - amount) * 100) / 100),
+        valid: true,
+    };
+};
+
+window.applyCouponCode = function () {
+    const couponInput = document.getElementById('discount-code');
+    const couponMessage = document.getElementById('coupon-message');
+
+    if (!couponInput) {
+        return;
+    }
+
+    const code = window.normalizeCouponCode(couponInput.value);
+    const subtotal = window.getCartTotals().subtotal;
+    const discount = window.getCouponDiscount(subtotal, code);
+
+    if (!code) {
+        window.clearCouponCode();
+        if (couponMessage) {
+            couponMessage.textContent = 'Bitte einen Rabattcode eingeben.';
+            couponMessage.className = 'cart-coupon-message is-invalid';
+        }
+        return;
+    }
+
+    if (!discount.valid || discount.amount <= 0) {
+        localStorage.removeItem('cart_coupon_code');
+        renderCart();
+        renderCartDrawer();
+        if (couponMessage) {
+            couponMessage.textContent = 'Dieser Rabattcode ist ungültig.';
+            couponMessage.className = 'cart-coupon-message is-invalid';
+        }
+        return;
+    }
+
+    window.saveCouponCode(code);
+
+    if (couponMessage) {
+        couponMessage.textContent = `${discount.label} aktiviert: -${formatPrice(discount.amount)} (${discount.percent}%)`;
+        couponMessage.className = 'cart-coupon-message is-valid';
+    }
+
+    renderCart();
+    renderCartDrawer();
 };
 
 window.showToast = function (message) {
@@ -26,12 +139,20 @@ window.showToast = function (message) {
 window.getCartTotals = function () {
     const cart = getCart();
 
-    return cart.reduce((totals, item) => {
+    const subtotal = cart.reduce((sum, item) => {
         const price = parseFloat(item.price) || 0;
         const quantity = item.menge || 0;
-        totals.total += price * quantity;
-        return totals;
-    }, { total: 0 });
+        return sum + (price * quantity);
+    }, 0);
+
+    const couponDiscount = window.getCouponDiscount(subtotal, window.getCouponCode());
+    const total = Math.max(0, Math.round((subtotal - couponDiscount.amount) * 100) / 100);
+
+    return {
+        subtotal,
+        coupon: couponDiscount,
+        total,
+    };
 };
 
 window.updateCartBadge = function () {
@@ -260,72 +381,107 @@ window.renderCart = function () {
     const tbody = document.getElementById('cart-body');
     const emptyMsg = document.getElementById('empty-msg');
     const cartTable = document.getElementById('cart-table');
+    const couponSummary = document.getElementById('coupon-summary');
+    const couponMessage = document.getElementById('coupon-message');
+    const couponInput = document.getElementById('discount-code');
 
     if (!tbody || !cartTable || !emptyMsg) return;
 
     tbody.innerHTML = '';
 
-    if (cart.length === 0) {
-        cartTable.style.display = 'none';
-        emptyMsg.style.display = 'block';
-        return;
-    }
-
-    cartTable.style.display = 'table';
-    emptyMsg.style.display = 'none';
-
     let total = 0;
     let updated = false;
 
-    cart.forEach((item, index) => {
+    if (cart.length === 0) {
+        cartTable.style.display = 'none';
+        emptyMsg.style.display = 'block';
+    } else {
+        cartTable.style.display = 'table';
+        emptyMsg.style.display = 'none';
 
-        const price = parseFloat(item.price);
-        const sum = price * item.menge;
-        total += sum;
+        cart.forEach((item, index) => {
 
-        const img = item.image || getProductImage(item.name) || '';
+            const price = parseFloat(item.price);
+            const sum = price * item.menge;
+            total += sum;
 
-        if (!item.image && img) {
-            item.image = img;
-            updated = true;
-        }
+            const img = item.image || getProductImage(item.name) || '';
 
-        const row = document.createElement('tr');
+            if (!item.image && img) {
+                item.image = img;
+                updated = true;
+            }
 
-        row.innerHTML = `
-            <td>${index + 1}</td>
+            const row = document.createElement('tr');
 
-            <td>
-                <div class="cart-product">
-                    ${img ? `<img src="${img}" alt="${item.name}">` : ''}
-                    <span>${item.name}</span>
-                </div>
-            </td>
+            row.innerHTML = `
+                <td>${index + 1}</td>
 
-            <td>${formatPrice(price)}</td>
+                <td>
+                    <div class="cart-product">
+                        ${img ? `<img src="${img}" alt="${item.name}">` : ''}
+                        <span>${item.name}</span>
+                    </div>
+                </td>
 
-            <td>
-                <button onclick="changeQty(${index}, -1)">−</button>
-                <span>${item.menge}</span>
-                <button onclick="changeQty(${index}, 1)">+</button>
-            </td>
+                <td>${formatPrice(price)}</td>
 
-            <td>${formatPrice(sum)}</td>
+                <td>
+                    <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        class="cart-qty-input"
+                        value="${item.menge}"
+                        onchange="setCartQty(${index}, this.value)"
+                        aria-label="Anzahl für ${item.name}"
+                    >
+                </td>
 
-            <td>
-                <button onclick="removeItem(${index})">Entfernen</button>
-            </td>
-        `;
+                <td>${formatPrice(sum)}</td>
 
-        tbody.appendChild(row);
-    });
+                <td>
+                    <button onclick="removeItem(${index})">Entfernen</button>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+    }
 
     if (updated) saveCart(cart);
 
-    const netto = total / 1.19;
-    const mwst = total - netto;
+    const totals = getCartTotals();
+    const netto = totals.subtotal / 1.19;
+    const mwst = totals.subtotal - netto;
 
-    document.getElementById('total-price').textContent = formatPrice(total);
+    if (couponInput) {
+        const savedCode = getCouponCode();
+        couponInput.value = savedCode;
+    }
+
+    if (couponSummary) {
+        if (totals.coupon.valid && totals.coupon.amount > 0) {
+            couponSummary.textContent = `${totals.coupon.code} (-${formatPrice(totals.coupon.amount)})`;
+        } else {
+            couponSummary.textContent = '-';
+        }
+    }
+
+    if (couponMessage) {
+        if (totals.coupon.valid && totals.coupon.amount > 0) {
+            couponMessage.textContent = `${totals.coupon.label} aktiv: -${formatPrice(totals.coupon.amount)} (${totals.coupon.percent}%)`;
+            couponMessage.className = 'cart-coupon-message is-valid';
+        } else if (cart.length > 0 && getCouponCode() !== '') {
+            couponMessage.textContent = 'Gespeicherter Rabattcode ist ungültig.';
+            couponMessage.className = 'cart-coupon-message is-invalid';
+        } else {
+            couponMessage.textContent = '';
+            couponMessage.className = 'cart-coupon-message';
+        }
+    }
+
+    document.getElementById('total-price').textContent = formatPrice(totals.total);
     document.getElementById('netto-price').textContent = formatPrice(netto);
     document.getElementById('mwst-price').textContent = formatPrice(mwst);
 };
@@ -339,6 +495,21 @@ window.changeQty = function (index, delta) {
     if (cart[index].menge <= 0) {
         cart.splice(index, 1);
     }
+
+    saveCart(cart);
+    renderCart();
+    renderCartDrawer();
+};
+
+window.setCartQty = function (index, value) {
+    const cart = getCart();
+    const quantity = Math.max(1, parseInt(value, 10) || 1);
+
+    if (!cart[index]) {
+        return;
+    }
+
+    cart[index].menge = quantity;
 
     saveCart(cart);
     renderCart();
@@ -365,6 +536,8 @@ window.checkout = function () {
     const cart = getCart();
     const form = document.getElementById('checkout-form');
     const payloadField = document.getElementById('cart-payload');
+    const discountField = document.getElementById('discount-code-payload');
+    const couponInput = document.getElementById('discount-code');
 
     if (!form || !payloadField) {
         window.location.href = 'login.php?return_to=cart.php';
@@ -377,6 +550,13 @@ window.checkout = function () {
     }
 
     payloadField.value = JSON.stringify(cart);
+    if (discountField) {
+        const code = couponInput ? window.normalizeCouponCode(couponInput.value) : getCouponCode();
+        discountField.value = code;
+        if (code) {
+            window.saveCouponCode(code);
+        }
+    }
     form.submit();
 };
 
@@ -411,11 +591,23 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCartDrawer();
     updateCartBadge();
 
+    const couponInput = document.getElementById('discount-code');
+    if (couponInput) {
+        couponInput.value = getCouponCode();
+        couponInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                applyCouponCode();
+            }
+        });
+    }
+
     const url = new URL(window.location.href);
     const bookingStatus = url.searchParams.get('booking');
 
     if (bookingStatus === 'success') {
         localStorage.removeItem('cart');
+        localStorage.removeItem('cart_coupon_code');
         renderCart();
         renderCartDrawer();
         updateCartBadge();

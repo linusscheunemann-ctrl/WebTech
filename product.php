@@ -1,23 +1,16 @@
 <?php
-// SNIPPET: Parameter-Check
-if(isset($_GET["pid"])) {
-    if(empty($_GET["pid"])) {
-        echo "No value fo the parameter!";
-}
-    } else {
-    echo "Parameter is missing!";
+if (!isset($_GET["pid"]) || $_GET["pid"] === "") {
+    die("Parameter is missing!");
 }
 
 $pid = (int) $_GET["pid"];
 
-// optional zweites Item
 $pid2 = null;
-if (isset($_GET["id2"]) && !empty($_GET["id2"])) {
+if (isset($_GET["id2"]) && $_GET["id2"] !== "") {
     $pid2 = (int) $_GET["id2"];
 }
 
-// JSON laden
-$json = file_get_contents("product.json");
+$json = file_get_contents(__DIR__ . "/config/product.json");
 
 if (!$json) {
     die("JSON file not found!");
@@ -25,28 +18,26 @@ if (!$json) {
 
 $data = json_decode($json, true);
 
-if (!$data || !isset($data["products"])) {x^
+if (!$data || !isset($data["products"])) {
     die("Invalid JSON structure!");
 }
 
-// Produkt-Finder
 function findProduct($data, $id) {
     foreach ($data["products"] as $item) {
-        if ((int)$item["id"] === $id) {
+        if ((int) $item["id"] === $id) {
             return $item;
         }
     }
+
     return null;
 }
 
-// Produkt 1
 $product1 = findProduct($data, $pid);
+
 if (!$product1) {
     die("Product not found for ID: " . $pid);
 }
 
-
-// Produkt 2 
 $product2 = null;
 if ($pid2 !== null) {
     $product2 = findProduct($data, $pid2);
@@ -63,39 +54,7 @@ if ($pid2 !== null) {
 </head>
 
 <body>
-
-<!-- LOGO -->
-<a href="index.php">
-    <img src="images/logo.png" class="logo" alt="Logo">
-</a>
-
-<!-- NAV -->
-<nav>
-    <div class="nav-center">
-        <div class="dropdown">
-            <a href="bestand.php" class="nav-button">CARS & BIKES</a>
-            <div class="dropdown-content">
-                <a href="autos.php">Autos</a>
-                <a href="motorraeder.php">Motorräder</a>
-            </div>
-        </div>
-
-        <a href="shop.php" class="nav-button">SHOP</a>
-        <a href="about.php" class="nav-button">ABOUT</a>
-    </div>
-
-    <div class="nav-right">
-        <a href="cart.php">
-            <img src="images/cart.webp" class="cart-img" alt="Cart">
-        </a>
-
-        <button onclick="myFunction()" id="theme-toggle" class="theme-toggle">🌕</button>
-
-        <a href="login.php">
-            <img src="images/login.png" class="login-icon" alt="Login">
-        </a>
-    </div>
-</nav>
+<?php require_once __DIR__ . '/includes/navbar.php'; ?>
 
 <!-- WRAPPER -->
 <div class="wrapper">
@@ -111,9 +70,10 @@ if ($pid2 !== null) {
 
         <button class="buy-btn"
             onclick="addToCart(
-                '<?php echo addslashes($product1["name"]); ?>',
-                '<?php echo $product1["price"]; ?>',
-                '<?php echo $product1["image"]; ?>'
+                <?php echo (int) $product1["id"]; ?>,
+                <?php echo json_encode($product1["name"]); ?>,
+                <?php echo json_encode((string) $product1["price"]); ?>,
+                <?php echo json_encode($product1["image"]); ?>
             )">
             Kaufen
         </button>
@@ -134,9 +94,10 @@ if ($pid2 !== null) {
 
         <button class="buy-btn"
             onclick="addToCart(
-                '<?php echo addslashes($product2["name"]); ?>',
-                '<?php echo $product2["price"]; ?>',
-                '<?php echo $product2["image"]; ?>'
+                <?php echo (int) $product2["id"]; ?>,
+                <?php echo json_encode($product2["name"]); ?>,
+                <?php echo json_encode((string) $product2["price"]); ?>,
+                <?php echo json_encode($product2["image"]); ?>
             )">
             Kaufen
         </button>
@@ -148,32 +109,7 @@ if ($pid2 !== null) {
 
 </div>
 
-<!-- FOOTER -->
-<footer id="footer-wrapper">
-
-    <div id="footersocial">
-        <ul>
-            <li><a href="#"><img src="images/footer-facebook.png" alt=""></a></li>
-            <li><a href="#"><img src="images/footer-email.png" alt=""></a></li>
-            <li><a href="#"><img src="images/footer-telefon.png" alt=""></a></li>
-            <li><a href="#"><img src="images/footer-anfahrt.png" alt=""></a></li>
-        </ul>
-    </div>
-
-    <div id="claim-footer">
-        <span id="head-footer">Kontakt</span>
-        <p>Auto Union Straße 1</p>
-        <p>85053 Ingolstadt</p>
-        <p>Email: info@deinautohaus.de</p>
-        <p>Telefon: 01234-567890</p>
-        <p>Öffnungszeiten: Mo-Fr 9-18 Uhr, Sa 10-14 Uhr</p>
-    </div>
-
-    <div id="copyright">
-        <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
-    </div>
-
-</footer>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 
 </body>
 </html>

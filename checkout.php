@@ -30,6 +30,7 @@ if ((int) ($currentUser['is_blocked'] ?? 0) === 1) {
 }
 
 $cartPayload = $_POST['cart_payload'] ?? '';
+$couponCode = appNormalizeCouponCode((string) ($_POST['discount_code'] ?? ''));
 $cartItems = json_decode($cartPayload, true);
 
 if (!is_array($cartItems) || count($cartItems) === 0) {
@@ -87,35 +88,39 @@ try {
 
     $bookingId = (int) $pdo->lastInsertId();
     $discountConfig = appGetDiscountConfig($pdo);
-    $discount = appCalculateBookingDiscount($bookingId, $subtotalAmount, $discountConfig);
+    $automaticDiscount = appCalculateBookingDiscount($bookingId, $subtotalAmount, $discountConfig);
+    $couponDiscount = appCalculateCouponDiscount($couponCode, $subtotalAmount);
 
-    if (($discount['amount'] ?? 0) > 0) {
-        $updateBooking = $pdo->prepare(
-            'UPDATE bookings
-             SET total_amount = :total_amount,
-                 discount_percent = :discount_percent,
-                 discount_amount = :discount_amount,
-                 discount_label = :discount_label
-             WHERE id = :booking_id'
-        );
-        $updateBooking->execute([
-            'total_amount' => $discount['final_total'],
-            'discount_percent' => $discount['percent'],
-            'discount_amount' => $discount['amount'],
-            'discount_label' => $discount['label'],
-            'booking_id' => $bookingId,
-        ]);
-    } else {
-        $updateBooking = $pdo->prepare(
-            'UPDATE bookings
-             SET total_amount = :total_amount
-             WHERE id = :booking_id'
-        );
-        $updateBooking->execute([
-            'total_amount' => $subtotalAmount,
-            'booking_id' => $bookingId,
-        ]);
+    $discountAmount = (float) ($automaticDiscount['amount'] ?? 0) + (float) ($couponDiscount['amount'] ?? 0);
+    $discountPercent = $subtotalAmount > 0 ? round(($discountAmount / $subtotalAmount) * 100, 2) : 0.0;
+    $discountLabels = [];
+
+    if (($automaticDiscount['amount'] ?? 0) > 0 && !empty($automaticDiscount['label'])) {
+        $discountLabels[] = (string) $automaticDiscount['label'];
     }
+
+    if (($couponDiscount['amount'] ?? 0) > 0 && !empty($couponDiscount['label'])) {
+        $discountLabels[] = 'Code ' . $couponDiscount['code'] . ' (' . $couponDiscount['label'] . ')';
+    }
+
+    $finalTotal = max(0, round($subtotalAmount - $discountAmount, 2));
+    $discountLabel = $discountLabels !== [] ? implode(' + ', $discountLabels) : null;
+
+    $updateBooking = $pdo->prepare(
+        'UPDATE bookings
+         SET total_amount = :total_amount,
+             discount_percent = :discount_percent,
+             discount_amount = :discount_amount,
+             discount_label = :discount_label
+         WHERE id = :booking_id'
+    );
+    $updateBooking->execute([
+        'total_amount' => $finalTotal,
+        'discount_percent' => $discountPercent,
+        'discount_amount' => $discountAmount,
+        'discount_label' => $discountLabel,
+        'booking_id' => $bookingId,
+    ]);
 
     $itemInsert = $pdo->prepare(
         'INSERT INTO booking_items (

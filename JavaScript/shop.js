@@ -1,20 +1,32 @@
+const productCatalogUrl = new URL("../config/product.json", document.currentScript?.src || window.location.href).href;
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Startet das Laden der Produkte
-    loadProducts();
+    if (document.querySelector(".shop")) {
+        loadProducts();
+    }
 });
+
 //  Funktion zum Laden der Produkte aus der JSON-Datei
 async function loadProducts() {
-
-    // Lädt die Datei "product.json"
-    const response = await fetch("product.json");
-    // Wandelt die Antwort in ein JavaScript-Objekt um
-    const data = await response.json();
-
     // Sucht das HTML-Element mit der Klasse "shop"
     const container = document.querySelector(".shop");
 
+    if (!container) {
+        return;
+    }
+
+    // Lädt die Datei aus dem Config-Ordner
+    const response = await fetch(productCatalogUrl);
+
+    if (!response.ok) {
+        throw new Error(`Produktdaten konnten nicht geladen werden (${response.status})`);
+    }
+
+    // Wandelt die Antwort in ein JavaScript-Objekt um
+    const data = await response.json();
+
     // Geht alle Produkte aus der JSON-Datei durch
-    data.products.forEach(product => {
+    (data.products || []).forEach(product => {
 
         // Erstellt ein neues <div>-Element
         const productDiv = document.createElement("div");
@@ -47,7 +59,6 @@ async function loadProducts() {
         // Fügt das fertige Produkt in den Shop-Container ein
         container.appendChild(productDiv);
     });
-
 
     attachBuyEvents();
 }
