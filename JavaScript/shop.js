@@ -1,61 +1,86 @@
-function getCart() {
-        return JSON.parse(localStorage.getItem('cart')) || []; //Warenkorb wird ausgelesen
-    }
-    function saveCart(cart) {
-        localStorage.setItem('cart', JSON.stringify(cart)); //Warenkorb wird gespeichert
-    }
-    
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-    function getProductImage(name) {
-        const images = {
-            'Museumsgutschein': 'images/products/Museumsgtuschein.png',
-            'Museumsführung': 'images/products/Führung durch das Museum.png',
-            'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
-        };
-        if (images[name]) {
-            return images[name];
-        }
-        const normalized = name.toLowerCase();
-        if (normalized.includes('museumsgutschein')) {
-            return images['Museumsgutschein'];
-        }
-        if (normalized.includes('führung') || normalized.includes('führung durch das museum') || normalized.includes('museum')) {
-            return images['Museumsführung'];
-        }
-        return '';
-    }
-    function addToCart(name, price, image) {
-        const cart = getCart();
-        const existingItem = cart.find(item => item.name === name);
-        const imagePath = image || getProductImage(name) || '';
+const productCatalogUrl = new URL("../config/product.json", document.currentScript?.src || window.location.href).href;
 
-        if (existingItem) {
-            existingItem.menge += 1;
-            if (!existingItem.image && imagePath) {
-                existingItem.image = imagePath;
-            }
-        } else {
-            cart.push({name, price, image: imagePath, menge: 1});
-        }
-        saveCart(cart);
-        
-        showToast(`${name} wurde zum Warenkorb hinzugefügt!`);
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".shop")) {
+        loadProducts();
     }
-    //Event Listener für alle Kauf-Buttons
-    document.querySelectorAll('.buy-btn').forEach(function(button){
-        button.addEventListener('click', function(){
-            const name = this.getAttribute('data-name');
-            const price = this.getAttribute('data-price');
-            const image = this.getAttribute('data-image') || '';
-            addToCart(name, price, image);
-        });
+});
+
+//  Funktion zum Laden der Produkte aus der JSON-Datei
+async function loadProducts() {
+    // Sucht das HTML-Element mit der Klasse "shop"
+    const container = document.querySelector(".shop");
+
+    if (!container) {
+        return;
+    }
+
+    // Lädt die Datei aus dem Config-Ordner
+    const response = await fetch(productCatalogUrl);
+
+    if (!response.ok) {
+        throw new Error(`Produktdaten konnten nicht geladen werden (${response.status})`);
+    }
+
+    // Wandelt die Antwort in ein JavaScript-Objekt um
+    const data = await response.json();
+
+    // Geht alle Produkte aus der JSON-Datei durch
+    (data.products || []).forEach(product => {
+
+        // Erstellt ein neues <div>-Element
+        const productDiv = document.createElement("div");
+
+        // Fügt dem div die CSS-Klasse "product" hinzu
+        productDiv.classList.add("product");
+
+        // Fügt den HTML-Inhalt für ein Produkt ein
+        productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h3 class="product-name">${product.name}</h3>
+            <div class="price">
+                ${formatPrice(product.price)}
+            </div>
+            <div class="product-buttons">
+                <button class="buy-btn"
+                    data-id="${product.id}"
+                    data-name="${product.name}"
+                    data-price="${product.price}"
+                    data-image="${product.image}">
+                    Kaufen
+                </button>
+                <button class="detail-btn"
+                    onclick="goToProduct(${product.id})">
+                    Details
+                </button>
+            </div>
+        `;
+
+        // Fügt das fertige Produkt in den Shop-Container ein
+        container.appendChild(productDiv);
     });
 
-    
+    attachBuyEvents();
+}
+
+function goToProduct(id) {
+    window.location.href = "product.php?pid=" + id;
+}
+
+function formatPrice(num) {
+    return Number(num).toFixed(2).replace(".", ",") + " €";
+}
+
+function attachBuyEvents() {
+    document.querySelectorAll(".buy-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const id = Number(this.dataset.id);
+            const name = this.dataset.name;
+            const price = this.dataset.price;
+            const image = this.dataset.image;
+            
+
+            addToCart(id,name, price, image);
+        });
+    });
+}
