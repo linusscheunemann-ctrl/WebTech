@@ -275,6 +275,7 @@ $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
 
     <main class="admin-dashboard">
         <h1>Auftragsverwaltung</h1>
+        <a href="logout.php" class="logout-button admin-logout-link">Abmelden</a>
 
         <?php if ($flashMessage): ?>
             <p class="form-message <?php echo htmlspecialchars($flashMessage['type'] === 'error' ? 'error-message' : 'success-message', ENT_QUOTES, 'UTF-8'); ?>">
