@@ -19,6 +19,7 @@
 
     <div id="copyright">
         <p>© 2026 Dein Autohaus. Alle Rechte vorbehalten.</p>
+        <p><a href="impressum.php">Impressum</a></p>
     </div>
 </footer>
 
