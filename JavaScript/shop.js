@@ -1,3 +1,4 @@
+// ## Beginn KI generierter Code
 const productCatalogUrl = new URL("../config/product.json", document.currentScript?.src || window.location.href).href;
 
 // Die Shop-Seite laedt Produkte erst dann, wenn der entsprechende Container vorhanden ist.
@@ -35,6 +36,8 @@ async function loadProducts() {
         productDiv.classList.add("product");
 
         // Bild, Name, Preis und Aktionen werden als HTML in die Karte geschrieben.
+        // ##Schluss KI generierter Code
+        // ##Beginn Code von Linus
         productDiv.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
             <h3 class="product-name">${product.name}</h3>
@@ -68,8 +71,9 @@ async function loadProducts() {
 function goToProduct(id) {
     window.location.href = "product.php?pid=" + id;
 }
-
-// Formatiert Preise in deutscher Schreibweise mit Euro-Symbol.
+//## Schluss Code von Linus
+//## Beginn KI genertierter Code
+// Formatiert Preise in Schreibweise mit Euro-Symbol.
 function formatPrice(num) {
     return Number(num).toFixed(2).replace(".", ",") + " €";
 }
@@ -89,3 +93,4 @@ function attachBuyEvents() {
         });
     });
 }
+//## Schluss KI genertierter Code

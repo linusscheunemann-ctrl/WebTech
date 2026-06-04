@@ -1,3 +1,5 @@
+<!--## Beginn Code von Moritz -->
+
 <footer id="footer-wrapper">
     <div id="footersocial">
         <ul>
@@ -53,3 +55,4 @@
         </div>
     </aside>
 </div>
+<!--## Schluss Code von Moritz -->

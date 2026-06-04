@@ -13,7 +13,7 @@
    <?php require_once __DIR__ . '/includes/navbar.php'; ?>
 
     <!-- Navigation Ende -->
-    
+    <!-- ## Beginn Code von Moritz-->
     <h1>Motorräder</h1>
     <table>
         <thead>
@@ -39,6 +39,7 @@
             </tr>
         </tbody>
     </table>
+    <!-- ## Schluss Code von Moritz-->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

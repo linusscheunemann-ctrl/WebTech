@@ -1,3 +1,5 @@
+// ## Beginn Code von Moritz
+
 // Einfache Carousel-Logik: die Folien laufen automatisch durch und koennen auch manuell angesprungen werden.
   let currentSlide = 0;
   const slides = document.querySelectorAll('.slideshow .slide');
@@ -30,3 +32,4 @@
 
   // Automatischer Wechsel alle zehn Sekunden.
   setInterval(nextSlide, 10000);
+// ## Schluss Code von Moritz

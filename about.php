@@ -1,56 +1,3 @@
-<?php
-$pageRoot = __DIR__;
-require_once $pageRoot . '/includes/app.php';
-
-$contactSuccessMessage = '';
-$contactErrorMessage = '';
-$contactName = '';
-$contactEmail = '';
-$contactSubject = '';
-$contactMessage = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'send_contact_message') {
-    $contactName = trim((string) ($_POST['name'] ?? ''));
-    $contactEmail = trim((string) ($_POST['email'] ?? ''));
-    $contactSubject = trim((string) ($_POST['subject'] ?? ''));
-    $contactMessage = trim((string) ($_POST['message'] ?? ''));
-
-    if ($contactName === '' || $contactEmail === '' || $contactSubject === '' || $contactMessage === '') {
-        $contactErrorMessage = 'Bitte fülle alle Felder aus.';
-    } elseif (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
-        $contactErrorMessage = 'Bitte gib eine gültige E-Mail-Adresse an.';
-    } else {
-        $recipient = 'moritz.parleiten@gmail.com';
-        $mailSubject = 'Kontaktanfrage: ' . $contactSubject;
-        $body = "Name: {$contactName}\n";
-        $body .= "E-Mail: {$contactEmail}\n";
-        $body .= "Betreff: {$contactSubject}\n\n";
-        $body .= "Nachricht:\n{$contactMessage}\n";
-
-        $sentResult = appSendMailSmtp(
-            appGetMailConfig(),
-            $recipient,
-            'Moritz Parleiten',
-            $mailSubject,
-            $body,
-            $contactEmail,
-            $contactName
-        );
-
-        if ($sentResult['success']) {
-            $contactSuccessMessage = 'Deine Nachricht wurde erfolgreich an uns gesendet.';
-            $contactName = '';
-            $contactEmail = '';
-            $contactSubject = '';
-            $contactMessage = '';
-        } else {
-            $contactErrorMessage = $sentResult['error'] !== null
-                ? 'Die Nachricht konnte nicht gesendet werden: ' . $sentResult['error']
-                : 'Die Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.';
-        }
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -64,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'send_
 </head>
 <body>
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
-
+<!--## Beginn Code von Moritz -->
     <main class="about-page">
         <section class="about-intro">
             <h1>Unser Standort</h1>
@@ -122,63 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'send_
             </div>
         </section>
 
-        <section class="contact-form-section" id="contact">
-            <div class="contact-form-card">
-                <h2>Kontaktanfrage</h2>
-                <p>Schreib uns direkt eine Nachricht. Sie wird an <strong>moritz.parleiten@gmail.com</strong> gesendet.</p>
-
-                <?php if ($contactSuccessMessage !== ''): ?>
-                    <p class="form-message success-message"><?php echo htmlspecialchars($contactSuccessMessage, ENT_QUOTES, 'UTF-8'); ?></p>
-                <?php endif; ?>
-
-                <?php if ($contactErrorMessage !== ''): ?>
-                    <p class="form-message error-message"><?php echo htmlspecialchars($contactErrorMessage, ENT_QUOTES, 'UTF-8'); ?></p>
-                <?php endif; ?>
-
-                <form class="contact-form" action="about.php#contact" method="post">
-                    <input type="hidden" name="action" value="send_contact_message">
-
-                    <label for="contact-name">Name</label>
-                    <input
-                        type="text"
-                        id="contact-name"
-                        name="name"
-                        value="<?php echo htmlspecialchars($contactName, ENT_QUOTES, 'UTF-8'); ?>"
-                        required
-                    >
-
-                    <label for="contact-email">E-Mail</label>
-                    <input
-                        type="email"
-                        id="contact-email"
-                        name="email"
-                        value="<?php echo htmlspecialchars($contactEmail, ENT_QUOTES, 'UTF-8'); ?>"
-                        required
-                    >
-
-                    <label for="contact-subject">Betreff</label>
-                    <input
-                        type="text"
-                        id="contact-subject"
-                        name="subject"
-                        value="<?php echo htmlspecialchars($contactSubject, ENT_QUOTES, 'UTF-8'); ?>"
-                        required
-                    >
-
-                    <label for="contact-message">Nachricht</label>
-                    <textarea
-                        id="contact-message"
-                        name="message"
-                        rows="6"
-                        required
-                    ><?php echo htmlspecialchars($contactMessage, ENT_QUOTES, 'UTF-8'); ?></textarea>
-
-                    <button type="submit">Nachricht senden</button>
-                </form>
-            </div>
-        </section>
     </main>
-
+<!--## Schluss Code von Moritz -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

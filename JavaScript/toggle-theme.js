@@ -1,3 +1,5 @@
+// ## Beginn Code von Linus
+
 // Emoji-Folgen für die kleine Übergangsanimation beim Theme-Wechsel
 const toDark = ["🌕","🌖","🌗","🌘","🌑"];
 const toLight = ["🌑","🌒","🌓","🌔","🌕"];
@@ -85,3 +87,5 @@ function myFunction() {
     // Geschwindigkeit der Animation in Millisekunden
     }, 80);
 }
+
+// ## Schluss Code von Linus

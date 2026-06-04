@@ -1,4 +1,5 @@
 <?php
+// ## Beginn Code von Linus
 session_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/includes/app.php';
@@ -6,7 +7,9 @@ require_once __DIR__ . '/includes/app.php';
 if (isset($pdo)) {
     appEnsureSchema($pdo);
 }
+// ## Schluss Code von Linus
 
+// ## Beginn KI generierter Code
 $errorMessage = '';
 $usernameValue = '';
 $returnTo = $_GET['return_to'] ?? $_POST['return_to'] ?? 'user.php';
@@ -67,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+// ## Schluss KI generierter Code
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -82,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
 
+    <!--## Beginn Code von Linus -->
     <h1>Benutzeranmeldung</h1>
 
     <?php if ($errorMessage !== ''): ?>
@@ -112,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Anmelden</button>
         <button type="button" onclick="location.href='registration.php'">Registrieren</button>
     </form>
-
+<!--## Schluss Code von Linus -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

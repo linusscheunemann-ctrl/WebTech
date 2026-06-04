@@ -1,3 +1,5 @@
+// ## Beginn Code von Linus
+
 document.addEventListener("DOMContentLoaded", function () {
     // Alle Formular-Elemente werden erst nach dem Laden des DOM geholt,
     // damit die Live-Validierung nur dort aktiv wird, wo die Felder wirklich existieren.
@@ -168,3 +170,4 @@ document.addEventListener("DOMContentLoaded", function () {
     updateSubmitState();
 
 });
+// ## Schluss Code von Linus

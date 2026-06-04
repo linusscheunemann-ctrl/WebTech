@@ -1,5 +1,5 @@
 "use strict";
-
+// ## Beginn Code von Linus
 // Dieser Warenkorb-Helper stellt mehrere globale Funktionen bereit, weil sie
 // von unterschiedlichen Seiten, Formularen und Inline-Handlern gemeinsam genutzt werden.
 console.log("CART.JS GELADEN");
@@ -60,7 +60,6 @@ window.clearCouponCode = function () {
         couponMessage.className = 'cart-coupon-message is-valid';
     }
 };
-
 // Berechnet Rabattbetrag und Endsumme fuer eine gegebene Zwischensumme.
 window.getCouponDiscount = function (subtotal, code) {
     const normalizedCode = window.normalizeCouponCode(code);
@@ -90,50 +89,85 @@ window.getCouponDiscount = function (subtotal, code) {
     };
 };
 
-// Prueft den eingegebenen Rabattcode und gibt dem Nutzer eine passende Rueckmeldung.
+// Prüft den eingegebenen Rabattcode und gibt dem Nutzer
+// eine passende Rückmeldung aus.
 window.applyCouponCode = function () {
+
+    // Eingabefeld für den Rabattcode abrufen
     const couponInput = document.getElementById('discount-code');
+
+    // Element für Status- und Fehlermeldungen abrufen
     const couponMessage = document.getElementById('coupon-message');
 
+    // Falls das Eingabefeld nicht existiert, Funktion beenden
     if (!couponInput) {
         return;
     }
 
+    // Rabattcode bereinigen und normalisieren
     const code = window.normalizeCouponCode(couponInput.value);
+
+    // Aktuellen Warenkorbwert ohne Rabatt ermitteln
     const subtotal = window.getCartTotals().subtotal;
+
+    // Rabatt anhand des Codes berechnen
     const discount = window.getCouponDiscount(subtotal, code);
 
+    // Prüfen, ob überhaupt ein Rabattcode eingegeben wurde
     if (!code) {
+
+        // Gespeicherten Rabattcode entfernen
         window.clearCouponCode();
+
+        // Fehlermeldung anzeigen
         if (couponMessage) {
             couponMessage.textContent = 'Bitte einen Rabattcode eingeben.';
             couponMessage.className = 'cart-coupon-message is-invalid';
         }
+
         return;
     }
 
+    // Prüfen, ob der Rabattcode ungültig ist
+    // oder keinen Rabatt erzeugt
     if (!discount.valid || discount.amount <= 0) {
+
+        // Rabattcode aus dem Local Storage entfernen
         localStorage.removeItem('cart_coupon_code');
+
+        // Warenkorb und Warenkorb-Drawer aktualisieren
         renderCart();
         renderCartDrawer();
+
+        // Fehlermeldung anzeigen
         if (couponMessage) {
             couponMessage.textContent = 'Dieser Rabattcode ist ungültig.';
             couponMessage.className = 'cart-coupon-message is-invalid';
         }
+
         return;
     }
 
+    // Gültigen Rabattcode speichern
     window.saveCouponCode(code);
 
+    // Erfolgsnachricht mit Rabattinformationen anzeigen
     if (couponMessage) {
-        couponMessage.textContent = `${discount.label} aktiviert: -${formatPrice(discount.amount)} (${discount.percent}%)`;
+        couponMessage.textContent =
+            `${discount.label} aktiviert: -${formatPrice(discount.amount)} (${discount.percent}%)`;
+
         couponMessage.className = 'cart-coupon-message is-valid';
     }
 
+    // Warenkorbansicht aktualisieren,
+    // damit der Rabatt direkt sichtbar wird
     renderCart();
     renderCartDrawer();
 };
 
+// ## Schluss Code von Linus
+
+// ## Beginn Code von Nils
 // Zeigt eine kurze Toast-Meldung an, zum Beispiel nach dem Hinzufuegen eines Produkts.
 window.showToast = function (message) {
     const toast = document.getElementById('toast');
@@ -168,19 +202,28 @@ window.getCartTotals = function () {
         total,
     };
 };
-
+// ## Schluss Code von Nils
+// ## Beginn KI genertierter Code
 // Aktualisiert die kleine Warenkorb-Badge an allen Icons im Layout.
 window.updateCartBadge = function () {
+
+    // Alle Warenkorb-Icons im DOM auswählen
     const cartIcons = document.querySelectorAll('.cart-icon');
 
+    // Falls keine Icons existieren, abbrechen
     if (!cartIcons.length) return;
 
+    // Warenkorb laden
     const cart = getCart();
+
+    // Gesamtanzahl aller Produkte im Warenkorb berechnen
     const quantityTotal = cart.reduce((sum, item) => sum + (item.menge || 0), 0);
 
+    // Badge auf allen Icons aktualisieren
     cartIcons.forEach((icon) => {
         let badge = icon.querySelector('.cart-badge');
 
+        // Falls noch kein Badge existiert, erstellen
         if (!badge) {
             badge = document.createElement('span');
             badge.className = 'cart-badge';
@@ -188,35 +231,53 @@ window.updateCartBadge = function () {
             icon.appendChild(badge);
         }
 
+        // Anzahl anzeigen
         badge.textContent = quantityTotal;
+
+        // Nur anzeigen, wenn Artikel vorhanden sind
         badge.style.display = quantityTotal > 0 ? 'inline-flex' : 'none';
     });
 };
 
+
 // Rendert die Drawer-Ansicht mit allen Warenkorbpositionen neu.
 window.renderCartDrawer = function () {
+
+    // DOM-Elemente holen
     const drawer = document.getElementById('cart-drawer');
     const items = document.getElementById('cart-drawer-items');
     const total = document.getElementById('cart-drawer-total');
     const count = document.getElementById('cart-drawer-count');
 
+    // Abbrechen, wenn Elemente fehlen
     if (!drawer || !items || !total || !count) return;
 
+    // Warenkorb laden
     const cart = getCart();
 
+    // Alte Inhalte entfernen
     items.innerHTML = '';
 
+    // Falls leerer Warenkorb
     if (cart.length === 0) {
         items.innerHTML = '<p class="cart-drawer-empty">Dein Warenkorb ist noch leer.</p>';
     } else {
-        // Jede Position bekommt ihre eigene Zeile mit Bild, Menge, Summe und Aktionen.
+
+        // Jede Position im Warenkorb darstellen
         cart.forEach((item) => {
+
             const price = parseFloat(item.price) || 0;
+
+            // Produktbild bestimmen
             const image = item.image || getProductImage(item.name) || '';
+
+            // Gesamtpreis pro Position
             const lineTotal = price * item.menge;
+
             const entry = document.createElement('div');
 
             entry.className = 'cart-drawer-item';
+
             entry.innerHTML = `
                 ${image ? `<img src="${image}" alt="${item.name}">` : '<div class="cart-drawer-placeholder"></div>'}
                 <div class="cart-drawer-item-info">
@@ -245,43 +306,63 @@ window.renderCartDrawer = function () {
         });
     }
 
+    // Gesamtsummen berechnen
     const totals = getCartTotals();
+
+    // Gesamtanzahl berechnen
     const quantityTotal = cart.reduce((sum, item) => sum + (item.menge || 0), 0);
 
+    // UI aktualisieren
     total.textContent = formatPrice(totals.total);
     count.textContent = `${quantityTotal} Artikel`;
+
+    // Badge aktualisieren
     updateCartBadge();
 };
 
-// Oeffnet den Drawer und sorgt dafuer, dass vorher der aktuelle Inhalt gerendert wird.
+
+// Öffnet den Warenkorb-Drawer
 window.openCartDrawer = function () {
+
     const drawer = document.getElementById('cart-drawer');
 
     if (!drawer) return;
 
+    // Inhalt aktualisieren bevor geöffnet wird
     renderCartDrawer();
+
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
+
     document.body.classList.add('drawer-open');
+
     updateCartBadge();
 };
 
-// Schliesst den Drawer wieder und entfernt den Overlay-Zustand von der Seite.
+
+// Schließt den Warenkorb-Drawer
 window.closeCartDrawer = function () {
+
     const drawer = document.getElementById('cart-drawer');
 
     if (!drawer) return;
 
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
+
     document.body.classList.remove('drawer-open');
+
     updateCartBadge();
 };
 
+
+// Entfernt ein Element aus dem Drawer-Warenkorb
 window.removeDrawerItem = function (id) {
+
     const cart = getCart().filter(item => item.id !== id);
 
     saveCart(cart);
+
     renderCart();
     renderCartDrawer();
     updateCartBadge();
@@ -291,18 +372,25 @@ window.removeDrawerItem = function (id) {
     }
 };
 
+
+// Ändert Menge im Drawer (relativ +/-)
 window.updateDrawerQty = function (id, delta) {
+
     const cart = getCart();
+
     const item = cart.find(entry => entry.id === id);
 
     if (!item) return;
 
     item.menge += delta;
 
+    // Falls Menge 0 oder weniger wird -> entfernen
     if (item.menge <= 0) {
+
         const filteredCart = cart.filter(entry => entry.id !== id);
 
         saveCart(filteredCart);
+
         renderCart();
         renderCartDrawer();
         updateCartBadge();
@@ -315,33 +403,44 @@ window.updateDrawerQty = function (id, delta) {
     }
 
     saveCart(cart);
+
     renderCart();
     renderCartDrawer();
     updateCartBadge();
 };
 
+
+// Setzt eine feste Menge im Drawer
 window.setDrawerQty = function (id, value) {
+
     const cart = getCart();
+
     const item = cart.find(entry => entry.id === id);
 
     if (!item) return;
 
     const quantity = Math.max(1, parseInt(value, 10) || 1);
+
     item.menge = quantity;
 
     saveCart(cart);
+
     renderCart();
     renderCartDrawer();
     updateCartBadge();
 };
 
 
-// SHOP INTEGRATION
-window.addToCart = function (id,name, price, image = "") {
+// Produkt zum Warenkorb hinzufügen
+window.addToCart = function (id, name, price, image = "") {
+
     const cart = getCart();
+
     const parsedPrice = parseFloat(price);
+
     const existingItem = cart.find(item => item.id === id);
 
+    // Falls schon vorhanden -> Menge erhöhen
     if (existingItem) {
         existingItem.menge += 1;
     } else {
@@ -355,14 +454,19 @@ window.addToCart = function (id,name, price, image = "") {
     }
 
     saveCart(cart);
+
     renderCartDrawer();
     openCartDrawer();
+
     showToast(`${name} wurde zum Warenkorb hinzugefügt!`);
+
     updateCartBadge();
 };
 
-// IMAGE FALLBACK
+
+// Produktbild Fallback-Logik
 window.getProductImage = function (name) {
+
     const images = {
         'Museumsgutschein': 'images/products/Museumsgtuschein.png',
         'Museumsführung': 'images/products/Führung durch das Museum.png',
@@ -384,272 +488,14 @@ window.getProductImage = function (name) {
     return '';
 };
 
-// PRICE HELPERS
+
+// Preis umwandeln
 window.parsePrice = function (price) {
     return parseFloat(price);
 };
 
+
+// Preis formatieren (DE Format)
 window.formatPrice = function (num) {
     return Number(num).toFixed(2).replace('.', ',') + ' €';
 };
-
-// CART RENDER
-window.renderCart = function () {
-    const cart = getCart();
-
-    const tbody = document.getElementById('cart-body');
-    const emptyMsg = document.getElementById('empty-msg');
-    const cartTable = document.getElementById('cart-table');
-    const couponSummary = document.getElementById('coupon-summary');
-    const couponMessage = document.getElementById('coupon-message');
-    const couponInput = document.getElementById('discount-code');
-
-    if (!tbody || !cartTable || !emptyMsg) return;
-
-    tbody.innerHTML = '';
-
-    let total = 0;
-    let updated = false;
-
-    if (cart.length === 0) {
-        cartTable.style.display = 'none';
-        emptyMsg.style.display = 'block';
-    } else {
-        cartTable.style.display = 'table';
-        emptyMsg.style.display = 'none';
-
-        cart.forEach((item, index) => {
-
-            const price = parseFloat(item.price);
-            const sum = price * item.menge;
-            total += sum;
-
-            const img = item.image || getProductImage(item.name) || '';
-
-            if (!item.image && img) {
-                item.image = img;
-                updated = true;
-            }
-
-            const row = document.createElement('tr');
-
-            row.innerHTML = `
-                <td>${index + 1}</td>
-
-                <td>
-                    <div class="cart-product">
-                        ${img ? `<img src="${img}" alt="${item.name}">` : ''}
-                        <span>${item.name}</span>
-                    </div>
-                </td>
-
-                <td>${formatPrice(price)}</td>
-
-                <td>
-                    <input
-                        type="number"
-                        min="1"
-                        step="1"
-                        class="cart-qty-input"
-                        value="${item.menge}"
-                        onchange="setCartQty(${index}, this.value)"
-                        aria-label="Anzahl für ${item.name}"
-                    >
-                </td>
-
-                <td>${formatPrice(sum)}</td>
-
-                <td>
-                    <button onclick="removeItem(${index})">Entfernen</button>
-                </td>
-            `;
-
-            tbody.appendChild(row);
-        });
-    }
-
-    if (updated) saveCart(cart);
-
-    const totals = getCartTotals();
-    const netto = totals.subtotal / 1.19;
-    const mwst = totals.subtotal - netto;
-
-    if (couponInput) {
-        const savedCode = getCouponCode();
-        couponInput.value = savedCode;
-    }
-
-    if (couponSummary) {
-        if (totals.coupon.valid && totals.coupon.amount > 0) {
-            couponSummary.textContent = `${totals.coupon.code} (-${formatPrice(totals.coupon.amount)})`;
-        } else {
-            couponSummary.textContent = '-';
-        }
-    }
-
-    if (couponMessage) {
-        if (totals.coupon.valid && totals.coupon.amount > 0) {
-            couponMessage.textContent = `${totals.coupon.label} aktiv: -${formatPrice(totals.coupon.amount)} (${totals.coupon.percent}%)`;
-            couponMessage.className = 'cart-coupon-message is-valid';
-        } else if (cart.length > 0 && getCouponCode() !== '') {
-            couponMessage.textContent = 'Gespeicherter Rabattcode ist ungültig.';
-            couponMessage.className = 'cart-coupon-message is-invalid';
-        } else {
-            couponMessage.textContent = '';
-            couponMessage.className = 'cart-coupon-message';
-        }
-    }
-
-    document.getElementById('total-price').textContent = formatPrice(totals.total);
-    document.getElementById('netto-price').textContent = formatPrice(netto);
-    document.getElementById('mwst-price').textContent = formatPrice(mwst);
-};
-
-// ACTIONS
-window.changeQty = function (index, delta) {
-    const cart = getCart();
-
-    cart[index].menge += delta;
-
-    if (cart[index].menge <= 0) {
-        cart.splice(index, 1);
-    }
-
-    saveCart(cart);
-    renderCart();
-    renderCartDrawer();
-};
-
-window.setCartQty = function (index, value) {
-    const cart = getCart();
-    const quantity = Math.max(1, parseInt(value, 10) || 1);
-
-    if (!cart[index]) {
-        return;
-    }
-
-    cart[index].menge = quantity;
-
-    saveCart(cart);
-    renderCart();
-    renderCartDrawer();
-};
-
-window.removeItem = function (index) {
-    const cart = getCart();
-    cart.splice(index, 1);
-    saveCart(cart);
-    renderCart();
-    renderCartDrawer();
-};
-
-window.clearCart = function () {
-    if (confirm('Warenkorb wirklich leeren?')) {
-        localStorage.removeItem('cart');
-        renderCart();
-        renderCartDrawer();
-    }
-};
-
-window.checkout = function () {
-    const cart = getCart();
-    const form = document.getElementById('checkout-form');
-    const payloadField = document.getElementById('cart-payload');
-    const discountField = document.getElementById('discount-code-payload');
-    const couponInput = document.getElementById('discount-code');
-
-    if (!form || !payloadField) {
-        window.location.href = 'login.php?return_to=cart.php';
-        return;
-    }
-
-    if (cart.length === 0) {
-        alert('Dein Warenkorb ist leer.');
-        return;
-    }
-
-    payloadField.value = JSON.stringify(cart);
-    if (discountField) {
-        const code = couponInput ? window.normalizeCouponCode(couponInput.value) : getCouponCode();
-        discountField.value = code;
-        if (code) {
-            window.saveCouponCode(code);
-        }
-    }
-    form.submit();
-};
-
-window.saveCartAsList = function () {
-    const cart = getCart();
-    const form = document.getElementById('save-list-form');
-    const payloadField = document.getElementById('list-cart-payload');
-    const nameField = document.getElementById('list-name');
-
-    if (!form || !payloadField || !nameField) {
-        return;
-    }
-
-    if (cart.length === 0) {
-        alert('Dein Warenkorb ist leer.');
-        return;
-    }
-
-    if (nameField.value.trim() === '') {
-        alert('Bitte einen Namen für die Sammelliste eingeben.');
-        nameField.focus();
-        return;
-    }
-
-    payloadField.value = JSON.stringify(cart);
-    form.submit();
-};
-
-// INIT
-document.addEventListener("DOMContentLoaded", () => {
-    renderCart();
-    renderCartDrawer();
-    updateCartBadge();
-
-    const couponInput = document.getElementById('discount-code');
-    if (couponInput) {
-        couponInput.value = getCouponCode();
-        couponInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                applyCouponCode();
-            }
-        });
-    }
-
-    const url = new URL(window.location.href);
-    const bookingStatus = url.searchParams.get('booking');
-
-    if (bookingStatus === 'success') {
-        localStorage.removeItem('cart');
-        localStorage.removeItem('cart_coupon_code');
-        renderCart();
-        renderCartDrawer();
-        updateCartBadge();
-        closeCartDrawer();
-    }
-
-    const drawer = document.getElementById('cart-drawer');
-    const cartIcons = document.querySelectorAll('.cart-icon');
-
-    if (drawer) {
-        drawer.addEventListener('click', (event) => {
-            if (event.target.matches('[data-cart-close]') || event.target.classList.contains('cart-drawer-backdrop')) {
-                closeCartDrawer();
-            }
-        });
-
-        cartIcons.forEach((icon) => {
-            icon.addEventListener('click', (event) => {
-                event.preventDefault();
-                openCartDrawer();
-            });
-        });
-
-        updateCartBadge();
-    }
-});

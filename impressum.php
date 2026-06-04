@@ -15,7 +15,7 @@ require_once $pageRoot . '/includes/app.php';
 </head>
 <body>
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
-
+<!--## Beginn Code von Linus -->
     <main class="about-page">
         <section class="about-intro">
             <h1>Impressum</h1>
@@ -44,7 +44,7 @@ require_once $pageRoot . '/includes/app.php';
             <p>E-Mail: info@deinautohaus.de</p>
         </section>
     </main>
-
+<!--## Schluss Code von Linus -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

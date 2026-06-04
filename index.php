@@ -16,7 +16,7 @@
     <!-- Navigation Anfang -->
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
     <!-- Navigation Ende -->
-
+<!--## Beginn Code von Moritz -->
     <section class="slideshow" aria-label="Slideshow">
       <div class="slides">
         <div class="slide"><img src="images/bg1.jpg" alt="Slide 1"></div>
@@ -108,7 +108,7 @@
         </div>
       </div>
     </section>
-
+<!--## Schluss Code von Moritz -->
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

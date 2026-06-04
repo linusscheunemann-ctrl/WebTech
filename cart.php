@@ -40,7 +40,7 @@ $bookingStatus = $_GET['booking'] ?? '';
 </head>
 <body>
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
-
+<!--## Beginn Code von Linus -->
     <div class="cart-container">
         <h1>Warenkorb</h1>
 
@@ -84,7 +84,9 @@ $bookingStatus = $_GET['booking'] ?? '';
             </div>
             <p id="coupon-message" class="cart-coupon-message"></p>
         </div>
+<!--## Schluss Code von Linus -->
 
+<!--## Beginn Code von Nils -->
         <p id="empty-msg">Ihr Warenkorb ist leer. Fügen Sie Produkte hinzu, um fortzufahren.</p>
         <table id="cart-table">
             <thead>
@@ -141,7 +143,7 @@ $bookingStatus = $_GET['booking'] ?? '';
             </div>
         <?php endif; ?>
     </div>
-
+<!--## Schluss Code von Nils -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

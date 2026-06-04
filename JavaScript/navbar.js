@@ -1,3 +1,5 @@
+// ## Beginn KI generierter Code
+// JavaScript für die responsive Navigation: Öffnen, Schließen und Accessibility-Features der Navbar
 document.addEventListener("DOMContentLoaded", () => {
   // Die drei Elemente steuern das responsive Navigationsmenü
   const header = document.querySelector(".site-header");
@@ -49,3 +51,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ## Beginn KI generierter Code

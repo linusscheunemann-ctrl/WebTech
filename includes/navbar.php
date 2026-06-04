@@ -1,3 +1,4 @@
+<!--## Beginn Code von Linus -->
 <header class="site-header">
     <a href="index.php" class="nav-brand" aria-label="Zur Startseite">
         <img src="images/logo.png" alt="Autohaus" class="logo">
@@ -45,3 +46,5 @@
 </header>
 
 <script src="JavaScript/navbar.js"></script>
+
+<!--## Schluss Code von Linus -->

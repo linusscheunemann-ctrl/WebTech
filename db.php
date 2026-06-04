@@ -1,5 +1,6 @@
-<?php
 
+
+<?php
 $dbHost = 'localhost';
 $dbName = 'autohaus';
 $dbUser = 'root';

@@ -11,6 +11,8 @@
     <!-- Navigation Anfang -->
    <?php require_once __DIR__ . '/includes/navbar.php'; ?>
     <!-- Navigation Ende -->
+
+    <!--## Beginn Code von Linus -->
     <h1>Unsere Fahrzeuge</h1>
 
        <h1>
@@ -27,7 +29,8 @@
         <img src="images/bg9.jpg">
         <img src="images/bg10.jpg">
         </h1>
-    
+    <!--## Schluss Code von Linus -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>
+

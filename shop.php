@@ -19,7 +19,7 @@
 <?php require_once __DIR__ . '/includes/navbar.php'; ?>
 <!-- Navigation Ende -->
 
-
+<!-- Beginn Code von Linus -->
 <!-- SHOP CONTAINER -->
 <div class="wrapper">
     <div class="shop">
@@ -33,6 +33,8 @@
 <div id="toast"></div>
 
 <!-- FOOTER -->
+
+<!-- Schluss Code von Linus -->
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 
 </body>
