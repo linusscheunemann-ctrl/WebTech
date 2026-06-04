@@ -1,185 +1,181 @@
-      .slideshow {
-        width: 100%;
-        height: 50vh;
-        max-height: 500px;
-        min-height: 320px;
-        overflow: hidden;
-        position: relative;
-        z-index: 1;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-        border: 2px solid var(--primary-color);
-       
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      }
-      .slideshow .slides {
-        display: flex;
-        height: 100%;
-        transition: transform 0.7s ease;
-      }
-      .slideshow .slide {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-        position: relative;
-        overflow: hidden;
-      }
-      .slideshow .slide img {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-        object-fit: cover;
-        display: block;
-      }
-      .slideshow .slide::before {
-        content: attr(data-title);
-        position: absolute;
-        left: 30px;
-        bottom: 30px;
-        color: white;
-        font-size: 2rem;
-        text-shadow: 0 0 14px rgba(0,0,0,0.8);
-      }
-      .slideshow .slide-nav {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        transform: translateY(-50%);
-        pointer-events: none;
-      }
-      .slideshow .slide-nav button {
-        pointer-events: all;
-        background: rgba(0,0,0,0.4);
-        border: 1px solid rgba(255,255,255,0.6);
-        color: white;
-        padding: 10px 14px;
-        margin: 0 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .slideshow .slide-dots {
-        position: absolute;
-        left: 50%;
-        bottom: 14px;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-      }
-      .slideshow .slide-dots button {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255,255,255,0.6);
-        cursor: pointer;
-      }
-      .slideshow .slide-dots button.active {
-        background: white;
-      }
-      .vehicle-section {
-        width: 100%;
-        background-color: var(--primary-color);
-        padding: 40px 0 60px;
-      }
-     
-      .vehicle-section h2 {
-        color: white;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2rem;
-      }
-      .vehicle-section,
-      .vehicle-section h2,
-      .vehicle-section h3,
-      .vehicle-section p,
-      .vehicle-card h3,
-      .vehicle-card p {
-        color: white !important;
-      }
-      .vehicle-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-      }
-     
-    
-      .visit-card h3,
-      .visit-card p {
-        text-align: center;
-      }
-      .visit-card p {
-        line-height: 1.4;
-      }
-      .visit-section {
-        width: 100%;
-        background-color: white;
-        padding: 40px 0 60px;
-        color: #000;
-      }
-      .visit-section .vehicle-inner .vehicle-section .vehicle-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
-        
-      .visit-section h2 {
-        color: var(--primary-color);
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2rem;
-      }
-      .visit-card {
-        background: #fff;
-        border: 1px solid rgba(0,0,0,0.08);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        color: #000;
-      }
-      .visit-section,
-      .visit-section h2,
-      .visit-section h3,
-      .visit-section p,
-      .visit-card h3,
-      .visit-card p {
-        color: #000 !important;
-      }
-      html[data-theme="dark"] .visit-section {
-        background-color: #787878;
-      }
-      html[data-theme="dark"] .visit-card {
-        background: #fff;
-      }
-      html[data-theme="dark"] .visit-heading {
-        color: #fff !important;
-      }
-       .vehicle-card {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        color: white;
+.slideshow {
+  width: 100%;
+  height: 50vh;
+  max-height: 500px;
+  min-height: 320px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.slideshow .slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.7s ease;
+}
+.slideshow .slide {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.slideshow .slide img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  object-fit: cover;
+  display: block;
+}
+.slideshow .slide::before {
+  content: attr(data-title);
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  color: white;
+  font-size: 2rem;
+  text-shadow: 0 0 14px rgba(0,0,0,0.8);
+}
+.slideshow .slide-nav {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.slideshow .slide-nav button {
+  pointer-events: all;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.6);
+  color: white;
+  padding: 10px 14px;
+  margin: 0 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.slideshow .slide-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+.slideshow .slide-dots button {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.6);
+  cursor: pointer;
+}
+.slideshow .slide-dots button.active {
+  background: white;
+}
+.vehicle-section {
+  width: 100%;
+  background-color: var(--primary-color);
+  padding: 40px 0 60px;
+}
+.vehicle-section h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+.vehicle-section,
+.vehicle-section h2,
+.vehicle-section h3,
+.vehicle-section p,
+.vehicle-card h3,
+.vehicle-card p {
+  color: white !important;
+}
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
 
-      }
-      .visit-card img .vehicle-card img{
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        display: block;
-      }
+.visit-card h3,
+.visit-card p {
+ text-align: center;
+}
+.visit-card p {
+  line-height: 1.4;
+}
+.visit-section {
+  width: 100%;
+  background-color: white;
+  padding: 40px 0 60px;
+  color: #000;
+}
+.visit-section .vehicle-inner .vehicle-section .vehicle-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+  
+.visit-section h2 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+.visit-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  color: #000;
+  }
+.visit-section,
+.visit-section h2,
+.visit-section h3,
+.visit-section p,
+.visit-card h3,
+.visit-card p {
+  color: #000 !important;
+}
+html[data-theme="dark"] .visit-section {
+  background-color: #787878;
+}
+html[data-theme="dark"] .visit-card {
+  background: #fff;
+}
+html[data-theme="dark"] .visit-heading {
+  color: #fff !important;
+}
+ .vehicle-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  color: whit
+}
+.visit-card img .vehicle-card img{
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
         
-      .visit-card-content,
-      .vehicle-card-content {
-        text-align: center;
-      }
-      
-      .visit-card-content .vehicle-card-content {
-        padding: 16px;
-      }
+.visit-card-content,
+.vehicle-card-content {
+  text-align: center;
+}
+
+.visit-card-content .vehicle-card-content {
+  padding: 16px;
+}
       

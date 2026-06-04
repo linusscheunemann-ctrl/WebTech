@@ -1,26 +1,35 @@
 "use strict";
 
+// Dieser Warenkorb-Helper stellt mehrere globale Funktionen bereit, weil sie
+// von unterschiedlichen Seiten, Formularen und Inline-Handlern gemeinsam genutzt werden.
 console.log("CART.JS GELADEN");
+
+// Liefert den zentralen Katalog aller gueltigen Rabattcodes.
 window.getCouponCatalog = function () {
     return window.COUPON_CATALOG || {};
 };
 
+// Liest den aktuell im Browser gespeicherten Warenkorb aus dem localStorage.
 window.getCart = function () {
     return JSON.parse(localStorage.getItem('cart')) || [];
 };
 
+// Speichert den kompletten Warenkorb wieder im localStorage.
 window.saveCart = function (cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
+// Normalisiert Rabattcodes, damit Gross-/Kleinschreibung und Leerzeichen keine Rolle spielen.
 window.normalizeCouponCode = function (code) {
     return String(code || '').trim().toUpperCase();
 };
 
+// Gibt den aktuell gespeicherten Rabattcode in normalisierter Form zurueck.
 window.getCouponCode = function () {
     return window.normalizeCouponCode(localStorage.getItem('cart_coupon_code') || '');
 };
 
+// Speichert einen Rabattcode oder loescht ihn, falls die Eingabe leer war.
 window.saveCouponCode = function (code) {
     const normalizedCode = window.normalizeCouponCode(code);
 
@@ -33,6 +42,7 @@ window.saveCouponCode = function (code) {
     return normalizedCode;
 };
 
+// Entfernt den Rabattcode aus dem Speicher und aktualisiert alle sichtbaren Warenkorb-Bereiche.
 window.clearCouponCode = function () {
     localStorage.removeItem('cart_coupon_code');
     renderCart();
@@ -51,6 +61,7 @@ window.clearCouponCode = function () {
     }
 };
 
+// Berechnet Rabattbetrag und Endsumme fuer eine gegebene Zwischensumme.
 window.getCouponDiscount = function (subtotal, code) {
     const normalizedCode = window.normalizeCouponCode(code);
     const coupon = window.getCouponCatalog()[normalizedCode];
@@ -79,6 +90,7 @@ window.getCouponDiscount = function (subtotal, code) {
     };
 };
 
+// Prueft den eingegebenen Rabattcode und gibt dem Nutzer eine passende Rueckmeldung.
 window.applyCouponCode = function () {
     const couponInput = document.getElementById('discount-code');
     const couponMessage = document.getElementById('coupon-message');
@@ -122,6 +134,7 @@ window.applyCouponCode = function () {
     renderCartDrawer();
 };
 
+// Zeigt eine kurze Toast-Meldung an, zum Beispiel nach dem Hinzufuegen eines Produkts.
 window.showToast = function (message) {
     const toast = document.getElementById('toast');
 
@@ -136,6 +149,7 @@ window.showToast = function (message) {
     }, 2400);
 };
 
+// Ermittelt Zwischensumme, Rabatt und Gesamtbetrag fuer den aktuellen Warenkorb.
 window.getCartTotals = function () {
     const cart = getCart();
 
@@ -155,6 +169,7 @@ window.getCartTotals = function () {
     };
 };
 
+// Aktualisiert die kleine Warenkorb-Badge an allen Icons im Layout.
 window.updateCartBadge = function () {
     const cartIcons = document.querySelectorAll('.cart-icon');
 
@@ -178,6 +193,7 @@ window.updateCartBadge = function () {
     });
 };
 
+// Rendert die Drawer-Ansicht mit allen Warenkorbpositionen neu.
 window.renderCartDrawer = function () {
     const drawer = document.getElementById('cart-drawer');
     const items = document.getElementById('cart-drawer-items');
@@ -193,6 +209,7 @@ window.renderCartDrawer = function () {
     if (cart.length === 0) {
         items.innerHTML = '<p class="cart-drawer-empty">Dein Warenkorb ist noch leer.</p>';
     } else {
+        // Jede Position bekommt ihre eigene Zeile mit Bild, Menge, Summe und Aktionen.
         cart.forEach((item) => {
             const price = parseFloat(item.price) || 0;
             const image = item.image || getProductImage(item.name) || '';
@@ -236,6 +253,7 @@ window.renderCartDrawer = function () {
     updateCartBadge();
 };
 
+// Oeffnet den Drawer und sorgt dafuer, dass vorher der aktuelle Inhalt gerendert wird.
 window.openCartDrawer = function () {
     const drawer = document.getElementById('cart-drawer');
 
@@ -248,6 +266,7 @@ window.openCartDrawer = function () {
     updateCartBadge();
 };
 
+// Schliesst den Drawer wieder und entfernt den Overlay-Zustand von der Seite.
 window.closeCartDrawer = function () {
     const drawer = document.getElementById('cart-drawer');
 

@@ -1,5 +1,9 @@
 <?php
 
+// Zentrale Hilfsfunktionen fuer Schema, Login, Formatierung, Rabatte, Mail und App-Logik.
+// Diese Datei wird von vielen Seiten eingebunden, damit gemeinsame Regeln nur einmal gepflegt werden muessen.
+
+// Prueft, ob eine Tabelle bereits eine bestimmte Spalte besitzt.
 function appTableHasColumn(PDO $pdo, string $table, string $column): bool
 {
     $statement = $pdo->query(sprintf(
@@ -11,6 +15,7 @@ function appTableHasColumn(PDO $pdo, string $table, string $column): bool
     return (bool) $statement->fetch();
 }
 
+// Fuegt eine Spalte nur dann hinzu, wenn sie noch nicht existiert.
 function appEnsureColumn(PDO $pdo, string $table, string $column, string $definition): void
 {
     if (appTableHasColumn($pdo, $table, $column)) {
@@ -25,6 +30,7 @@ function appEnsureColumn(PDO $pdo, string $table, string $column, string $defini
     ));
 }
 
+// Legt die benoetigten Tabellen an und erweitert sie bei Bedarf um fehlende Spalten.
 function appEnsureSchema(PDO $pdo): void
 {
     $pdo->exec(
@@ -134,6 +140,7 @@ function appEnsureSchema(PDO $pdo): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 
+    // Ein Admin-Account soll immer existieren, damit das System verwaltet werden kann.
     $adminStatement = $pdo->prepare('SELECT id FROM users WHERE username = :username LIMIT 1');
     $adminStatement->execute(['username' => 'admin']);
     $adminUser = $adminStatement->fetch();
@@ -159,6 +166,7 @@ function appEnsureSchema(PDO $pdo): void
     );
     $promoteAdmin->execute(['username' => 'admin']);
 
+    // Vorgabewerte fuer Rabatt-Einstellungen werden beim ersten Start angelegt.
     $defaultSettings = [
         'discount_enabled' => '1',
         'discount_10_percent' => '10',
@@ -179,21 +187,25 @@ function appEnsureSchema(PDO $pdo): void
     }
 }
 
+// Liest die aktuelle Nutzer-ID aus der Session.
 function appCurrentUserId(): int
 {
     return (int) ($_SESSION['user_id'] ?? 0);
 }
 
+// Liest den aktuellen Benutzernamen aus der Session.
 function appCurrentUsername(): string
 {
     return (string) ($_SESSION['username'] ?? '');
 }
 
+// Prueft, ob eine gueltige Login-Session vorhanden ist.
 function appIsLoggedIn(): bool
 {
     return appCurrentUserId() > 0 && appCurrentUsername() !== '';
 }
 
+// Laedt den aktuellen Nutzer aus der Datenbank, sofern eine Session existiert.
 function appLoadCurrentUser(PDO $pdo): ?array
 {
     if (!appIsLoggedIn()) {
@@ -212,6 +224,7 @@ function appLoadCurrentUser(PDO $pdo): ?array
     return $user ?: null;
 }
 
+// Erzwingt einen Login und leitet nicht angemeldete Nutzer weiter.
 function appRequireLogin(string $returnTo = 'user.php'): void
 {
     if (appIsLoggedIn()) {
@@ -224,6 +237,7 @@ function appRequireLogin(string $returnTo = 'user.php'): void
     exit;
 }
 
+// Erzwingt Admin-Rechte und blockiert alle anderen Nutzer.
 function appRequireAdmin(PDO $pdo): array
 {
     appRequireLogin('admin.php');
@@ -238,6 +252,7 @@ function appRequireAdmin(PDO $pdo): array
     return $user;
 }
 
+// Wandelt einen internen Buchungsstatus in eine lesbare Beschriftung um.
 function appBookingStatusLabel(string $status): string
 {
     return match ($status) {
@@ -249,6 +264,7 @@ function appBookingStatusLabel(string $status): string
     };
 }
 
+// Liefert die CSS-Klasse fuer den jeweiligen Buchungsstatus.
 function appBookingStatusClass(string $status): string
 {
     return match ($status) {
@@ -261,26 +277,31 @@ function appBookingStatusClass(string $status): string
     };
 }
 
+// Eine Buchung darf nur im Status "new" storniert werden.
 function appBookingIsCancelable(array $booking): bool
 {
     return ($booking['status'] ?? '') === 'new';
 }
 
+// Einheitliche Ausgabe von Geldbetragen mit deutschem Dezimaltrennzeichen.
 function appFormatMoney(float $amount): string
 {
     return number_format($amount, 2, ',', '.') . ' €';
 }
 
+// Formatiert Prozentwerte ohne ueberfluessige Nachkommastellen.
 function appFormatPercent(float $percent): string
 {
     return rtrim(rtrim(number_format($percent, 2, ',', '.'), '0'), ',');
 }
 
+// Speicherort des zentralen Rabattkatalogs.
 function appCouponCatalogPath(): string
 {
     return __DIR__ . '/../config/coupons.json';
 }
 
+// Laedt und normalisiert den Rabattkatalog aus JSON und merkt das Ergebnis fuer weitere Aufrufe.
 function appLoadCouponCatalog(): array
 {
     static $cachedCatalog = null;
@@ -333,6 +354,7 @@ function appLoadCouponCatalog(): array
     return $cachedCatalog;
 }
 
+// Erstellt eine kurze Rabatt-Zusammenfassung fuer Tabellen und Hinweise.
 function appFormatDiscountSummary(?string $label, float $percent, float $amount): string
 {
     if ($amount <= 0 || $percent <= 0) {
@@ -344,6 +366,7 @@ function appFormatDiscountSummary(?string $label, float $percent, float $amount)
     return $prefix . '-' . appFormatMoney($amount) . ' (' . appFormatPercent($percent) . '%)';
 }
 
+// Liest SMTP-Konfiguration aus Datei oder aus Umgebungsvariablen.
 function appGetMailConfig(): array
 {
     $config = [
@@ -383,6 +406,7 @@ function appGetMailConfig(): array
     return $config;
 }
 
+// Liest eine SMTP-Serverantwort zeilenweise ein, bis der Abschlusscode erreicht ist.
 function appSmtpReadResponse($connection): array
 {
     $lines = [];
@@ -412,6 +436,7 @@ function appSmtpReadResponse($connection): array
     ];
 }
 
+// Schreibt einen SMTP-Befehl und prueft optional den erwarteten Antwortcode.
 function appSmtpWriteCommand($connection, string $command, ?int $expectedCode = null): array
 {
     fwrite($connection, $command . "\r\n");
@@ -424,6 +449,7 @@ function appSmtpWriteCommand($connection, string $command, ?int $expectedCode = 
     return $response;
 }
 
+// Sendet eine Mail direkt per SMTP ohne externe Bibliothek.
 function appSendMailSmtp(array $config, string $toEmail, string $toName, string $subject, string $body, string $replyToEmail = '', string $replyToName = ''): array
 {
     if (($config['host'] ?? '') === '' || ($config['username'] ?? '') === '' || ($config['password'] ?? '') === '') {

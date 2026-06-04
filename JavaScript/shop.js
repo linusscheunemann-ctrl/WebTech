@@ -1,40 +1,40 @@
 const productCatalogUrl = new URL("../config/product.json", document.currentScript?.src || window.location.href).href;
 
+// Die Shop-Seite laedt Produkte erst dann, wenn der entsprechende Container vorhanden ist.
 document.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector(".shop")) {
         loadProducts();
     }
 });
 
-//  Funktion zum Laden der Produkte aus der JSON-Datei
+// Laedt die Produktdaten aus der JSON-Datei und baut daraus die sichtbaren Produktkarten.
 async function loadProducts() {
-    // Sucht das HTML-Element mit der Klasse "shop"
+    // Dieser Container nimmt spaeter alle Produktkarten auf.
     const container = document.querySelector(".shop");
 
     if (!container) {
         return;
     }
 
-    // Lädt die Datei aus dem Config-Ordner
+    // Die Produktliste kommt aus der zentralen Konfigurationsdatei.
     const response = await fetch(productCatalogUrl);
 
     if (!response.ok) {
         throw new Error(`Produktdaten konnten nicht geladen werden (${response.status})`);
     }
 
-    // Wandelt die Antwort in ein JavaScript-Objekt um
+    // JSON wird in ein normales JavaScript-Objekt umgewandelt.
     const data = await response.json();
 
-    // Geht alle Produkte aus der JSON-Datei durch
+    // Jedes Produkt wird als eigene Karte gerendert.
     (data.products || []).forEach(product => {
 
-        // Erstellt ein neues <div>-Element
         const productDiv = document.createElement("div");
 
-        // Fügt dem div die CSS-Klasse "product" hinzu
+        // Einheitliche Klasse fuer das Kartenlayout.
         productDiv.classList.add("product");
 
-        // Fügt den HTML-Inhalt für ein Produkt ein
+        // Bild, Name, Preis und Aktionen werden als HTML in die Karte geschrieben.
         productDiv.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
             <h3 class="product-name">${product.name}</h3>
@@ -56,21 +56,25 @@ async function loadProducts() {
             </div>
         `;
 
-        // Fügt das fertige Produkt in den Shop-Container ein
+        // Die fertige Karte wird an den Shop-Container angehaengt.
         container.appendChild(productDiv);
     });
 
+    // Danach erhalten die Kauf-Buttons ihre Click-Handler fuer den Warenkorb.
     attachBuyEvents();
 }
 
+// Wechselt zur Detailseite eines Produkts anhand seiner ID.
 function goToProduct(id) {
     window.location.href = "product.php?pid=" + id;
 }
 
+// Formatiert Preise in deutscher Schreibweise mit Euro-Symbol.
 function formatPrice(num) {
     return Number(num).toFixed(2).replace(".", ",") + " €";
 }
 
+// Bindet alle Kauf-Buttons an die Warenkorb-Funktion aus cart.js.
 function attachBuyEvents() {
     document.querySelectorAll(".buy-btn").forEach(button => {
         button.addEventListener("click", function () {
@@ -80,6 +84,7 @@ function attachBuyEvents() {
             const image = this.dataset.image;
             
 
+            // addToCart stammt aus cart.js und uebernimmt das eigentliche Hinzufuegen.
             addToCart(id,name, price, image);
         });
     });

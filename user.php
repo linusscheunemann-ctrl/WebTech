@@ -1,12 +1,15 @@
 <?php
+// Der Nutzerbereich kombiniert Profilpflege, Benachrichtigungen, Buchungen und Sammellisten.
 session_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/includes/app.php';
 
+// Schema bei vorhandener Verbindung sicherstellen.
 if (isset($pdo)) {
     appEnsureSchema($pdo);
 }
 
+// Serverseitige Validierung fuer den Benutzernamen.
 function isValidUsername(string $username): bool
 {
     return strlen($username) >= 5
@@ -14,11 +17,13 @@ function isValidUsername(string $username): bool
         && preg_match('/[a-z]/', $username);
 }
 
+// Serverseitige Mindestlaenge fuer das Passwort.
 function isValidPassword(string $password): bool
 {
     return strlen($password) >= 10;
 }
 
+// Nach dem Speichern des Warenkorbs wird eine kleine HTML-Seite mit localStorage-Update ausgegeben.
 function renderCartRedirectPage(array $cart, string $message = 'Der Warenkorb wurde aktualisiert.', string $targetUrl = 'cart.php'): void
 {
     $jsonCart = json_encode(array_values($cart), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -46,11 +51,13 @@ function renderCartRedirectPage(array $cart, string $message = 'Der Warenkorb wu
     exit;
 }
 
+// Ohne Login ist der Nutzerbereich nicht erreichbar.
 if (empty($_SESSION['username'])) {
     header('Location: login.php');
     exit;
 }
 
+// Der aktuelle Nutzer wird aus Session und Datenbank zusammengesetzt.
 $currentUser = isset($pdo) ? appLoadCurrentUser($pdo) : null;
 $userId = (int) ($_SESSION['user_id'] ?? 0);
 $isBlocked = (int) ($currentUser['is_blocked'] ?? ($_SESSION['is_blocked'] ?? 0)) === 1;
@@ -67,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
     } elseif ($bookingId <= 0) {
         $errorMessage = 'Die Buchung konnte nicht gefunden werden.';
     } else {
+        // Die Buchung muss dem angemeldeten Nutzer gehoeren, sonst wird sie ignoriert.
         $statement = $pdo->prepare(
             'SELECT id, status
              FROM bookings
@@ -85,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
         } elseif (!appBookingIsCancelable($booking)) {
             $errorMessage = 'Diese Buchung kann nicht mehr storniert werden.';
         } else {
+            // Stornierung wird mit Status, Grund und Zeitstempel in der Datenbank festgehalten.
             $update = $pdo->prepare(
                 'UPDATE bookings
                  SET status = :status,
@@ -107,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'mark_notifications_read') {
+    // Alle Benachrichtigungen werden als gelesen markiert.
     if (isset($pdo)) {
         appMarkNotificationsRead($pdo, $userId);
     }
@@ -116,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'mark_
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_cart_list') {
+    // Eine neue Sammelliste wird aus den uebergebenen Warenkorb-Daten erstellt.
     $listName = trim((string) ($_POST['list_name'] ?? ''));
     $cartPayload = (string) ($_POST['cart_payload'] ?? '');
     $cartItems = json_decode($cartPayload, true);
@@ -127,12 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
     } elseif (!is_array($cartItems) || $cartItems === []) {
         $errorMessage = 'Der Warenkorb ist leer, daher kann keine Sammelliste gespeichert werden.';
     } else {
+        // Die eigentliche Speicherung uebernimmt die App-Hilfsfunktion.
         appCreateShoppingList($pdo, $userId, $listName, $cartItems);
         $successMessage = 'Die Sammelliste "' . $listName . '" wurde gespeichert.';
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'merge_lists') {
+    // Mehrere gespeicherte Listen koennen wieder in einen Warenkorb zusammengefuehrt werden.
     if (!isset($pdo)) {
         $errorMessage = 'Die Datenbankverbindung ist aktuell nicht verfügbar.';
     } else {
@@ -142,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'merge
         if ($lists === []) {
             $errorMessage = 'Bitte mindestens eine Sammelliste auswählen.';
         } else {
+            // Die Listen werden zu einem flachen Warenkorb zusammengezogen.
             $cart = appFlattenShoppingLists($lists);
             renderCartRedirectPage(
                 $cart,
@@ -153,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'merge
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reorder_booking') {
+    // Eine alte Buchung kann erneut in den Warenkorb uebernommen werden.
     $bookingId = (int) ($_POST['booking_id'] ?? 0);
 
     if (!isset($pdo)) {
@@ -160,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reord
     } elseif ($bookingId <= 0) {
         $errorMessage = 'Die Buchung konnte nicht gefunden werden.';
     } else {
+        // Die Buchungspositionen werden als neuer Warenkorb vorbereitet.
         $cart = appFetchBookingCartItems($pdo, $bookingId, $userId);
 
         if ($cart === []) {
@@ -175,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reord
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Wenn keine Spezialaktion gesetzt wurde, wird das Profil aktualisiert.
     $formAction = $_POST['action'] ?? 'update_profile';
 
     if ($formAction !== 'update_profile') {
@@ -184,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
 
+        // Die restliche Logik arbeitet nur, wenn die Datenbank erreichbar ist.
         if (!isset($pdo)) {
             $errorMessage = 'Die Datenbankverbindung ist aktuell nicht verfügbar.';
         } elseif ($usernameValue === '' || $password === '' || $confirmPassword === '') {
@@ -195,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($password !== $confirmPassword) {
             $errorMessage = 'Die Passwörter stimmen nicht überein.';
         } else {
+            // Der neue Benutzername darf in keinem anderen Konto bereits verwendet werden.
             $statement = $pdo->prepare(
                 'SELECT id
                  FROM users
@@ -210,6 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($statement->fetch()) {
                 $errorMessage = 'Dieser Benutzername ist bereits vergeben.';
             } else {
+                // Username und Passwort-Hash werden gemeinsam aktualisiert.
                 $update = $pdo->prepare(
                     'UPDATE users
                      SET username = :username,
@@ -230,6 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Die folgenden Daten werden fuer das Konto-Dashboard nur geladen, wenn wirklich ein Nutzer existiert.
 $bookings = [];
 $bookingItems = [];
 $shoppingLists = [];
@@ -237,6 +258,7 @@ $notifications = [];
 $unreadNotificationCount = 0;
 
 if ($userId > 0 && isset($pdo)) {
+    // Alle Buchungen dieses Nutzers holen.
     $bookingStatement = $pdo->prepare(
         'SELECT id, user_id, subtotal_amount, total_amount, discount_percent, discount_amount, discount_label, status, rejection_reason, processed_at, cancelled_at, created_at
          FROM bookings
@@ -247,6 +269,7 @@ if ($userId > 0 && isset($pdo)) {
     $bookings = $bookingStatement->fetchAll() ?: [];
 
     if ($bookings !== []) {
+        // Positionsdaten werden pro Buchung gesammelt, damit die Tabellenzeilen spaeter kompakt bleiben.
         $bookingIds = array_map(static fn(array $booking): int => (int) $booking['id'], $bookings);
         $placeholders = implode(',', array_fill(0, count($bookingIds), '?'));
 
@@ -264,6 +287,7 @@ if ($userId > 0 && isset($pdo)) {
         }
     }
 
+    // Zusatzzustand fuer das Konto-Dashboard laden.
     $shoppingLists = appFetchShoppingLists($pdo, $userId);
     $notifications = appFetchUserNotifications($pdo, $userId, 8);
     $unreadNotificationCount = appGetUnreadNotificationCount($pdo, $userId);

@@ -1,6 +1,8 @@
 <?php
+// HTTP-Status für eine nicht gefundene Seite setzen
 http_response_code(404);
 
+// Angeforderte URL auslesen und für die Ausgabe sicher entschärfen
 $requestedPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
 $requestedPath = trim((string) $requestedPath);
 $requestedPath = $requestedPath !== '' ? htmlspecialchars($requestedPath, ENT_QUOTES, 'UTF-8') : 'Unbekannte Seite';
@@ -17,6 +19,7 @@ $requestedPath = $requestedPath !== '' ? htmlspecialchars($requestedPath, ENT_QU
     <title>404 - Seite nicht gefunden</title>
 </head>
 <body>
+    <!-- Gemeinsame Navigation der Seite einbinden -->
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
 
     <main class="error-page">
@@ -50,6 +53,7 @@ $requestedPath = $requestedPath !== '' ? htmlspecialchars($requestedPath, ENT_QU
         </section>
     </main>
 
+    <!-- Gemeinsamen Footer einbinden -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

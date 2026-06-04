@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Alle Formular-Elemente werden erst nach dem Laden des DOM geholt,
+    // damit die Live-Validierung nur dort aktiv wird, wo die Felder wirklich existieren.
     const username = document.getElementById("username");
     const msgUser = document.getElementById("msg-user");
     const password = document.getElementById("password");
@@ -6,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const msgPw = document.getElementById("msg-pw");
     const submitButton = document.getElementById("register-submit") || document.getElementById("profile-submit");
 
+    // Fügt bei Passwortfeldern einen kleinen Umschalter für "anzeigen/verbergen" ein,
+    // damit Nutzer ihr Passwort bei Bedarf kontrollieren können.
     function attachPasswordToggle(input) {
         if (!input || input.dataset.toggleAttached === "true") return;
 
@@ -29,10 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
         input.dataset.toggleAttached = "true";
     }
 
-    // =========================
-    // USERNAME VALIDIERUNG
-    // =========================
-
+    // Prüft alle benötigten Felder gemeinsam und schaltet den Submit-Button
+    // nur frei, wenn Benutzername, Passwort und Bestätigung zusammen passen.
     function updateSubmitState() {
         if (!submitButton || !username || !password || !confirm) return;
 
@@ -61,14 +63,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const isValid = hasLength && hasUpper && hasLower;
 
-            // Input Farbe
+            // Das Eingabefeld bekommt direkt eine visuelle Rückmeldung.
             username.classList.remove("valid", "invalid");
 
             if (value.length > 0) {
                 username.classList.add(isValid ? "valid" : "invalid");
             }
 
-            // Message reset
+            // Bei leerem Feld wird die Hilfsmeldung komplett entfernt.
             if (value.length === 0) {
                 msgUser.innerHTML = "";
                 return;
@@ -97,10 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // =========================
-    // PASSWORD VALIDIERUNG
-    // =========================
-
+    // Prüft Passwortlänge und, falls vorhanden, die Übereinstimmung mit der Bestätigung.
     function validatePassword() {
         if (!password || !msgPw) return;
 
@@ -112,13 +111,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const isValid = hasLength && matches;
 
-        // Passwort Input Farbe
+        // Das Passwortfeld selbst bekommt einen gültig/ungültig-Zustand.
         password.classList.remove("valid", "invalid");
         if (pw.length > 0) {
             password.classList.add(isValid ? "valid" : "invalid");
         }
 
-        // Confirm Input Farbe
+        // Falls ein Bestätigungsfeld vorhanden ist, wird es mitgeprüft und markiert.
         if (confirm) {
             confirm.classList.remove("valid", "invalid");
             if (cpw.length > 0) {
@@ -126,6 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        // Wenn beide Felder leer sind, wird kein Hinweistext gezeigt.
         if (pw.length === 0 && (!confirm || cpw.length === 0)) {
             msgPw.innerHTML = "";
             return;

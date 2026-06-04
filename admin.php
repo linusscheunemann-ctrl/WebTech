@@ -1,18 +1,23 @@
 <?php
+// Der Adminbereich verwaltet Buchungen, Nutzer und Rabatte.
 session_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/includes/app.php';
 
+// Schema nur dann initialisieren, wenn die Datenbankverbindung zur Verfuegung steht.
 if (isset($pdo)) {
     appEnsureSchema($pdo);
 }
 
+// Ohne Datenbank macht der Adminbereich keinen Sinn.
 if (!isset($pdo)) {
     die('Die Datenbankverbindung ist aktuell nicht verfügbar.');
 }
 
+// Nur Administratoren duerfen diese Seite aufrufen.
 appRequireAdmin($pdo);
 
+// Die Tabs gruppieren Buchungen nach Status, damit die Ansicht uebersichtlich bleibt.
 $tabs = [
     'new' => [
         'label' => 'Neue Aufträge',
@@ -32,15 +37,20 @@ $tabs = [
     ],
 ];
 
+// Unbekannte Tab-Werte fallen auf die Standardansicht zurueck.
 $activeTab = $_GET['tab'] ?? 'new';
 if (!array_key_exists($activeTab, $tabs)) {
     $activeTab = 'new';
 }
 
+// Aktuelle Rabatt-Einstellungen fuer den separaten Einstellungsbereich laden.
 $discountConfig = appGetDiscountConfig($pdo);
+
+// Flash-Meldungen werden nach einem Redirect genau einmal angezeigt.
 $flashMessage = $_SESSION['admin_flash'] ?? null;
 unset($_SESSION['admin_flash']);
 
+// Speichert eine Meldung in der Session, damit sie beim naechsten Seitenaufruf erscheint.
 function adminFlash(string $type, string $message): void
 {
     $_SESSION['admin_flash'] = [
@@ -49,6 +59,7 @@ function adminFlash(string $type, string $message): void
     ];
 }
 
+// Alle Aenderungen laufen ueber POST, damit Statusaenderungen und Sperren sauber verarbeitet werden.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $activeTab = $_POST['tab'] ?? $activeTab;
@@ -57,10 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Buchungen koennen Schritt fuer Schritt vom Neuzustand bis zum Abschluss weitergeschaltet werden.
         if ($action === 'advance_booking') {
             $bookingId = (int) ($_POST['booking_id'] ?? 0);
             $targetStatus = trim((string) ($_POST['target_status'] ?? ''));
 
+            // Zuerst den aktuellen Status laden, damit nur gueltige Uebergaenge erlaubt sind.
             $statement = $pdo->prepare(
                 'SELECT id, user_id, status
                  FROM bookings
@@ -75,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($targetStatus === 'processing' && ($booking['status'] ?? '') === 'new') {
+                // Der erste Schritt setzt die Buchung auf "processing".
                 $update = $pdo->prepare(
                     'UPDATE bookings
                      SET status = "processing",
@@ -92,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 adminFlash('success', 'Die Buchung wurde in Bearbeitung verschoben.');
             } elseif ($targetStatus === 'completed' && ($booking['status'] ?? '') === 'processing') {
+                // Der zweite Schritt schliesst die Buchung ab.
                 $update = $pdo->prepare(
                     'UPDATE bookings
                      SET status = "completed",
@@ -111,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 throw new RuntimeException('Der Status konnte nicht geändert werden.');
             }
+        // Buchungen koennen auch mit einer Begruendung abgelehnt werden.
         } elseif ($action === 'reject_booking') {
             $bookingId = (int) ($_POST['booking_id'] ?? 0);
             $reason = trim((string) ($_POST['rejection_reason'] ?? ''));
@@ -119,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new RuntimeException('Bitte einen Ablehnungsgrund angeben.');
             }
 
+            // Erneut den Datensatz laden, um den Status vor dem Ablehnen zu pruefen.
             $statement = $pdo->prepare(
                 'SELECT id, user_id, status
                  FROM bookings
@@ -136,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new RuntimeException('Diese Buchung kann nicht abgelehnt werden.');
             }
 
+            // Ablehnung speichert Status, Grund und Bearbeitungszeitpunkt.
             $update = $pdo->prepare(
                 'UPDATE bookings
                  SET status = "rejected",
@@ -157,8 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
             adminFlash('success', 'Die Buchung wurde abgelehnt.');
+        // Normale Nutzer koennen gesperrt oder entsperrt werden.
         } elseif ($action === 'toggle_user_block') {
             $userId = (int) ($_POST['user_id'] ?? 0);
+            // Vor dem Umschalten wird geprueft, ob der Nutzer existiert und kein Admin ist.
             $statement = $pdo->prepare(
                 'SELECT id, username, role, is_blocked
                  FROM users
@@ -177,6 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $newState = ((int) ($user['is_blocked'] ?? 0)) === 1 ? 0 : 1;
+            // Der Sperrstatus wird einfach umgedreht.
             $update = $pdo->prepare(
                 'UPDATE users
                  SET is_blocked = :is_blocked
@@ -201,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'success',
                 $newState === 1 ? 'Der Nutzer wurde gesperrt.' : 'Der Nutzer wurde entsperrt.'
             );
+        // Die Rabatteinstellungen werden zentral in app_settings gespeichert.
         } elseif ($action === 'update_discount_settings') {
             $enabled = isset($_POST['discount_enabled']) ? '1' : '0';
             $tenPercent = max(0, min(100, (float) ($_POST['discount_10_percent'] ?? 10)));
@@ -222,9 +244,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// Fuer die aktive Ansicht nur die relevanten Statuswerte laden.
 $bookingStatuses = $tabs[$activeTab]['statuses'];
 $placeholders = implode(',', array_fill(0, count($bookingStatuses), '?'));
 
+// Buchungen werden mit dem Nutzer verknuepft, damit der Admin den Besitzer sieht.
 $bookingQuery = $pdo->prepare(
     "SELECT b.id, b.user_id, b.subtotal_amount, b.total_amount, b.discount_percent, b.discount_amount, b.discount_label, b.status, b.rejection_reason, b.processed_at, b.cancelled_at, b.created_at, u.username
      FROM bookings b
@@ -235,6 +259,7 @@ $bookingQuery = $pdo->prepare(
 $bookingQuery->execute($bookingStatuses);
 $bookings = $bookingQuery->fetchAll() ?: [];
 
+// Die Positionen jeder Buchung werden separat geladen und nach Buchung gruppiert.
 $bookingItems = [];
 if ($bookings !== []) {
     $bookingIds = array_map(static fn(array $booking): int => (int) $booking['id'], $bookings);
@@ -253,6 +278,7 @@ if ($bookings !== []) {
     }
 }
 
+// Die vollstaendige Nutzerliste dient fuer Sperren und Entsperren.
 $usersQuery = $pdo->query(
     'SELECT id, username, role, is_blocked
      FROM users
