@@ -1,6 +1,6 @@
 
-
 <?php
+ // ## Beginn Code von Linus generiert mit Unterstützung von CoPilot
 $dbHost = 'localhost';
 $dbName = 'autohaus';
 $dbUser = 'root';
@@ -19,3 +19,4 @@ try {
 } catch (PDOException $exception) {
     $dbError = 'Datenbankverbindung fehlgeschlagen.';
 }
+// ## Schluss Code von Linus generiert mit Unterstützung von CoPilot

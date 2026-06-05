@@ -86,6 +86,26 @@ CREATE TABLE IF NOT EXISTS user_notifications (
     INDEX (is_read)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS product_images (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    file_path VARCHAR(255) NOT NULL UNIQUE,
+    original_name VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS products (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    category VARCHAR(100) NOT NULL DEFAULT '',
+    subcategory VARCHAR(100) NOT NULL DEFAULT '',
+    image_id INT UNSIGNED DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX (image_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO app_settings (setting_key, setting_value)
 VALUES
     ('discount_enabled', '1'),
@@ -95,8 +115,10 @@ ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
 
 INSERT INTO users (username, password_hash, role, is_blocked)
 VALUES
-    ('admin', '$2y$10$replace_with_a_valid_bcrypt_hash_here', 'admin', 0)
+    ('admin', '$2y$10$replace_with_a_valid_bcrypt_hash_here', 'admin', 0),
+    ('admin1', '$2y$10$G8OWFxUeOXPrcI9n4EaeR.cQfNc8kNXAv.osJ4IdRXp4m7ZNNNmru', 'admin', 0)
 ON DUPLICATE KEY UPDATE
+    password_hash = VALUES(password_hash),
     role = 'admin',
     is_blocked = 0;
 

@@ -1,4 +1,4 @@
-// ## Beginn KI generierter Code
+// ## Beginn KI generierter Code (Codex)
 // JavaScript für die responsive Navigation: Öffnen, Schließen und Accessibility-Features der Navbar
 document.addEventListener("DOMContentLoaded", () => {
   // Die drei Elemente steuern das responsive Navigationsmenü
@@ -52,4 +52,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ## Beginn KI generierter Code
+// ## Schluss KI generierter Code (Codex)

@@ -1,4 +1,4 @@
-// ## Beginn Code von Linus
+// ## Beginn Code von Linus generiert mit Unterstützung von CoPilot
 
 // Emoji-Folgen für die kleine Übergangsanimation beim Theme-Wechsel
 const toDark = ["🌕","🌖","🌗","🌘","🌑"];
@@ -88,4 +88,4 @@ function myFunction() {
     }, 80);
 }
 
-// ## Schluss Code von Linus
+// ## Schluss Code von Linus generiert mit Unterstützung von CoPilot

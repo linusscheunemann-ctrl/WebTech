@@ -218,7 +218,29 @@ input {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
+textarea,
+select {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-color);
+  background: var(--surface-strong);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
 input:hover {
+  transform: translateY(-1px);
+}
+
+textarea:hover,
+select:hover {
   transform: translateY(-1px);
 }
 
@@ -442,7 +464,7 @@ table {
   width: auto;
 }
 /* ## Schluss Code von Linus*/
-/* ## Beginn KI generierter Code*/
+/* ## Beginn KI generierter Code (Codex)*/
 .booking-table,
 .admin-table {
   width: min(1100px, 94vw);
@@ -560,6 +582,51 @@ table {
 .booking-action-form input[type="text"]:hover,
 .admin-inline-form input[type="text"]:hover {
   transform: none;
+}
+
+.admin-form-grid {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  gap: 12px 14px;
+  align-items: start;
+  box-sizing: border-box;
+  min-width: 0;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.admin-product-form {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-form-grid textarea,
+.admin-form-grid select,
+.admin-form-grid input[type="file"] {
+  width: 100%;
+}
+
+.admin-form-grid input[type="file"] {
+  padding: 9px 12px;
+}
+
+.admin-form-grid input[type="file"]:hover {
+  transform: none;
+}
+
+.admin-form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .admin-dashboard h1 {
@@ -680,6 +747,62 @@ html[data-theme="dark"] .status-unknown {
   margin: 0 0 36px;
 }
 
+.admin-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 16px 0 22px;
+}
+
+.admin-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 8px;
+}
+
+.admin-filter-bar label {
+  margin: 0;
+}
+
+.admin-product-filter {
+  min-width: min(420px, 100%);
+  flex: 1 1 320px;
+}
+
+.admin-filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(63, 79, 85, 0.10);
+  color: var(--text-color);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-subheading {
+  display: block;
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.product-thumb {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+html[data-theme="dark"] .product-thumb {
+  border-color: var(--border-color);
+  background: var(--surface-strong);
+}
+
 .admin-users-toolbar {
   display: flex;
   justify-content: space-between;
@@ -787,7 +910,7 @@ html[data-theme="dark"] .status-unknown {
   background: #fff;
   color: #000;
 }
-/* ## Schluss KI generierter Code*/
+/* ## Schluss KI generierter Code (Codex)*/
 /* ## Beginn Code von Moritz */
 .about-page {
   max-width: 1180px;
@@ -1215,7 +1338,7 @@ footer a,
 }
 /* ## Beginn Code von Linus */
 
-/* ## Beginn KI generierter Code */
+/* ## Beginn KI generierter Code (Codex)*/
 .cart-coupon-box {
   max-width: 980px;
   width: 90%;
@@ -1284,7 +1407,7 @@ footer a,
 body.drawer-open {
   overflow: hidden;
 }
-/* ## Schluss KI generierter Code */
+/* ## Schluss KI generierter Code (Codex) */
 /* ## Beginn Code von Nils */
 #toast {
   position: fixed;
@@ -1310,7 +1433,7 @@ body.drawer-open {
 
 /* ## Schluss Code von Nils */
 
-/* ## Beginn KI generierter Code */
+/* ## Beginn KI generierter Code (Codex)*/
 .cart-drawer {
   position: fixed;
   inset: 0;
@@ -1538,7 +1661,7 @@ body.drawer-open {
 .cart-drawer-actions button {
   flex: 1 1 0;
 }
-/* ## Schluss KI generierter Code */
+/* ## Schluss KI generierter Code (Codex) */
 /* ## Beginn Code von Linus */
 .shop {
     display: grid;
@@ -1647,7 +1770,7 @@ input.invalid {
 }
 
 /* ## Schluss Code von Linus */
-/* ## Beginn KI genertierter Code */
+/* ## Beginn KI genertierter Code (Codex)*/
 @media (max-width: 1024px) {
   .shop {
     max-width: 100%;
@@ -2699,6 +2822,14 @@ html[data-theme="dark"] .error-code {
   .error-card-grid {
     grid-template-columns: 1fr;
   }
+
+  .admin-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .site-header.is-open .nav-toggle span:nth-child(1) {
@@ -2832,4 +2963,4 @@ html[data-theme="dark"] .error-code {
     width: 150px;
   }
 }
-/* ## Schluss KI genertierter Code */
+/* ## Schluss KI genertierter Code (Codex) */

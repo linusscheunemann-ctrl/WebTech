@@ -24,7 +24,7 @@
 <div class="wrapper">
     <div class="shop">
 
-        <!-- Produkte werden hier per shop.js + config/product.json geladen -->
+        <!-- Produkte werden hier per shop.js + api/products.php geladen -->
 
     </div>
 </div>

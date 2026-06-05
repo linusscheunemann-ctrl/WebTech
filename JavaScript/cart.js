@@ -203,7 +203,7 @@ window.getCartTotals = function () {
     };
 };
 // ## Schluss Code von Nils
-// ## Beginn KI genertierter Code
+// ## Beginn KI genertierter Code (Claude)
 // Aktualisiert die kleine Warenkorb-Badge an allen Icons im Layout.
 window.updateCartBadge = function () {
 
@@ -499,3 +499,4 @@ window.parsePrice = function (price) {
 window.formatPrice = function (num) {
     return Number(num).toFixed(2).replace('.', ',') + ' €';
 };
+// ## Schluss KI genertierter Code (Claude)

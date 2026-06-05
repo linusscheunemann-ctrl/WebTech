@@ -1,5 +1,5 @@
-// ## Beginn KI generierter Code
-const productCatalogUrl = new URL("../config/product.json", document.currentScript?.src || window.location.href).href;
+// ## Beginn KI generierter Code (CoPilot)
+const productCatalogUrl = new URL("../api/products.php", document.currentScript?.src || window.location.href).href;
 
 // Die Shop-Seite laedt Produkte erst dann, wenn der entsprechende Container vorhanden ist.
 document.addEventListener("DOMContentLoaded", () => {
@@ -39,7 +39,7 @@ async function loadProducts() {
         // ##Schluss KI generierter Code
         // ##Beginn Code von Linus
         productDiv.innerHTML = `
-            <img src="${product.image}" alt="${product.name}">
+            <img src="${product.image || 'images/image.png'}" alt="${product.name}">
             <h3 class="product-name">${product.name}</h3>
             <div class="price">
                 ${formatPrice(product.price)}
@@ -49,7 +49,7 @@ async function loadProducts() {
                     data-id="${product.id}"
                     data-name="${product.name}"
                     data-price="${product.price}"
-                    data-image="${product.image}">
+                    data-image="${product.image || ''}">
                     Kaufen
                 </button>
                 <button class="detail-btn"
@@ -93,4 +93,4 @@ function attachBuyEvents() {
         });
     });
 }
-//## Schluss KI genertierter Code
+//## Schluss KI genertierter Code (CoPilot)

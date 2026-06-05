@@ -59,6 +59,34 @@ function adminFlash(string $type, string $message): void
     ];
 }
 
+function adminImageExtensionFromMime(string $mimeType): ?string
+{
+    return match ($mimeType) {
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp',
+        default => null,
+    };
+}
+
+function adminEnsureWritableDirectory(string $directory): void
+{
+    if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+        throw new RuntimeException('Der Upload-Ordner konnte nicht angelegt werden.');
+    }
+
+    if (is_writable($directory)) {
+        return;
+    }
+
+    @chmod($directory, 0777);
+
+    if (!is_writable($directory)) {
+        throw new RuntimeException('Der Upload-Ordner ist nicht beschreibbar.');
+    }
+}
+
 // Alle Aenderungen laufen ueber POST, damit Statusaenderungen und Sperren sauber verarbeitet werden.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -233,6 +261,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             appSetSetting($pdo, 'discount_20_percent', (string) $twentyPercent);
 
             adminFlash('success', 'Die Rabatteinstellungen wurden gespeichert.');
+        // Produkte werden direkt in der Datenbank verwaltet.
+        } elseif ($action === 'create_product') {
+            $name = trim((string) ($_POST['product_name'] ?? ''));
+            $description = trim((string) ($_POST['product_description'] ?? ''));
+            $price = (float) str_replace(',', '.', trim((string) ($_POST['product_price'] ?? '0')));
+            $category = trim((string) ($_POST['product_category'] ?? ''));
+            $subcategory = trim((string) ($_POST['product_subcategory'] ?? ''));
+            $imageId = (int) ($_POST['image_id'] ?? 0);
+
+            if ($name === '') {
+                throw new RuntimeException('Bitte einen Produktnamen eingeben.');
+            }
+
+            if ($description === '') {
+                throw new RuntimeException('Bitte eine Produktbeschreibung eingeben.');
+            }
+
+            if ($price <= 0) {
+                throw new RuntimeException('Bitte einen gültigen Preis eingeben.');
+            }
+
+            if ($category === '') {
+                throw new RuntimeException('Bitte eine Kategorie angeben.');
+            }
+
+            if ($subcategory === '') {
+                throw new RuntimeException('Bitte eine Unterkategorie angeben.');
+            }
+
+            if ($imageId > 0) {
+                $imageCheck = $pdo->prepare(
+                    'SELECT id
+                     FROM product_images
+                     WHERE id = :image_id
+                     LIMIT 1'
+                );
+                $imageCheck->execute(['image_id' => $imageId]);
+
+                if (!$imageCheck->fetch()) {
+                    throw new RuntimeException('Das ausgewählte Bild wurde nicht gefunden.');
+                }
+            } else {
+                $imageId = null;
+            }
+
+            $insertProduct = $pdo->prepare(
+                'INSERT INTO products (
+                    name,
+                    description,
+                    price,
+                    category,
+                    subcategory,
+                    image_id
+                ) VALUES (
+                    :name,
+                    :description,
+                    :price,
+                    :category,
+                    :subcategory,
+                    :image_id
+                )'
+            );
+            $insertProduct->execute([
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'category' => $category,
+                'subcategory' => $subcategory,
+                'image_id' => $imageId,
+            ]);
+
+            adminFlash('success', 'Das Produkt wurde angelegt.');
+        } elseif ($action === 'delete_product') {
+            $productId = (int) ($_POST['product_id'] ?? 0);
+
+            if ($productId <= 0) {
+                throw new RuntimeException('Das Produkt konnte nicht gefunden werden.');
+            }
+
+            $productCheck = $pdo->prepare(
+                'SELECT id
+                 FROM products
+                 WHERE id = :product_id
+                 LIMIT 1'
+            );
+            $productCheck->execute(['product_id' => $productId]);
+
+            if (!$productCheck->fetch()) {
+                throw new RuntimeException('Das Produkt wurde nicht gefunden.');
+            }
+
+            $deleteProduct = $pdo->prepare(
+                'DELETE FROM products
+                 WHERE id = :product_id'
+            );
+            $deleteProduct->execute(['product_id' => $productId]);
+
+            adminFlash('success', 'Das Produkt wurde gelöscht.');
+        } elseif ($action === 'upload_product_image') {
+            if (!isset($_FILES['product_image']) || !is_array($_FILES['product_image'])) {
+                throw new RuntimeException('Bitte ein Bild auswählen.');
+            }
+
+            $uploadedFile = $_FILES['product_image'];
+            $uploadError = (int) ($uploadedFile['error'] ?? UPLOAD_ERR_NO_FILE);
+
+            if ($uploadError !== UPLOAD_ERR_OK) {
+                throw new RuntimeException('Das Bild konnte nicht hochgeladen werden.');
+            }
+
+            $tmpName = (string) ($uploadedFile['tmp_name'] ?? '');
+            if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+                throw new RuntimeException('Der Upload ist ungültig.');
+            }
+
+            $imageInfo = @getimagesize($tmpName);
+            if ($imageInfo === false || !isset($imageInfo['mime'])) {
+                throw new RuntimeException('Bitte nur gültige Bilddateien hochladen.');
+            }
+
+            $extension = adminImageExtensionFromMime((string) $imageInfo['mime']);
+            if ($extension === null) {
+                throw new RuntimeException('Nur JPG, PNG, GIF oder WEBP sind erlaubt.');
+            }
+
+            $uploadDir = __DIR__ . '/images/products/uploads';
+            adminEnsureWritableDirectory($uploadDir);
+
+            $safeName = 'product-' . bin2hex(random_bytes(8)) . '.' . $extension;
+            $relativePath = 'images/products/uploads/' . $safeName;
+            $absolutePath = $uploadDir . '/' . $safeName;
+
+            if (!move_uploaded_file($tmpName, $absolutePath)) {
+                throw new RuntimeException('Das Bild konnte nicht gespeichert werden. Bitte die Schreibrechte im Upload-Ordner prüfen.');
+            }
+
+            $insertImage = $pdo->prepare(
+                'INSERT INTO product_images (file_path, original_name)
+                 VALUES (:file_path, :original_name)'
+            );
+            $insertImage->execute([
+                'file_path' => $relativePath,
+                'original_name' => (string) ($uploadedFile['name'] ?? $safeName),
+            ]);
+
+            adminFlash('success', 'Das Produktbild wurde hochgeladen.');
         } else {
             throw new RuntimeException('Unbekannte Aktion.');
         }
@@ -285,6 +459,10 @@ $usersQuery = $pdo->query(
      ORDER BY role DESC, username ASC'
 );
 $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
+
+// Produkte und Bildbibliothek werden mit einer JOIN-Abfrage geladen.
+$products = appFetchProducts($pdo);
+$productImages = appFetchProductImages($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -294,6 +472,7 @@ $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <script src="JavaScript/toggle-theme.js" defer></script>
     <script src="JavaScript/cart.js" defer></script>
+    <script src="JavaScript/admin-products.js" defer></script>
     <title>Adminbereich</title>
 </head>
 <body>
@@ -411,7 +590,6 @@ $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
         <section class="admin-panel">
             <div class="admin-users-toolbar">
                 <h2>Nutzerliste</h2>
-                <p class="account-bookings-empty">Sperren blockiert neue Buchungen, entsperren hebt die Einschränkung wieder auf.</p>
             </div>
 
             <?php if ($users === []): ?>
@@ -456,6 +634,163 @@ $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
                                         </form>
                                     <?php endif; ?>
                                 </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </section>
+
+        <section class="admin-panel">
+            <div class="admin-users-toolbar">
+                <h2>Produkte</h2>
+            </div>
+
+            <div class="admin-filter-bar">
+                <label for="admin-product-filter">Produkte filtern</label>
+                <input
+                    type="search"
+                    id="admin-product-filter"
+                    class="admin-product-filter"
+                    placeholder="Name, Kategorie oder Unterkategorie"
+                    data-products-endpoint="api/products.php"
+                >
+                <span class="admin-filter-count" id="admin-product-filter-count"><?php echo count($products); ?> Produkte</span>
+            </div>
+
+            <?php if ($products === []): ?>
+                <p class="account-bookings-empty">Es sind noch keine Produkte vorhanden.</p>
+            <?php endif; ?>
+
+            <table class="admin-table" id="admin-products-table">
+                <thead>
+                    <tr>
+                        <th>Nr.</th>
+                        <th>Name</th>
+                        <th>Bild</th>
+                        <th>Preis</th>
+                        <th>Kategorie</th>
+                        <th>Unterkategorie</th>
+                        <th>Aktion</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-products-table-body">
+                    <?php if ($products === []): ?>
+                        <tr>
+                            <td colspan="7" class="account-bookings-empty">Keine Produkte vorhanden.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($products as $product): ?>
+                            <?php $imagePath = (string) ($product['image_path'] ?? ''); ?>
+                            <tr>
+                                <td><?php echo (int) $product['id']; ?></td>
+                                <td><?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>
+                                    <?php if ($imagePath !== ''): ?>
+                                        <img
+                                            src="<?php echo htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8'); ?>"
+                                            alt="<?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            class="product-thumb"
+                                        >
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars(appFormatMoney((float) $product['price']), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) $product['category'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) $product['subcategory'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>
+                                    <form action="admin.php" method="post" class="admin-inline-form">
+                                        <input type="hidden" name="action" value="delete_product">
+                                        <input type="hidden" name="tab" value="<?php echo htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8'); ?>">
+                                        <input type="hidden" name="product_id" value="<?php echo (int) $product['id']; ?>">
+                                        <button type="submit" class="admin-action-button" onclick="return confirm('Dieses Produkt wirklich löschen?');">Löschen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <div class="admin-product-grid">
+                <form action="admin.php" method="post" class="admin-form-grid admin-product-form">
+                    <input type="hidden" name="action" value="create_product">
+                    <input type="hidden" name="tab" value="<?php echo htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8'); ?>">
+
+                    <label for="product_name">Produktname</label>
+                    <input type="text" id="product_name" name="product_name" required>
+
+                    <label for="product_price">Preis</label>
+                    <input type="text" id="product_price" name="product_price" inputmode="decimal" placeholder="z. B. 19,90" required>
+
+                    <label for="product_category">Kategorie</label>
+                    <input type="text" id="product_category" name="product_category" required>
+
+                    <label for="product_subcategory">Unterkategorie</label>
+                    <input type="text" id="product_subcategory" name="product_subcategory" required>
+
+                    <label class="full-width" for="product_description">Beschreibung</label>
+                    <textarea id="product_description" name="product_description" rows="5" class="full-width" required></textarea>
+
+                    <label class="full-width" for="image_id">Produktbild</label>
+                    <select id="image_id" name="image_id" class="full-width">
+                        <option value="">Ohne Bild</option>
+                        <?php foreach ($productImages as $image): ?>
+                            <option value="<?php echo (int) $image['id']; ?>">
+                                <?php echo htmlspecialchars('#' . (int) $image['id'] . ' - ' . (string) ($image['original_name'] ?: $image['file_path']), ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <div class="admin-form-actions full-width">
+                        <button type="submit" class="admin-action-button">Produkt anlegen</button>
+                    </div>
+                </form>
+
+                <form action="admin.php" method="post" enctype="multipart/form-data" class="admin-form-grid admin-product-form">
+                    <input type="hidden" name="action" value="upload_product_image">
+                    <input type="hidden" name="tab" value="<?php echo htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8'); ?>">
+
+                    <label class="full-width" for="product_image">Neues Produktbild hochladen</label>
+                    <input type="file" id="product_image" name="product_image" accept="image/*" class="full-width" required>
+
+                    <p class="account-bookings-empty full-width">
+                        Erlaubt sind JPG, PNG, GIF und WEBP. Das Bild landet in der Bildbibliothek und kann danach für neue Produkte verwendet werden.
+                    </p>
+
+                    <div class="admin-form-actions full-width">
+                        <button type="submit" class="admin-action-button">Bild hochladen</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3 class="admin-subheading">Bildbibliothek</h3>
+            <?php if ($productImages === []): ?>
+                <p class="account-bookings-empty">Es wurden noch keine Produktbilder hochgeladen.</p>
+            <?php else: ?>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nr.</th>
+                            <th>Vorschau</th>
+                            <th>Datei</th>
+                            <th>Hochgeladen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($productImages as $image): ?>
+                            <tr>
+                                <td><?php echo (int) $image['id']; ?></td>
+                                <td>
+                                    <img
+                                        src="<?php echo htmlspecialchars((string) $image['file_path'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        alt="<?php echo htmlspecialchars((string) ($image['original_name'] ?: $image['file_path']), ENT_QUOTES, 'UTF-8'); ?>"
+                                        class="product-thumb"
+                                    >
+                                </td>
+                                <td><?php echo htmlspecialchars((string) ($image['original_name'] ?: $image['file_path']), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars(date('d.m.Y H:i', strtotime((string) $image['created_at'])), ENT_QUOTES, 'UTF-8'); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
