@@ -31,7 +31,7 @@ function appEnsureColumn(PDO $pdo, string $table, string $column, string $defini
     ));
 }
 // ## Schluss KI generierter Code (Codex)
-// ## Beginn Code von Linus
+// ## Beginn Code von Linus mit Unterstützung von (CoPilot)
 // Legt die benoetigten Tabellen an und erweitert sie bei Bedarf um fehlende Spalten.
 function appEnsureSchema(PDO $pdo): void
 {
@@ -168,7 +168,7 @@ function appEnsureSchema(PDO $pdo): void
 
     appSeedProductCatalog($pdo);
 
-// ## Schluss Code von Linus
+// ## Schluss Code von Linus mit Unterstützung von (CoPilot)
 // ## Beginn Code von Moritz
     // Ein Admin-Account soll immer existieren, damit das System verwaltet werden kann.
     $adminStatement = $pdo->prepare('SELECT id FROM users WHERE username = :username LIMIT 1');
