@@ -4,11 +4,6 @@
 // von unterschiedlichen Seiten, Formularen und Inline-Handlern gemeinsam genutzt werden.
 console.log("CART.JS GELADEN");
 
-// Liefert den zentralen Katalog aller gueltigen Rabattcodes.
-window.getCouponCatalog = function () {
-    return window.COUPON_CATALOG || {};
-};
-
 // Liest den aktuell im Browser gespeicherten Warenkorb aus dem localStorage.
 window.getCart = function () {
     return JSON.parse(localStorage.getItem('cart')) || [];
@@ -17,152 +12,6 @@ window.getCart = function () {
 // Speichert den kompletten Warenkorb wieder im localStorage.
 window.saveCart = function (cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
-};
-
-// Normalisiert Rabattcodes, damit Gross-/Kleinschreibung und Leerzeichen keine Rolle spielen.
-window.normalizeCouponCode = function (code) {
-    return String(code || '').trim().toUpperCase();
-};
-
-// Gibt den aktuell gespeicherten Rabattcode in normalisierter Form zurueck.
-window.getCouponCode = function () {
-    return window.normalizeCouponCode(localStorage.getItem('cart_coupon_code') || '');
-};
-
-// Speichert einen Rabattcode oder loescht ihn, falls die Eingabe leer war.
-window.saveCouponCode = function (code) {
-    const normalizedCode = window.normalizeCouponCode(code);
-
-    if (normalizedCode === '') {
-        localStorage.removeItem('cart_coupon_code');
-        return '';
-    }
-
-    localStorage.setItem('cart_coupon_code', normalizedCode);
-    return normalizedCode;
-};
-
-// Entfernt den Rabattcode aus dem Speicher und aktualisiert alle sichtbaren Warenkorb-Bereiche.
-window.clearCouponCode = function () {
-    localStorage.removeItem('cart_coupon_code');
-    renderCart();
-    renderCartDrawer();
-
-    const couponInput = document.getElementById('discount-code');
-    const couponMessage = document.getElementById('coupon-message');
-
-    if (couponInput) {
-        couponInput.value = '';
-    }
-
-    if (couponMessage) {
-        couponMessage.textContent = 'Rabattcode wurde entfernt.';
-        couponMessage.className = 'cart-coupon-message is-valid';
-    }
-};
-// Berechnet Rabattbetrag und Endsumme fuer eine gegebene Zwischensumme.
-window.getCouponDiscount = function (subtotal, code) {
-    const normalizedCode = window.normalizeCouponCode(code);
-    const coupon = window.getCouponCatalog()[normalizedCode];
-
-    if (!coupon) {
-        return {
-            code: '',
-            label: null,
-            percent: 0,
-            amount: 0,
-            final_total: subtotal,
-            valid: false,
-        };
-    }
-
-    const percent = Math.max(0, Math.min(100, Number(coupon.percent) || 0));
-    const amount = Math.round(subtotal * (percent / 100) * 100) / 100;
-
-    return {
-        code: normalizedCode,
-        label: coupon.label || normalizedCode,
-        percent,
-        amount,
-        final_total: Math.max(0, Math.round((subtotal - amount) * 100) / 100),
-        valid: true,
-    };
-};
-
-// Prüft den eingegebenen Rabattcode und gibt dem Nutzer
-// eine passende Rückmeldung aus.
-window.applyCouponCode = function () {
-
-    // Eingabefeld für den Rabattcode abrufen
-    const couponInput = document.getElementById('discount-code');
-
-    // Element für Status- und Fehlermeldungen abrufen
-    const couponMessage = document.getElementById('coupon-message');
-
-    // Falls das Eingabefeld nicht existiert, Funktion beenden
-    if (!couponInput) {
-        return;
-    }
-
-    // Rabattcode bereinigen und normalisieren
-    const code = window.normalizeCouponCode(couponInput.value);
-
-    // Aktuellen Warenkorbwert ohne Rabatt ermitteln
-    const subtotal = window.getCartTotals().subtotal;
-
-    // Rabatt anhand des Codes berechnen
-    const discount = window.getCouponDiscount(subtotal, code);
-
-    // Prüfen, ob überhaupt ein Rabattcode eingegeben wurde
-    if (!code) {
-
-        // Gespeicherten Rabattcode entfernen
-        window.clearCouponCode();
-
-        // Fehlermeldung anzeigen
-        if (couponMessage) {
-            couponMessage.textContent = 'Bitte einen Rabattcode eingeben.';
-            couponMessage.className = 'cart-coupon-message is-invalid';
-        }
-
-        return;
-    }
-
-    // Prüfen, ob der Rabattcode ungültig ist
-    // oder keinen Rabatt erzeugt
-    if (!discount.valid || discount.amount <= 0) {
-
-        // Rabattcode aus dem Local Storage entfernen
-        localStorage.removeItem('cart_coupon_code');
-
-        // Warenkorb und Warenkorb-Drawer aktualisieren
-        renderCart();
-        renderCartDrawer();
-
-        // Fehlermeldung anzeigen
-        if (couponMessage) {
-            couponMessage.textContent = 'Dieser Rabattcode ist ungültig.';
-            couponMessage.className = 'cart-coupon-message is-invalid';
-        }
-
-        return;
-    }
-
-    // Gültigen Rabattcode speichern
-    window.saveCouponCode(code);
-
-    // Erfolgsnachricht mit Rabattinformationen anzeigen
-    if (couponMessage) {
-        couponMessage.textContent =
-            `${discount.label} aktiviert: -${formatPrice(discount.amount)} (${discount.percent}%)`;
-
-        couponMessage.className = 'cart-coupon-message is-valid';
-    }
-
-    // Warenkorbansicht aktualisieren,
-    // damit der Rabatt direkt sichtbar wird
-    renderCart();
-    renderCartDrawer();
 };
 
 // ## Schluss Code von Linus
@@ -193,14 +42,116 @@ window.getCartTotals = function () {
         return sum + (price * quantity);
     }, 0);
 
-    const couponDiscount = window.getCouponDiscount(subtotal, window.getCouponCode());
-    const total = Math.max(0, Math.round((subtotal - couponDiscount.amount) * 100) / 100);
+    const vat = Math.round(subtotal * 0.19 * 100) / 100;
+    const total = Math.round((subtotal + vat) * 100) / 100;
 
     return {
         subtotal,
-        coupon: couponDiscount,
+        vat,
         total,
     };
+};
+
+// Escaped Texte sicher fuer HTML-Ausgabe in Tabellen und Drawer.
+window.escapeHtml = function (value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => {
+        switch (char) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case "'": return '&#39;';
+            default: return char;
+        }
+    });
+};
+
+// Rendert die komplette Warenkorb-Tabelle auf der cart.php.
+window.renderCart = function () {
+    const cart = getCart();
+    const body = document.getElementById('cart-body');
+    const emptyMsg = document.getElementById('empty-msg');
+    const table = document.getElementById('cart-table');
+    const nettoPrice = document.getElementById('netto-price');
+    const mwstPrice = document.getElementById('mwst-price');
+    const totalPrice = document.getElementById('total-price');
+    const cartPayload = document.getElementById('cart-payload');
+    const listCartPayload = document.getElementById('list-cart-payload');
+
+    if (!body || !emptyMsg || !table) {
+        updateCartBadge();
+        return;
+    }
+
+    body.innerHTML = '';
+
+    if (cart.length === 0) {
+        emptyMsg.style.display = 'block';
+        table.style.display = 'none';
+
+        if (nettoPrice) nettoPrice.textContent = formatPrice(0);
+        if (mwstPrice) mwstPrice.textContent = formatPrice(0);
+        if (totalPrice) totalPrice.textContent = formatPrice(0);
+        if (cartPayload) cartPayload.value = '[]';
+        if (listCartPayload) listCartPayload.value = '[]';
+
+        updateCartBadge();
+        return;
+    }
+
+    emptyMsg.style.display = 'none';
+    table.style.display = 'table';
+
+    cart.forEach((item, index) => {
+        const price = parseFloat(item.price) || 0;
+        const quantity = Math.max(1, parseInt(item.menge, 10) || 1);
+        const lineTotal = price * quantity;
+        const image = item.image || '';
+        const safeName = window.escapeHtml(item.name);
+        const safeImage = window.escapeHtml(image);
+
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+                <div class="cart-table-product">
+                    ${image ? `<img src="${safeImage}" alt="${safeName}">` : ''}
+                    <span>${safeName}</span>
+                </div>
+            </td>
+            <td>${formatPrice(price)}</td>
+            <td>
+                <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="${quantity}"
+                    aria-label="Menge für ${safeName}"
+                    onchange="setCartQty(${item.id}, this.value)"
+                >
+            </td>
+            <td>${formatPrice(lineTotal)}</td>
+            <td>
+                <button type="button" class="btn-clear" onclick="removeCartItem(${item.id})">Entfernen</button>
+            </td>
+        `;
+
+        body.appendChild(row);
+    });
+
+    const totals = window.getCartTotals();
+    const subtotal = totals.subtotal || 0;
+    const vat = totals.vat || 0;
+    const finalTotal = totals.total || 0;
+
+    if (nettoPrice) nettoPrice.textContent = formatPrice(subtotal);
+    if (mwstPrice) mwstPrice.textContent = formatPrice(vat);
+    if (totalPrice) totalPrice.textContent = formatPrice(finalTotal);
+    if (cartPayload) cartPayload.value = JSON.stringify(cart);
+    if (listCartPayload) listCartPayload.value = JSON.stringify(cart);
+
+    updateCartBadge();
 };
 // ## Schluss Code von Nils
 // ## Beginn KI genertierter Code (Claude)
@@ -269,7 +220,7 @@ window.renderCartDrawer = function () {
             const price = parseFloat(item.price) || 0;
 
             // Produktbild bestimmen
-            const image = item.image || getProductImage(item.name) || '';
+            const image = item.image || '';
 
             // Gesamtpreis pro Position
             const lineTotal = price * item.menge;
@@ -279,9 +230,9 @@ window.renderCartDrawer = function () {
             entry.className = 'cart-drawer-item';
 
             entry.innerHTML = `
-                ${image ? `<img src="${image}" alt="${item.name}">` : '<div class="cart-drawer-placeholder"></div>'}
+                ${image ? `<img src="${image}" alt="${window.escapeHtml(item.name)}">` : '<div class="cart-drawer-placeholder"></div>'}
                 <div class="cart-drawer-item-info">
-                    <strong>${item.name}</strong>
+                    <strong>${window.escapeHtml(item.name)}</strong>
                     <span>${item.menge} x ${formatPrice(price)}</span>
                 </div>
                 <div class="cart-drawer-item-actions">
@@ -370,6 +321,89 @@ window.removeDrawerItem = function (id) {
     if (cart.length === 0) {
         closeCartDrawer();
     }
+};
+
+// Entfernt ein Produkt direkt aus der cart.php-Tabelle.
+window.removeCartItem = function (id) {
+    const cart = getCart().filter(item => item.id !== id);
+
+    saveCart(cart);
+    renderCart();
+    renderCartDrawer();
+
+    if (cart.length === 0) {
+        closeCartDrawer();
+    }
+};
+
+// Setzt die Menge eines Produkts in der cart.php-Tabelle auf einen festen Wert.
+window.setCartQty = function (id, value) {
+    const cart = getCart();
+    const item = cart.find(entry => entry.id === id);
+
+    if (!item) return;
+
+    const quantity = Math.max(1, parseInt(value, 10) || 1);
+    item.menge = quantity;
+
+    saveCart(cart);
+    renderCart();
+    renderCartDrawer();
+};
+
+// Leert den kompletten Warenkorb.
+window.clearCart = function () {
+    localStorage.removeItem('cart');
+
+    renderCart();
+    renderCartDrawer();
+    updateCartBadge();
+};
+
+// Sendet die aktuelle Warenkorbansicht an die Checkout-Seite.
+window.checkout = function () {
+    const cart = getCart();
+    const form = document.getElementById('checkout-form');
+    const payload = document.getElementById('cart-payload');
+
+    if (!form || !payload) {
+        return;
+    }
+
+    if (cart.length === 0) {
+        showToast('Der Warenkorb ist leer.');
+        return;
+    }
+
+    payload.value = JSON.stringify(cart);
+
+    form.submit();
+};
+
+// Speichert den aktuellen Warenkorb als Sammelliste.
+window.saveCartAsList = function () {
+    const cart = getCart();
+    const form = document.getElementById('save-list-form');
+    const payload = document.getElementById('list-cart-payload');
+    const listNameInput = document.getElementById('list-name');
+
+    if (!form || !payload || !listNameInput) {
+        return;
+    }
+
+    if (cart.length === 0) {
+        showToast('Der Warenkorb ist leer.');
+        return;
+    }
+
+    if (listNameInput.value.trim() === '') {
+        showToast('Bitte einen Namen für die Sammelliste eingeben.');
+        listNameInput.focus();
+        return;
+    }
+
+    payload.value = JSON.stringify(cart);
+    form.submit();
 };
 
 
@@ -464,31 +498,6 @@ window.addToCart = function (id, name, price, image = "") {
 };
 
 
-// Produktbild Fallback-Logik
-window.getProductImage = function (name) {
-
-    const images = {
-        'Museumsgutschein': 'images/products/Museumsgtuschein.png',
-        'Museumsführung': 'images/products/Führung durch das Museum.png',
-        'Führung durch das Museum': 'images/products/Führung durch das Museum.png',
-    };
-
-    if (images[name]) return images[name];
-
-    const normalized = name.toLowerCase();
-
-    if (normalized.includes('museumsgutschein')) {
-        return images['Museumsgutschein'];
-    }
-
-    if (normalized.includes('führung') || normalized.includes('museum')) {
-        return images['Museumsführung'];
-    }
-
-    return '';
-};
-
-
 // Preis umwandeln
 window.parsePrice = function (price) {
     return parseFloat(price);
@@ -499,4 +508,15 @@ window.parsePrice = function (price) {
 window.formatPrice = function (num) {
     return Number(num).toFixed(2).replace('.', ',') + ' €';
 };
+
+// Initialisiert Warenkorb-UI und Schliessen-Buttons nach dem Laden der Seite.
+document.addEventListener('DOMContentLoaded', () => {
+    renderCart();
+    renderCartDrawer();
+    updateCartBadge();
+
+    document.querySelectorAll('[data-cart-close]').forEach((button) => {
+        button.addEventListener('click', closeCartDrawer);
+    });
+});
 // ## Schluss KI genertierter Code (Claude)

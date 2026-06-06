@@ -31,9 +31,6 @@ $bookingStatus = $_GET['booking'] ?? '';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="google-fonts">
     <link rel="stylesheet" href="CSS/mystyle.css">
     <script src="JavaScript/toggle-theme.js"></script>
-    <script>
-        window.COUPON_CATALOG = <?php echo json_encode(appGetCouponCatalog(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-    </script>
     <script src="JavaScript/cart.js" defer></script>
     <script src="JavaScript/shop.js" defer></script>
     <title>Warenkorb</title>
@@ -72,18 +69,6 @@ $bookingStatus = $_GET['booking'] ?? '';
             <p class="form-message error-message">Für die Buchung musst du eingeloggt sein. Bitte melde dich an oder registriere dich.</p>
         <?php endif; ?>
 
-        <div class="cart-coupon-box">
-            <div class="cart-coupon-header">
-                <label for="discount-code">Rabattcode</label>
-                <span>Gültig für den Checkout</span>
-            </div>
-            <div class="cart-coupon-row">
-                <input type="text" id="discount-code" placeholder="Rabattcode eingeben" autocomplete="off">
-                <button type="button" class="btn-back" onclick="applyCouponCode()">Anwenden</button>
-                <button type="button" class="btn-clear" onclick="clearCouponCode()">Löschen</button>
-            </div>
-            <p id="coupon-message" class="cart-coupon-message"></p>
-        </div>
 <!--## Schluss Code von Linus -->
 
 <!--## Beginn Code von Nils -->
@@ -109,12 +94,8 @@ $bookingStatus = $_GET['booking'] ?? '';
                     <td colspan="4">zzgl. MwSt. (19%)</td>
                     <td id="mwst-price" colspan="2"></td>
                 </tr>
-                <tr>
-                    <td colspan="4">Rabatt</td>
-                    <td id="coupon-summary" colspan="2">-</td>
-                </tr>
                 <tr class="total-row">
-                    <td colspan="4">Gesamt (inkl. MwSt. und Rabatt):</td>
+                    <td colspan="4">Gesamt (inkl. MwSt.):</td>
                     <td id="total-price" colspan="2">0,00 €</td>
                 </tr>
             </tfoot>
@@ -123,7 +104,6 @@ $bookingStatus = $_GET['booking'] ?? '';
         <?php if ($isLoggedIn): ?>
             <form id="checkout-form" action="checkout.php" method="post" class="cart-actions">
                 <input type="hidden" name="cart_payload" id="cart-payload">
-                <input type="hidden" name="discount_code" id="discount-code-payload">
                 <button type="button" class="btn-back" onclick="location.href='shop.php'">Weiter einkaufen</button>
                 <button type="button" class="btn-clear" onclick="clearCart()">Warenkorb leeren</button>
                 <button type="button" class="btn-checkout" onclick="checkout()" <?php echo $isBlocked ? 'disabled' : ''; ?>>Zur Kasse</button>

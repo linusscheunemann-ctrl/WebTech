@@ -748,6 +748,7 @@ $productImages = appFetchProductImages($pdo);
                     </div>
                 </form>
 
+                <!--Upload formular für die Bildbibliothek -->
                 <form action="admin.php" method="post" enctype="multipart/form-data" class="admin-form-grid admin-product-form">
                     <input type="hidden" name="action" value="upload_product_image">
                     <input type="hidden" name="tab" value="<?php echo htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8'); ?>">

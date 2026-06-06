@@ -44,9 +44,6 @@ if ((int) ($currentUser['is_blocked'] ?? 0) === 1) {
 // Warenkorb-Daten aus dem POST-Request holen (JSON-String)
 $cartPayload = $_POST['cart_payload'] ?? '';
 
-// Gutscheincode aus dem Formular holen und normalisieren
-$couponCode = appNormalizeCouponCode((string) ($_POST['discount_code'] ?? ''));
-
 // JSON in ein PHP-Array umwandeln
 $cartItems = json_decode($cartPayload, true);
 
@@ -126,12 +123,9 @@ try {
     // Automatischen Rabatt berechnen (z. B. Mengenrabatt, Aktionen)
     $automaticDiscount = appCalculateBookingDiscount($bookingId, $subtotalAmount, $discountConfig);
 
-    // Coupon-Rabatt berechnen
-    $couponDiscount = appCalculateCouponDiscount($couponCode, $subtotalAmount);
-
     // Gesamten Rabatt berechnen
     $discountAmount = (float) ($automaticDiscount['amount'] ?? 0)
-                    + (float) ($couponDiscount['amount'] ?? 0);
+                    ;
 
     // Rabatt in Prozent berechnen
     $discountPercent = $subtotalAmount > 0
@@ -143,10 +137,6 @@ try {
 
     if (($automaticDiscount['amount'] ?? 0) > 0 && !empty($automaticDiscount['label'])) {
         $discountLabels[] = (string) $automaticDiscount['label'];
-    }
-
-    if (($couponDiscount['amount'] ?? 0) > 0 && !empty($couponDiscount['label'])) {
-        $discountLabels[] = 'Code ' . $couponDiscount['code'] . ' (' . $couponDiscount['label'] . ')';
     }
 
     // Finalen Gesamtbetrag berechnen (nicht negativ zulassen)
@@ -219,7 +209,30 @@ try {
     exit;
 }
 
-// Erfolgreiche Buchung → Weiterleitung
-header('Location: cart.php?booking=success');
+// Erfolgreiche Buchung -> Warenkorb im Browser leeren und dann weiterleiten
+header('Content-Type: text/html; charset=UTF-8');
+?>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=cart.php?booking=success">
+    <title>Buchung abgeschlossen</title>
+</head>
+<body>
+    <script>
+        try {
+            localStorage.removeItem('cart');
+        } catch (error) {
+            // Falls localStorage nicht verfuegbar ist, wird trotzdem weitergeleitet.
+        }
+        window.location.replace('cart.php?booking=success');
+    </script>
+    <noscript>
+        <p>Die Buchung wurde abgeschlossen. <a href="cart.php?booking=success">Weiter</a>.</p>
+    </noscript>
+</body>
+</html>
+<?php
 exit;
 // Schluss KI generierter Code

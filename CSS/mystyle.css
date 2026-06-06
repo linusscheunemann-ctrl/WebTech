@@ -1338,67 +1338,6 @@ footer a,
 }
 /* ## Beginn Code von Linus */
 
-/* ## Beginn KI generierter Code (Codex)*/
-.cart-coupon-box {
-  max-width: 980px;
-  width: 90%;
-  margin: 0 auto 18px;
-  padding: 16px 18px;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  background: var(--surface-color);
-  box-shadow: var(--shadow-soft);
-  text-align: left;
-}
-
-
-.cart-coupon-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.cart-coupon-header label {
-  margin: 0;
-  font-size: 14px;
-}
-
-.cart-coupon-header span,
-.cart-coupon-hint,
-.cart-coupon-message {
-  color: var(--text-muted);
-  font-size: 12px;
-  margin: 0;
-}
-
-.cart-coupon-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.cart-coupon-row input {
-  min-width: min(100%, 260px);
-  flex: 1 1 260px;
-}
-
-.cart-coupon-message {
-  min-height: 1.4em;
-  margin-top: 10px;
-}
-
-.cart-coupon-message.is-valid {
-  color: var(--success-color);
-}
-
-.cart-coupon-message.is-invalid {
-  color: var(--error-color);
-}
-
 .cart-qty-input {
   width: 86px;
   text-align: center;

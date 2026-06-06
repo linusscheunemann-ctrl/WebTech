@@ -1,1 +1,4 @@
 ErrorDocument 404 /GitHub/WebTech/404.php
+
+php_value upload_max_filesize 30M
+php_value post_max_size 32M
