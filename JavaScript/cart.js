@@ -6,12 +6,38 @@ console.log("CART.JS GELADEN");
 
 // Liest den aktuell im Browser gespeicherten Warenkorb aus dem localStorage.
 window.getCart = function () {
-    return JSON.parse(localStorage.getItem('cart')) || [];
+    try {
+        const rawCart = localStorage.getItem('cart');
+
+        if (!rawCart) {
+            return [];
+        }
+
+        const parsedCart = JSON.parse(rawCart);
+
+        return Array.isArray(parsedCart) ? parsedCart : [];
+    } catch (error) {
+        console.warn('Ungültiger Warenkorb im localStorage wurde zurückgesetzt.', error);
+
+        try {
+            localStorage.removeItem('cart');
+        } catch (removeError) {
+            console.warn('Der fehlerhafte Warenkorb konnte nicht entfernt werden.', removeError);
+        }
+
+        return [];
+    }
 };
 
 // Speichert den kompletten Warenkorb wieder im localStorage.
 window.saveCart = function (cart) {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    try {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        return true;
+    } catch (error) {
+        console.error('Der Warenkorb konnte nicht gespeichert werden.', error);
+        return false;
+    }
 };
 
 // ## Schluss Code von Linus
@@ -487,7 +513,10 @@ window.addToCart = function (id, name, price, image = "") {
         });
     }
 
-    saveCart(cart);
+    if (!saveCart(cart)) {
+        showToast('Der Warenkorb konnte nicht gespeichert werden.');
+        return;
+    }
 
     renderCartDrawer();
     openCartDrawer();

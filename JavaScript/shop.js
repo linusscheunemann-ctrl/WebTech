@@ -17,54 +17,76 @@ async function loadProducts() {
         return;
     }
 
-    // Die Produktliste kommt aus der zentralen Konfigurationsdatei.
-    const response = await fetch(productCatalogUrl);
+    try {
+        // Die Produktliste kommt aus der zentralen Konfigurationsdatei.
+        const response = await fetch(productCatalogUrl);
 
-    if (!response.ok) {
-        throw new Error(`Produktdaten konnten nicht geladen werden (${response.status})`);
+        if (!response.ok) {
+            throw new Error(`Produktdaten konnten nicht geladen werden (${response.status})`);
+        }
+
+        // JSON wird in ein normales JavaScript-Objekt umgewandelt.
+        const data = await response.json();
+
+        // Alte Karten entfernen, falls die Seite neu gerendert wird.
+        container.innerHTML = "";
+
+        // Jedes Produkt wird als eigene Karte gerendert.
+        (data.products || []).forEach((product) => {
+            const productDiv = document.createElement("div");
+            productDiv.classList.add("product");
+
+            const productImage = document.createElement("img");
+            productImage.src = product.image || "images/image.png";
+            productImage.alt = product.name || "Produktbild";
+
+            const title = document.createElement("h3");
+            title.className = "product-name";
+            title.textContent = product.name || "";
+
+            const price = document.createElement("div");
+            price.className = "price";
+            price.textContent = formatPrice(product.price);
+
+            const buttons = document.createElement("div");
+            buttons.className = "product-buttons";
+
+            const buyButton = document.createElement("button");
+            buyButton.type = "button";
+            buyButton.className = "buy-btn";
+            buyButton.textContent = "Kaufen";
+            buyButton.addEventListener("click", () => {
+                window.addToCart(
+                    Number(product.id),
+                    product.name || "",
+                    product.price,
+                    product.image || ""
+                );
+            });
+
+            const detailButton = document.createElement("button");
+            detailButton.type = "button";
+            detailButton.className = "detail-btn";
+            detailButton.textContent = "Details";
+            detailButton.addEventListener("click", () => {
+                goToProduct(product.id);
+            });
+
+            buttons.appendChild(buyButton);
+            buttons.appendChild(detailButton);
+
+            productDiv.appendChild(productImage);
+            productDiv.appendChild(title);
+            productDiv.appendChild(price);
+            productDiv.appendChild(buttons);
+
+            // Die fertige Karte wird an den Shop-Container angehaengt.
+            container.appendChild(productDiv);
+        });
+    } catch (error) {
+        console.error("Shop konnte nicht geladen werden:", error);
+        container.innerHTML = '<p class="form-message error-message">Die Produkte konnten gerade nicht geladen werden. Bitte versuche es erneut.</p>';
     }
-
-    // JSON wird in ein normales JavaScript-Objekt umgewandelt.
-    const data = await response.json();
-
-    // Jedes Produkt wird als eigene Karte gerendert.
-    (data.products || []).forEach(product => {
-
-        const productDiv = document.createElement("div");
-
-        // Einheitliche Klasse fuer das Kartenlayout.
-        productDiv.classList.add("product");
-
-        // Bild, Name, Preis und Aktionen werden als HTML in die Karte geschrieben.
-        // ##Schluss KI generierter Code
-        // ##Beginn Code von Linus
-        productDiv.innerHTML = `
-            <img src="${product.image || 'images/image.png'}" alt="${product.name}">
-            <h3 class="product-name">${product.name}</h3>
-            <div class="price">
-                ${formatPrice(product.price)}
-            </div>
-            <div class="product-buttons">
-                <button class="buy-btn"
-                    data-id="${product.id}"
-                    data-name="${product.name}"
-                    data-price="${product.price}"
-                    data-image="${product.image || ''}">
-                    Kaufen
-                </button>
-                <button class="detail-btn"
-                    onclick="goToProduct(${product.id})">
-                    Details
-                </button>
-            </div>
-        `;
-
-        // Die fertige Karte wird an den Shop-Container angehaengt.
-        container.appendChild(productDiv);
-    });
-
-    // Danach erhalten die Kauf-Buttons ihre Click-Handler fuer den Warenkorb.
-    attachBuyEvents();
 }
 
 // Wechselt zur Detailseite eines Produkts anhand seiner ID.
@@ -76,21 +98,5 @@ function goToProduct(id) {
 // Formatiert Preise in Schreibweise mit Euro-Symbol.
 function formatPrice(num) {
     return Number(num).toFixed(2).replace(".", ",") + " €";
-}
-
-// Bindet alle Kauf-Buttons an die Warenkorb-Funktion aus cart.js.
-function attachBuyEvents() {
-    document.querySelectorAll(".buy-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const id = Number(this.dataset.id);
-            const name = this.dataset.name;
-            const price = this.dataset.price;
-            const image = this.dataset.image;
-            
-
-            // addToCart stammt aus cart.js und uebernimmt das eigentliche Hinzufuegen.
-            addToCart(id,name, price, image);
-        });
-    });
 }
 //## Schluss KI genertierter Code (CoPilot)
