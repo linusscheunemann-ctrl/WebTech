@@ -2335,3 +2335,12 @@ form,
     border-radius: 6px;
     margin-bottom: 16px;
 }
+
+.js-warning {
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+    color: #842029;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
