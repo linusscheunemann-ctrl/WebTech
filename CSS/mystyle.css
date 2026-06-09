@@ -2327,3 +2327,11 @@ form,
     transform: translateX(-50%) translateY(0) scale(1);
   }
 }
+.cookie-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}

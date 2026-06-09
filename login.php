@@ -67,6 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+// Prüfen ob der Cookie ankam
+$cookies_enabled= isset($_SESSION['cookies_enabled']);
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -87,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($errorMessage !== ''): ?>
         <p class="form-message error-message"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif; ?>
+    <?php if (!$cookies_enabled): ?>
+        <div class="cookie-warning">
+            ⚠️ Cookies sind deaktiviert. Bitte aktiviere Cookies in deinem Browser, um dich anzumelden.
+    </div>
+    <?php endif;?>
 
     <form action="login.php" method="post">
         <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8'); ?>">
