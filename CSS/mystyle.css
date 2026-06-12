@@ -2903,3 +2903,22 @@ html[data-theme="dark"] .error-code {
   }
 }
 /* ## Schluss KI genertierter Code (Codex) */
+/* ## Beginn Code von Nils */
+.cookie-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.js-warning {
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+    color: #842029;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+/* ## Schluss Code von Nils */
