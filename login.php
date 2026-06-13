@@ -67,8 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-// Prüfen ob der Cookie ankam
-$cookies_enabled= isset($_SESSION['cookies_enabled']);
+// Cookie-Check via Redirect (nur bei GET, nicht beim Login-POST)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && !isset($_GET['cookie_check'])) {
+    $_SESSION['cookie_test'] = true;
+    session_write_close(); // Session vor Redirect auf Disk schreiben! Sonst wird der Cookie nicht rechtzeitig gesetzt.
+    $query = array_filter(['cookie_check' => '1', 'return_to' => $_GET['return_to'] ?? null]);
+    header('Location: login.php?' . http_build_query($query));
+    exit;
+}
+
+// Prüfen ob der Cookie ankam (korrekter Key!)
+$cookies_enabled = isset($_SESSION['cookie_test']);
 ?>
 <!DOCTYPE html>
 <html lang="de">
