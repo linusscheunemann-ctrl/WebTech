@@ -1,29 +1,4 @@
-<?php
-session_start();
-$isLoggedIn = !empty($_SESSION['username']) && !empty($_SESSION['user_id']);
-$currentUser = null;
-
-require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/includes/app.php';
-
-if (isset($pdo)) {
-    appEnsureSchema($pdo);
-}
-
-$currentUser = $isLoggedIn && isset($pdo) ? appLoadCurrentUser($pdo) : null;
-$isBlocked = (int) ($currentUser['is_blocked'] ?? ($_SESSION['is_blocked'] ?? 0)) === 1;
-$discountConfig = isset($pdo) ? appGetDiscountConfig($pdo) : ['enabled' => false, 'ten_percent' => 10, 'twenty_percent' => 20];
-$nextBookingDiscount = null;
-
-if ($isLoggedIn && isset($pdo)) {
-    $countStatement = $pdo->query('SELECT COUNT(*) FROM bookings');
-    $nextBookingNumber = ((int) ($countStatement ? $countStatement->fetchColumn() : 0)) + 1;
-    $nextBookingDiscount = appCalculateBookingDiscount($nextBookingNumber, 1.0, $discountConfig);
-}
-
-$loginReturnTo = 'login.php?return_to=cart.php';
-$bookingStatus = $_GET['booking'] ?? '';
-?>
+<?php require_once __DIR__ . '/controllers/cart_controller.php'; ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/controllers/admin_controller.php';
+if (false) {
 // Der Adminbereich verwaltet Buchungen, Nutzer und Rabatte.
 session_start();
 require_once __DIR__ . '/db.php';
@@ -463,6 +465,7 @@ $users = $usersQuery ? ($usersQuery->fetchAll() ?: []) : [];
 // Produkte und Bildbibliothek werden mit einer JOIN-Abfrage geladen.
 $products = appFetchProducts($pdo);
 $productImages = appFetchProductImages($pdo);
+}
 ?>
 <!DOCTYPE html>
 <html lang="de">
