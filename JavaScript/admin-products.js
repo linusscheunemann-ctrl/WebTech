@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`HTTP ${response.status}`);
             }
 
+            // Die Antwort wird als JSON geparst, Fehler werden im catch-Block behandelt.
             const data = await response.json();
             const products = Array.isArray(data.products) ? data.products : [];
             renderProducts(products);

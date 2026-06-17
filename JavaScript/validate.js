@@ -1,4 +1,4 @@
-// ## Beginn Code von Linus
+// ## Beginn Code von Linus generiert mit Unterstützung von CoPilot
 
 document.addEventListener("DOMContentLoaded", function () {
     // Alle Formular-Elemente werden erst nach dem Laden des DOM geholt,
@@ -170,4 +170,4 @@ document.addEventListener("DOMContentLoaded", function () {
     updateSubmitState();
 
 });
-// ## Schluss Code von Linus
+// ## Schluss Code von Linus generiert mit Unterstützung von CoPilot
