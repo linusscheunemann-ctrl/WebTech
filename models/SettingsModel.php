@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appGetSetting(PDO $pdo, string $key, string $default = ''): string
 {
     $statement = $pdo->prepare(
@@ -28,3 +30,5 @@ function appSetSetting(PDO $pdo, string $key, string $value): void
         'setting_value' => $value,
     ]);
 }
+
+// ## Schluss generierter Code von Codex

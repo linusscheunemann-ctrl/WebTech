@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appFetchProducts(PDO $pdo, string $search = ''): array
 {
     $search = trim($search);
@@ -72,3 +74,5 @@ function appFetchProductImages(PDO $pdo): array
 
     return $statement ? ($statement->fetchAll() ?: []) : [];
 }
+
+// ## Schluss generierter Code von Codex

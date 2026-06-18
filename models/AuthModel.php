@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appCurrentUserId(): int
 {
     return (int) ($_SESSION['user_id'] ?? 0);
@@ -61,3 +63,5 @@ function appRequireAdmin(PDO $pdo): array
 
     return $user;
 }
+
+// ## Schluss generierter Code von Codex

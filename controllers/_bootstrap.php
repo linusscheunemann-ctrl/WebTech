@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -10,3 +12,5 @@ require_once __DIR__ . '/../includes/app.php';
 if (isset($pdo)) {
     appEnsureSchema($pdo);
 }
+
+// ## Schluss generierter Code von Codex

@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 require_once __DIR__ . '/_bootstrap.php';
 
 appRequireLogin('cart.php');
@@ -147,27 +149,6 @@ try {
     exit;
 }
 
-header('Content-Type: text/html; charset=UTF-8');
-?>
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;url=cart.php?booking=success">
-    <title>Buchung abgeschlossen</title>
-</head>
-<body>
-    <script>
-        try {
-            localStorage.removeItem('cart');
-        } catch (error) {
-        }
-        window.location.replace('cart.php?booking=success');
-    </script>
-    <noscript>
-        <p>Die Buchung wurde abgeschlossen. <a href="cart.php?booking=success">Weiter</a>.</p>
-    </noscript>
-</body>
-</html>
-<?php
+require __DIR__ . '/../views/checkout_success_view.php';
 exit;
+// ## Schluss generierter Code von Codex

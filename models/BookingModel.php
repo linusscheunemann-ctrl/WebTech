@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appBookingStatusLabel(string $status): string
 {
     return match ($status) {
@@ -152,3 +154,5 @@ function appFetchBookingCartItems(PDO $pdo, int $bookingId, int $userId): array
 
     return $cart;
 }
+
+// ## Schluss generierter Code von Codex

@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 require_once __DIR__ . '/_bootstrap.php';
 
 $errorMessage = '';
@@ -58,3 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require __DIR__ . '/../views/login_view.php';
+
+// ## Schluss generierter Code von Codex

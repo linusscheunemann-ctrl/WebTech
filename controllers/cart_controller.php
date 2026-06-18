@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 require_once __DIR__ . '/_bootstrap.php';
 
 $isLoggedIn = appIsLoggedIn();
@@ -23,3 +25,7 @@ if ($isLoggedIn && isset($pdo)) {
 
 $loginReturnTo = 'login.php?return_to=cart.php';
 $bookingStatus = $_GET['booking'] ?? '';
+
+require __DIR__ . '/../views/cart_view.php';
+
+// ## Schluss generierter Code von Codex

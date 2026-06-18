@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appCreateNotification(PDO $pdo, int $userId, string $message, string $type = 'info', ?int $bookingId = null): void
 {
     $statement = $pdo->prepare(
@@ -71,3 +73,5 @@ function appMarkNotificationsRead(PDO $pdo, int $userId): void
 
     $statement->execute(['user_id' => $userId]);
 }
+
+// ## Schluss generierter Code von Codex

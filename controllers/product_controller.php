@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 require_once __DIR__ . '/_bootstrap.php';
 
 if (!isset($_GET['pid']) || $_GET['pid'] === '') {
@@ -26,3 +28,7 @@ $product2 = null;
 if ($pid2 !== null) {
     $product2 = appFetchProductById($pdo, $pid2);
 }
+
+require __DIR__ . '/../views/product_view.php';
+
+// ## Schluss generierter Code von Codex

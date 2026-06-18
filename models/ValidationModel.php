@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appIsValidUsername(string $username): bool
 {
     return strlen($username) >= 5
@@ -11,3 +13,5 @@ function appIsValidPassword(string $password): bool
 {
     return strlen($password) >= 10;
 }
+
+// ## Schluss generierter Code von Codex

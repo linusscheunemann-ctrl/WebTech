@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appTableHasColumn(PDO $pdo, string $table, string $column): bool
 {
     $statement = $pdo->query(sprintf(
@@ -311,3 +313,5 @@ function appEnsureSchema(PDO $pdo): void
         ]);
     }
 }
+
+// ## Schluss generierter Code von Codex

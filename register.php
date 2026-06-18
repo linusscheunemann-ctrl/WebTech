@@ -1,7 +1,6 @@
-
 <?php
-// ## Beginn Code von Linus
+// ## Beginn generierter Code von Codex
 header('Location: registration.php');
 exit;
-// ## Schluss Code von Linus
+// ## Schluss generierter Code von Codex
 ?>

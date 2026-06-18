@@ -1,4 +1,5 @@
 <?php
+// ## Beginn generierter Code von Codex
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../includes/app.php';
 
@@ -30,3 +31,4 @@ echo json_encode([
     'count' => count($responseProducts),
     'search' => $search,
 ], JSON_UNESCAPED_UNICODE);
+// ## Schluss generierter Code von Codex

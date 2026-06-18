@@ -1,4 +1,5 @@
 <?php
+// ## Beginn generierter Code von Codex
 // HTTP-Status für eine nicht gefundene Seite setzen
 http_response_code(404);
 
@@ -6,6 +7,7 @@ http_response_code(404);
 $requestedPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
 $requestedPath = trim((string) $requestedPath);
 $requestedPath = $requestedPath !== '' ? htmlspecialchars($requestedPath, ENT_QUOTES, 'UTF-8') : 'Unbekannte Seite';
+// ## Schluss generierter Code von Codex
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +56,6 @@ $requestedPath = $requestedPath !== '' ? htmlspecialchars($requestedPath, ENT_QU
         </section>
     </main>
 <!--## Schluss Code von Linus-->
-    <!-- Gemeinsamen Footer einbinden -->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

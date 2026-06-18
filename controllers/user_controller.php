@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 require_once __DIR__ . '/_bootstrap.php';
 
 function renderCartRedirectPage(array $cart, string $message = 'Der Warenkorb wurde aktualisiert.', string $targetUrl = 'cart.php'): void
@@ -249,3 +251,7 @@ if ($userId > 0 && isset($pdo)) {
     $notifications = appFetchUserNotifications($pdo, $userId, 8);
     $unreadNotificationCount = appGetUnreadNotificationCount($pdo, $userId);
 }
+
+require __DIR__ . '/../views/user_view.php';
+
+// ## Schluss generierter Code von Codex

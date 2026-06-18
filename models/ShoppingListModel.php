@@ -1,5 +1,7 @@
 <?php
 
+// ## Beginn generierter Code von Codex
+
 function appFetchShoppingLists(PDO $pdo, int $userId): array
 {
     $statement = $pdo->prepare(
@@ -231,3 +233,5 @@ function appCreateShoppingList(PDO $pdo, int $userId, string $listName, array $c
         throw $throwable;
     }
 }
+
+// ## Schluss generierter Code von Codex
