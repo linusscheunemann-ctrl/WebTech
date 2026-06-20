@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+<!---Beginn Code Nils -->
 // Cookie-Test über die Session
 $cookies_enabled = isset($_COOKIE[session_name()]);
 
@@ -36,6 +36,8 @@ if (isset($_SESSION['username']) && $_SESSION['username'] !== '') {
     header('Location: ' . $returnTo);
     exit;
 }
+<!--Ende Code Nils -->
+<!-- Beginn Claude Code generierter Code -->
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameValue = trim($_POST['username'] ?? '');
@@ -43,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!isset($pdo)) {
         $errorMessage = 'Die Datenbankverbindung ist aktuell nicht verfügbar.';
-    } elseif ($usernameValue === '' || $password === '') {
+    }
+    <!-- Ende Claude Code generierte Code -->
+     elseif ($usernameValue === '' || $password === '') {
         $errorMessage = 'Bitte Benutzername und Passwort eingeben.';
     } else {
         $statement = $pdo->prepare(
@@ -77,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-
+<!-- Beginn Code Nils -->
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -141,3 +145,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>
+<!-- Ende Code Nils -->
