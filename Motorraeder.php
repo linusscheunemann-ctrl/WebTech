@@ -78,12 +78,22 @@
     sort($motorbikeImages, SORT_NATURAL | SORT_FLAG_CASE);
     $motorbikeImages = array_slice($motorbikeImages, 0, 58);
 
+    // Hier kannst du für einzelne Bilder feste Namen und Preise hinterlegen.
+    // Schlüssel ist der Dateiname im Ordner `images/motorrad/`.
+    $motorbikeMeta = [
+         '5b356b64-f229-4ec5-90fa-0484d77d93e5.jpeg' => ['title' => 'BMW R 1250 GS', 'price' => 15490],
+        '456cdffe-56f4-410d-9d49-5252ecdc84ad.jpeg' => ['title' => 'Ducati Monster', 'price' => 13250],
+    ];
+
     $motorbikeCards = [];
     foreach ($motorbikeImages as $index => $imagePath) {
+        $fileName = basename($imagePath);
+        $meta = $motorbikeMeta[$fileName] ?? [];
+
         $motorbikeCards[] = [
             'image' => substr($imagePath, strlen(__DIR__) + 1),
-            'title' => sprintf('Motorrad %02d', $index + 1),
-            'price' => number_format(6990 + ($index * 180), 0, ',', '.') . ' €',
+            'title' => $meta['title'] ?? sprintf('Motorrad %02d', $index + 1),
+            'price' => number_format((float) ($meta['price'] ?? (6990 + ($index * 180))), 0, ',', '.') . ' €',
         ];
     }
     ?>
