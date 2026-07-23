@@ -7,6 +7,65 @@
     <script src="JavaScript/toggle-theme.js"></script>
     <script src="JavaScript/cart.js" defer></script>
     <title>Motorräder</title>
+    <style>
+        .motorbikes-section {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        .motorbikes-section h1 {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .motorbikes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+        }
+
+        .motorbike-card {
+            background: #ffffff;
+            color: #111111;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .motorbike-card-media {
+            padding: 14px 16px 0;
+            box-sizing: border-box;
+        }
+
+        .motorbike-card-media img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            border-radius: 12px;
+            margin: 0;
+        }
+
+        .motorbike-card-content {
+            padding: 16px 18px 20px;
+            text-align: center;
+        }
+
+        .motorbike-card-content h3 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+        }
+
+        .motorbike-card-content p {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Anfang -->
@@ -14,31 +73,40 @@
 
     <!-- Navigation Ende -->
     <!-- ## Beginn Code von Moritz-->
-    <h1>Motorräder</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Bild</th>
-                <th>Marke</th>
-                <th>Modell</th>
-                <th>Leistung</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><img src="images/motorrad-museum-ingolstadt-1.jpg" alt="Ducati Panigale V4"></td>
-                <td>Harley-Davidson</td>
-                <td>Street 750</td>
-                <td>120ps</td>
-            </tr>
-            <tr>
-                <td><img src="images/image.png" alt="BMW S1000RR"></td>
-                <td>bmw</td>
-                <td>S1000RR</td>
-                <td>205 PS</td>
-            </tr>
-        </tbody>
-    </table>
+    <?php
+    $motorbikeImages = glob(__DIR__ . '/images/motorrad/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [];
+    sort($motorbikeImages, SORT_NATURAL | SORT_FLAG_CASE);
+    $motorbikeImages = array_slice($motorbikeImages, 0, 58);
+
+    $motorbikeCards = [];
+    foreach ($motorbikeImages as $index => $imagePath) {
+        $motorbikeCards[] = [
+            'image' => substr($imagePath, strlen(__DIR__) + 1),
+            'title' => sprintf('Motorrad %02d', $index + 1),
+            'price' => number_format(6990 + ($index * 180), 0, ',', '.') . ' €',
+        ];
+    }
+    ?>
+
+    <main class="motorbikes-section">
+        <h1>Motorräder</h1>
+        <div class="motorbikes-grid">
+            <?php foreach ($motorbikeCards as $card): ?>
+                <article class="motorbike-card">
+                    <div class="motorbike-card-media">
+                        <img
+                            src="<?php echo htmlspecialchars($card['image'], ENT_QUOTES, 'UTF-8'); ?>"
+                            alt="<?php echo htmlspecialchars($card['title'], ENT_QUOTES, 'UTF-8'); ?>"
+                        >
+                    </div>
+                    <div class="motorbike-card-content">
+                        <h3><?php echo htmlspecialchars($card['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p><?php echo htmlspecialchars($card['price'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </main>
     <!-- ## Schluss Code von Moritz-->
     <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
